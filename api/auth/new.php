@@ -44,14 +44,6 @@ if (empty($username)) {
     exit;
 }
 
-if (empty($password)) {
-    http_response_code(400);
-    $response['success'] = false;
-    $response['message'] = 'Password tidak boleh kosong';
-    echo json_encode($response);
-    exit;
-}
-
 if (strlen($username) < 3) {
     http_response_code(400);
     $response['success'] = false;
