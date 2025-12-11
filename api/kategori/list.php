@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../config/koneksi.php';
 $response = array();
 
 try {
-    $query = "SELECT id_kategori, nama_kategori, background_url, favorit, aktif FROM kategori WHERE aktif = 1 ORDER BY favorit DESC, nama_kategori ASC";
+    $query = "SELECT id_kategori, nama_kategori, background_url, favorit, aktif FROM kategori ORDER BY favorit DESC, nama_kategori ASC";
     $result = $conn->query($query);
     
     if ($result) {

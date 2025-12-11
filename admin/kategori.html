@@ -228,6 +228,23 @@
         </div>
     </div>
 
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-75 overflow-y-auto h-full w-full z-50" onclick="closeImageModal()">
+        <div class="relative top-10 mx-auto p-5" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-white">Preview Gambar</h3>
+                <button onclick="closeImageModal()" class="text-white hover:text-gray-300">
+                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="flex justify-center">
+                <img id="modalImage" src="" alt="Background Image" class="max-w-full max-h-96 rounded-lg shadow-lg">
+            </div>
+        </div>
+    </div>
+
     <script>
     let currentToken = localStorage.getItem('admin_token');
     let currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
@@ -300,7 +317,12 @@
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-[5%]">${index + 1}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-xs">${kategori.nama_kategori}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate w-[20%]" title="${kategori.background_url || ''}">${kategori.background_url || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate w-[20%]">
+                        ${kategori.background_url ? 
+                            `<button onclick="showImageModal('${kategori.background_url}')" class="text-blue-600 hover:text-blue-800 hover:underline truncate block max-w-xs" title="${kategori.background_url}">${kategori.background_url}</button>` 
+                            : '-'
+                        }
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-center w-[7%]">
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${kategori.favorit ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
                             ${kategori.favorit ? 'Ya' : 'Tidak'}
@@ -472,6 +494,22 @@
         localStorage.removeItem('admin_token');
         localStorage.removeItem('admin_data');
         window.location.href = 'login.html';
+    }
+
+    // Show image modal
+    function showImageModal(imageUrl) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        modalImage.src = '../public/images/' + imageUrl; // Correct path to public/images directory
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Close image modal
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
     }
 
     // Load data on page load
