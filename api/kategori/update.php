@@ -68,7 +68,8 @@ if (isset($_FILES['background_image']) && $_FILES['background_image']['error'] =
         exit;
     }
 } else {
-    $background_url = null;
+    // Keep existing background_url if no new image is uploaded
+    $background_url = null; // Will be handled in the query
 }
 
 // Get form data
@@ -109,9 +110,18 @@ try {
         exit;
     }
     
-    $update_query = "UPDATE kategori SET nama_kategori = ?, background_url = ?, favorit = ?, aktif = ? WHERE id_kategori = ?";
-    $stmt = $conn->prepare($update_query);
-    $stmt->bind_param("ssiii", $nama_kategori, $background_url, $favorit, $aktif, $id_kategori);
+    // Update with or without new image
+    if ($background_url !== null) {
+        // New image uploaded - update all fields including background_url
+        $update_query = "UPDATE kategori SET nama_kategori = ?, background_url = ?, favorit = ?, aktif = ? WHERE id_kategori = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("ssiii", $nama_kategori, $background_url, $favorit, $aktif, $id_kategori);
+    } else {
+        // No new image - update all fields except background_url
+        $update_query = "UPDATE kategori SET nama_kategori = ?, favorit = ?, aktif = ? WHERE id_kategori = ?";
+        $stmt = $conn->prepare($update_query);
+        $stmt->bind_param("siii", $nama_kategori, $favorit, $aktif, $id_kategori);
+    }
     
     if ($stmt->execute()) {
         $response['success'] = true;
