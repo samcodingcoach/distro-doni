@@ -290,6 +290,11 @@ function resetProdukForm() {
     document.getElementById('harga_aktif_hidden').value = '0';
     document.getElementById('harga_coret_hidden').value = '0';
     document.getElementById('terjual').value = '0';
+    
+    // Reset image previews
+    removeImagePreview('gambar1', 'preview1', 'removePreview1');
+    removeImagePreview('gambar2', 'preview2', 'removePreview2');
+    removeImagePreview('gambar3', 'preview3', 'removePreview3');
 }
 
 /**
@@ -299,6 +304,70 @@ function editProduk(produk) {
     document.getElementById('modalTitle').textContent = 'Edit Produk';
     populateProdukForm(produk);
     document.getElementById('produkModal').classList.remove('hidden');
+}
+
+/**
+ * Preview image on file selection
+ */
+function previewImage(input, previewId, removeBtnId) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const previewDiv = document.getElementById(previewId);
+            const removeBtn = document.getElementById(removeBtnId);
+            
+            // Create image preview
+            previewDiv.innerHTML = `
+                <img src="${e.target.result}" alt="Preview" class="max-w-full max-h-48 mx-auto rounded-lg shadow-lg">
+                <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <p class="font-medium">${input.files[0].name}</p>
+                    <p>Size: ${(input.files[0].size / 1024).toFixed(2)} KB</p>
+                </div>
+            `;
+            
+            // Show remove button
+            removeBtn.classList.remove('hidden');
+        };
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+/**
+ * Remove image preview
+ */
+function removeImagePreview(inputId, previewId, removeBtnId) {
+    event.stopPropagation();
+    event.preventDefault();
+    
+    // Clear file input
+    const fileInput = document.getElementById(inputId);
+    if (fileInput) {
+        fileInput.value = '';
+    }
+    
+    // Reset preview to default state
+    const previewDiv = document.getElementById(previewId);
+    if (previewDiv) {
+        previewDiv.innerHTML = `
+            <span class="material-icons-round text-gray-400 text-4xl group-hover:text-primary transition-colors">cloud_upload</span>
+            <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                <label class="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none" for="${inputId}">
+                    <span>Upload file</span>
+                    <input class="sr-only" id="${inputId}" name="${inputId}" type="file" accept=".jpg,.jpeg,.png" onchange="previewImage(this, '${previewId}', '${removeBtnId}')">
+                </label>
+                <p class="pl-1">atau drag & drop</p>
+            </div>
+            <p class="text-xs text-gray-500">PNG, JPG up to 1MB</p>
+        `;
+    }
+    
+    // Hide remove button
+    const removeBtn = document.getElementById(removeBtnId);
+    if (removeBtn) {
+        removeBtn.classList.add('hidden');
+    }
 }
 
 /**
