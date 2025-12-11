@@ -1,0 +1,448 @@
+/**
+ * Produk Management JavaScript
+ * Handle all produk-related functionality
+ */
+
+// Global variables
+let currentToken = localStorage.getItem('admin_token');
+let currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
+let allProdukData = [];
+let currentPage = 1;
+const itemsPerPage = 15;
+let filteredData = [];
+
+// Check authentication
+if (!currentToken) {
+    window.location.href = 'login.html';
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Display admin name
+    if (currentAdmin.username) {
+        document.getElementById('adminName').textContent = currentAdmin.username;
+        document.getElementById('mobileAdminName').textContent = currentAdmin.username;
+    }
+    
+    // Load initial data
+    loadProduk();
+    
+    // Setup form submission
+    document.getElementById('produkForm').addEventListener('submit', submitProdukForm);
+});
+
+/**
+ * Toggle mobile menu
+ */
+function toggleMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const overlay = document.getElementById('mobileMenuOverlay');
+    
+    if (mobileMenu.classList.contains('-translate-x-full')) {
+        mobileMenu.classList.remove('-translate-x-full');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    } else {
+        mobileMenu.classList.add('-translate-x-full');
+        overlay.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+/**
+ * Load produk data from API
+ */
+async function loadProduk() {
+    try {
+        const response = await fetch('../api/produk/list.php');
+        const data = await response.json();
+        
+        if (data.success && data.data.length > 0) {
+            allProdukData = data.data;
+            filteredData = [...allProdukData];
+            displayProduk();
+            updatePagination();
+        } else {
+            allProdukData = [];
+            filteredData = [];
+            const tbody = document.getElementById('produkTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada data produk</td></tr>';
+            updatePagination();
+        }
+    } catch (error) {
+        showMessage('error', 'Gagal memuat data: ' + error.message);
+    }
+}
+
+/**
+ * Load kategori data for dropdown
+ */
+async function loadKategori() {
+    try {
+        const response = await fetch('../api/kategori/list.php');
+        const data = await response.json();
+        
+        if (data.success && data.data.length > 0) {
+            const select = document.getElementById('id_kategori');
+            select.innerHTML = '<option value="">Pilih Kategori</option>';
+            data.data.forEach(kategori => {
+                select.innerHTML += `<option value="${kategori.id_kategori}">${kategori.nama_kategori}</option>`;
+            });
+        }
+    } catch (error) {
+        console.error('Gagal memuat data kategori:', error);
+    }
+}
+
+/**
+ * Format currency to Rupiah
+ */
+function formatRupiah(amount) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+    }).format(amount || 0);
+}
+
+/**
+ * Display produk data with pagination
+ */
+function displayProduk() {
+    const tbody = document.getElementById('produkTableBody');
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = filteredData.slice(startIndex, endIndex);
+    
+    if (pageData.length > 0) {
+        tbody.innerHTML = pageData.map((produk, index) => `
+            <tr>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${startIndex + index + 1}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${produk.kode_produk || '-'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-xs" title="${produk.nama_produk}">${produk.nama_produk}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${produk.nama_kategori}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStockColorClass(produk.jumlah_stok)}">
+                        ${produk.jumlah_stok || 0}
+                    </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-right font-medium text-gray-900">${formatRupiah(produk.harga_aktif)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                    <button onclick="editProduk(${JSON.stringify(produk).replace(/"/g, '&quot;')})" 
+                            class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</button>
+                    <button onclick="deleteProduk(${produk.id_produk}, '${produk.nama_produk}')" 
+                            class="text-red-600 hover:text-red-900">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    } else {
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada data yang ditemukan</td></tr>';
+    }
+}
+
+/**
+ * Get stock color class based on quantity
+ */
+function getStockColorClass(stock) {
+    if (!stock || stock <= 5) return 'bg-red-100 text-red-800';
+    if (stock <= 10) return 'bg-yellow-100 text-yellow-800';
+    return 'bg-green-100 text-green-800';
+}
+
+/**
+ * Update pagination controls
+ */
+function updatePagination() {
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const startItem = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+    const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+    
+    // Update text displays
+    document.getElementById('dataCount').textContent = totalItems;
+    document.getElementById('startItem').textContent = startItem;
+    document.getElementById('endItem').textContent = endItem;
+    document.getElementById('totalItems').textContent = totalItems;
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+    
+    // Update button states
+    document.getElementById('prevBtn').disabled = currentPage === 1;
+    document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
+}
+
+/**
+ * Change page
+ */
+function changePage(direction) {
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+    const newPage = currentPage + direction;
+    
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        displayProduk();
+        updatePagination();
+    }
+}
+
+/**
+ * Search produk data
+ */
+function searchProduk() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    
+    if (searchTerm === '') {
+        filteredData = [...allProdukData];
+    } else {
+        filteredData = allProdukData.filter(produk => 
+            (produk.kode_produk && produk.kode_produk.toLowerCase().includes(searchTerm)) ||
+            (produk.nama_produk && produk.nama_produk.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    currentPage = 1;
+    displayProduk();
+    updatePagination();
+}
+
+/**
+ * Filter produk by stock
+ */
+function filterByStock() {
+    const filterValue = document.getElementById('stockFilter').value;
+    
+    if (filterValue === '') {
+        filteredData = [...allProdukData];
+    } else if (filterValue === 'most') {
+        filteredData = [...allProdukData].sort((a, b) => (b.jumlah_stok || 0) - (a.jumlah_stok || 0));
+    } else if (filterValue === 'least') {
+        filteredData = [...allProdukData].sort((a, b) => (a.jumlah_stok || 0) - (b.jumlah_stok || 0));
+    }
+    
+    currentPage = 1;
+    displayProduk();
+    updatePagination();
+}
+
+/**
+ * Format Rupiah input field
+ */
+function formatRupiahInput(input) {
+    // Remove all non-digit characters
+    let value = input.value.replace(/\D/g, '');
+    
+    // Convert to number and format with thousand separator
+    if (value) {
+        let formatted = parseInt(value).toLocaleString('id-ID');
+        input.value = formatted;
+        
+        // Update hidden field
+        const hiddenInput = document.getElementById(input.id + '_hidden');
+        if (hiddenInput) {
+            hiddenInput.value = value;
+        }
+    } else {
+        input.value = '';
+        
+        // Update hidden field
+        const hiddenInput = document.getElementById(input.id + '_hidden');
+        if (hiddenInput) {
+            hiddenInput.value = '0';
+        }
+    }
+}
+
+/**
+ * Switch tabs in modal
+ */
+function switchTab(tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    // Deactivate all buttons
+    document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('active', 'text-primary', 'border-primary');
+        el.classList.add('text-gray-500', 'border-transparent');
+    });
+    // Show selected tab
+    document.getElementById('content-' + tabId).classList.add('active');
+    // Activate button
+    const btn = document.getElementById('tab-' + tabId);
+    btn.classList.add('active');
+    btn.classList.remove('text-gray-500', 'border-transparent');
+}
+
+/**
+ * Show add form modal
+ */
+function showAddForm() {
+    document.getElementById('modalTitle').textContent = 'Tambah Produk';
+    resetProdukForm();
+    document.getElementById('produkModal').classList.remove('hidden');
+    loadKategori();
+}
+
+/**
+ * Reset form to default state
+ */
+function resetProdukForm() {
+    document.getElementById('produkForm').reset();
+    document.getElementById('id_produk').value = '';
+    document.getElementById('harga_aktif_hidden').value = '0';
+    document.getElementById('harga_coret_hidden').value = '0';
+    document.getElementById('terjual').value = '0';
+}
+
+/**
+ * Edit produk
+ */
+function editProduk(produk) {
+    document.getElementById('modalTitle').textContent = 'Edit Produk';
+    populateProdukForm(produk);
+    document.getElementById('produkModal').classList.remove('hidden');
+}
+
+/**
+ * Populate form with produk data
+ */
+function populateProdukForm(produk) {
+    // Basic fields
+    document.getElementById('id_produk').value = produk.id_produk;
+    document.getElementById('kode_produk').value = produk.kode_produk || '';
+    document.getElementById('nama_produk').value = produk.nama_produk;
+    document.getElementById('merk').value = produk.merk || '';
+    document.getElementById('deskripsi').value = produk.deskripsi || '';
+    document.getElementById('ukuran').value = produk.ukuran || '';
+    document.getElementById('jumlah_stok').value = produk.jumlah_stok || 0;
+    document.getElementById('terjual').value = produk.terjual || 0;
+    
+    // Price fields (hidden + formatted display)
+    document.getElementById('harga_aktif_hidden').value = produk.harga_aktif;
+    document.getElementById('harga_coret_hidden').value = produk.harga_coret || '';
+    
+    if (produk.harga_aktif) {
+        document.getElementById('harga_aktif').value = parseInt(produk.harga_aktif).toLocaleString('id-ID');
+    }
+    if (produk.harga_coret) {
+        document.getElementById('harga_coret').value = parseInt(produk.harga_coret).toLocaleString('id-ID');
+    }
+    
+    // Checkboxes
+    document.getElementById('in_stok').checked = produk.in_stok == 1;
+    document.getElementById('favorit').checked = produk.favorit == 1;
+    document.getElementById('aktif').checked = produk.aktif == 1;
+    
+    // Load kategori and set value
+    loadKategori().then(() => {
+        document.getElementById('id_kategori').value = produk.id_kategori;
+    });
+}
+
+/**
+ * Delete produk
+ */
+function deleteProduk(id, nama) {
+    if (confirm(`Apakah Anda yakin ingin menghapus produk "${nama}"?`)) {
+        showMessage('error', 'Fitur hapus belum diimplementasikan');
+    }
+}
+
+/**
+ * Close modal
+ */
+function closeModal() {
+    document.getElementById('produkModal').classList.add('hidden');
+    document.getElementById('modalSuccessMessage').classList.add('hidden');
+    document.getElementById('modalErrorMessage').classList.add('hidden');
+    resetProdukForm();
+}
+
+/**
+ * Show message (non-modal)
+ */
+function showMessage(type, message) {
+    const messageEl = type === 'success' ? 
+        document.getElementById('successMessage') : 
+        document.getElementById('errorMessage');
+    const textEl = type === 'success' ? 
+        document.getElementById('successText') : 
+        document.getElementById('errorText');
+    
+    textEl.textContent = message;
+    messageEl.classList.remove('hidden');
+    
+    setTimeout(() => {
+        messageEl.classList.add('hidden');
+    }, 3000);
+}
+
+/**
+ * Show message in modal
+ */
+function showModalMessage(type, message) {
+    const messageEl = type === 'success' ? 
+        document.getElementById('modalSuccessMessage') : 
+        document.getElementById('modalErrorMessage');
+    const textEl = type === 'success' ? 
+        document.getElementById('modalSuccessText') : 
+        document.getElementById('modalErrorText');
+    
+    textEl.textContent = message;
+    messageEl.classList.remove('hidden');
+    
+    if (type === 'error') {
+        setTimeout(() => {
+            messageEl.classList.add('hidden');
+        }, 3000);
+    }
+}
+
+/**
+ * Submit produk form
+ */
+async function submitProdukForm(e) {
+    e.preventDefault();
+    
+    const id_produk = document.getElementById('id_produk').value;
+    const formData = new FormData();
+    
+    // Add regular form fields
+    const fields = ['kode_produk', 'nama_produk', 'merk', 'id_kategori', 'deskripsi', 
+                   'harga_aktif', 'harga_coret', 'ukuran', 'jumlah_stok', 'terjual'];
+    
+    fields.forEach(field => {
+        const element = document.getElementById(field);
+        if (element) {
+            formData.append(field, element.value);
+        }
+    });
+    
+    // Handle checkboxes
+    formData.append('in_stok', document.getElementById('in_stok').checked ? 1 : 0);
+    formData.append('favorit', document.getElementById('favorit').checked ? 1 : 0);
+    formData.append('aktif', document.getElementById('aktif').checked ? 1 : 0);
+    
+    // Add image files if they exist
+    ['gambar1', 'gambar2', 'gambar3'].forEach(field => {
+        const fileInput = document.getElementById(field);
+        if (fileInput && fileInput.files[0]) {
+            formData.append(field, fileInput.files[0]);
+        }
+    });
+    
+    if (id_produk) {
+        formData.append('id_produk', id_produk);
+    }
+    
+    // TODO: Implement create/update API calls
+    showMessage('error', 'Fitur simpan belum diimplementasikan');
+    closeModal();
+}
+
+/**
+ * Logout
+ */
+function logout() {
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_data');
+    window.location.href = 'login.html';
+}
