@@ -26,7 +26,8 @@ try {
                 p.gambar2, 
                 p.gambar3, 
                 p.aktif, 
-                p.favorit, 
+                p.favorit,
+                p.terjual, 
                 p.update_at, 
                 p.id_admin, 
                 admin.username
