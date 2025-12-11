@@ -21,6 +21,7 @@ function requireAuth($conn) {
     $headers = getallheaders();
     $token = null;
     
+    // Try multiple ways to get the Authorization header
     if (isset($headers['Authorization'])) {
         $auth_header = $headers['Authorization'];
         if (strpos($auth_header, 'Bearer ') === 0) {
@@ -28,6 +29,11 @@ function requireAuth($conn) {
         }
     } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+        if (strpos($auth_header, 'Bearer ') === 0) {
+            $token = substr($auth_header, 7);
+        }
+    } elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $auth_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
         if (strpos($auth_header, 'Bearer ') === 0) {
             $token = substr($auth_header, 7);
         }
