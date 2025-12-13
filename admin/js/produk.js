@@ -317,14 +317,29 @@ function previewImage(input, previewId, removeBtnId) {
             const previewDiv = document.getElementById(previewId);
             const removeBtn = document.getElementById(removeBtnId);
             
+            // Store file info
+            const file = input.files[0];
+            
             // Create image preview
             previewDiv.innerHTML = `
                 <img src="${e.target.result}" alt="Preview" class="max-w-full max-h-48 mx-auto rounded-lg shadow-lg">
                 <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                    <p class="font-medium">${input.files[0].name}</p>
-                    <p>Size: ${(input.files[0].size / 1024).toFixed(2)} KB</p>
+                    <p class="font-medium">${file.name}</p>
+                    <p>Size: ${(file.size / 1024).toFixed(2)} KB</p>
                 </div>
             `;
+            
+            // Keep the input file (IMPORTANT: don't remove it!)
+            // Append it after the preview but keep it hidden
+            const newInput = document.createElement('input');
+            newInput.type = 'file';
+            newInput.id = input.id;
+            newInput.name = input.name;
+            newInput.className = 'sr-only';
+            newInput.accept = input.accept;
+            newInput.files = input.files; // Copy files
+            newInput.onchange = () => previewImage(newInput, previewId, removeBtnId);
+            previewDiv.appendChild(newInput);
             
             // Show remove button
             removeBtn.classList.remove('hidden');
@@ -338,8 +353,10 @@ function previewImage(input, previewId, removeBtnId) {
  * Remove image preview
  */
 function removeImagePreview(inputId, previewId, removeBtnId) {
-    event.stopPropagation();
-    event.preventDefault();
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
     
     // Clear file input
     const fileInput = document.getElementById(inputId);
@@ -470,41 +487,133 @@ function showModalMessage(type, message) {
  */
 async function submitProdukForm(e) {
     e.preventDefault();
+    console.log('submitProdukForm called'); // Debug log
     
     const id_produk = document.getElementById('id_produk').value;
-    const formData = new FormData();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
     
-    // Add regular form fields
-    const fields = ['kode_produk', 'nama_produk', 'merk', 'id_kategori', 'deskripsi', 
-                   'harga_aktif', 'harga_coret', 'ukuran', 'jumlah_stok', 'terjual'];
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="material-icons-round animate-spin">sync</span> Menyimpan...';
     
-    fields.forEach(field => {
-        const element = document.getElementById(field);
-        if (element) {
-            formData.append(field, element.value);
-        }
-    });
+    console.log('Form submission started'); // Debug log
     
-    // Handle checkboxes
-    formData.append('in_stok', document.getElementById('in_stok').checked ? 1 : 0);
-    formData.append('favorit', document.getElementById('favorit').checked ? 1 : 0);
-    formData.append('aktif', document.getElementById('aktif').checked ? 1 : 0);
-    
-    // Add image files if they exist
+    // DEBUG: Check file inputs BEFORE creating FormData
+    console.log('BEFORE FormData:');
     ['gambar1', 'gambar2', 'gambar3'].forEach(field => {
-        const fileInput = document.getElementById(field);
-        if (fileInput && fileInput.files[0]) {
-            formData.append(field, fileInput.files[0]);
+        const input = document.getElementById(field);
+        console.log(field, 'input:', input);
+        console.log(field, 'files:', input ? input.files : 'no input');
+        if (input && input.files && input.files.length > 0) {
+            console.log(field, 'file:', input.files[0]);
         }
     });
     
-    if (id_produk) {
-        formData.append('id_produk', id_produk);
+    try {
+        // Prepare form data
+        const formData = new FormData();
+        
+        // Add regular form fields
+        const fields = ['kode_produk', 'nama_produk', 'merk', 'id_kategori', 'deskripsi', 'ukuran', 'jumlah_stok', 'terjual'];
+        
+        fields.forEach(field => {
+            const element = document.getElementById(field);
+            if (element) {
+                formData.append(field, element.value);
+            }
+        });
+        
+        // Handle price fields (use hidden values)
+        formData.append('harga_aktif', document.getElementById('harga_aktif_hidden').value);
+        formData.append('harga_coret', document.getElementById('harga_coret_hidden').value);
+        
+        // Handle checkboxes
+        formData.append('in_stok', document.getElementById('in_stok').checked ? 1 : 0);
+        formData.append('favorit', document.getElementById('favorit').checked ? 1 : 0);
+        formData.append('aktif', document.getElementById('aktif').checked ? 1 : 0);
+        
+        // Add admin ID from current session
+        formData.append('id_admin', currentAdmin.id_admin || 1);
+        
+        // Process and add image files with timestamp renaming
+        const timestamp = Date.now();
+        const imageFields = ['gambar1', 'gambar2', 'gambar3'];
+        
+        for (let i = 0; i < imageFields.length; i++) {
+            const field = imageFields[i];
+            const fileInput = document.getElementById(field);
+            
+            console.log(`Checking ${field}:`, fileInput);
+            console.log(`${field} files:`, fileInput ? fileInput.files : 'No input');
+            
+            if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                
+                console.log(`Found file for ${field}:`, file.name, file.size, file.type);
+                
+                // Validate file size (1MB limit)
+                if (file.size > 1024 * 1024) {
+                    throw new Error(`Ukuran file ${file.name} melebihi 1MB`);
+                }
+                
+                // Validate file type
+                if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
+                    throw new Error(`Format file ${file.name} tidak valid. Hanya JPG dan PNG yang diperbolehkan`);
+                }
+                
+                // Create new file with timestamp name
+                const extension = file.name.split('.').pop();
+                const newFileName = `produk_${timestamp}_0${i + 1}.${extension}`;
+                
+                console.log(`Appending ${field} as ${newFileName}`);
+                
+                // Append file directly with new name
+                formData.append(field, file, newFileName);
+            } else {
+                console.log(`No file found for ${field}`);
+            }
+        }
+        
+        // Debug log FormData
+        console.log('FormData contents:');
+        for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+                console.log(key, value.name, value.size, value.type);
+            } else {
+                console.log(key, value);
+            }
+        }
+        
+        // Make API call
+        const response = await fetch('../api/produk/new.php', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showModalMessage('success', result.message);
+            setTimeout(() => {
+                closeModal();
+                loadProduk(); // Reload the data
+            }, 1500);
+        } else {
+            showModalMessage('error', result.message);
+        }
+        
+    } catch (error) {
+        console.error('Error saving produk:', error);
+        showModalMessage('error', error.message || 'Gagal menyimpan produk');
+    } finally {
+        // Restore button state
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
-    
-    // TODO: Implement create/update API calls
-    showMessage('error', 'Fitur simpan belum diimplementasikan');
-    closeModal();
 }
 
 /**
