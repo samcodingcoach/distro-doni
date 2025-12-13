@@ -11,6 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 require_once __DIR__ . '/../../config/koneksi.php';
+require_once __DIR__ . '/../auth/validate_token.php';
+
+// Require authentication for POST
+$admin = requireAuth($conn);
 
 // baca JSON input
 $raw = file_get_contents('php://input');
