@@ -131,7 +131,7 @@ function displayProduk() {
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                     <button onclick="editProduk(${JSON.stringify(produk).replace(/"/g, '&quot;')})" 
                             class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</button>
-                    <button onclick="deleteProduk(${produk.id_produk}, '${produk.nama_produk}')" 
+                    <button onclick="deleteProduk(${produk.id_produk}, '${produk.nama_produk}', '${produk.kode_produk}')" 
                             class="text-red-600 hover:text-red-900">Delete</button>
                 </td>
             </tr>
@@ -426,32 +426,93 @@ function populateProdukForm(produk) {
 /**
  * Delete produk
  */
-async function deleteProduk(id, nama) {
-    if (confirm(`Apakah Anda yakin ingin menghapus produk "${nama}"?`)) {
-        try {
-            const response = await fetch('../api/produk/delete.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${currentToken}`
-                },
-                body: JSON.stringify({
-                    id_produk: id
-                })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showMessage('success', result.message);
-                loadProduk(); // Reload the data
-            } else {
-                showMessage('error', result.message);
-            }
-        } catch (error) {
-            console.error('Error deleting produk:', error);
-            showMessage('error', 'Gagal menghapus produk');
+function deleteProduk(id, nama, kode_produk) {
+    // Show delete confirmation modal
+    document.getElementById('deleteProductName').textContent = nama;
+    document.getElementById('deleteProductCode').textContent = kode_produk;
+    document.getElementById('confirmProductCode').value = '';
+    document.getElementById('deleteError').classList.add('hidden');
+    document.getElementById('confirmDeleteBtn').disabled = true;
+    document.getElementById('deleteModal').classList.remove('hidden');
+    
+    // Store the ID globally for confirm delete
+    window.deleteProductId = id;
+}
+
+/**
+ * Validate delete code
+ */
+function validateDeleteCode() {
+    const input = document.getElementById('confirmProductCode');
+    const expectedCode = document.getElementById('deleteProductCode').textContent;
+    const deleteBtn = document.getElementById('confirmDeleteBtn');
+    const errorMsg = document.getElementById('deleteError');
+    
+    if (input.value.trim() === expectedCode) {
+        deleteBtn.disabled = false;
+        errorMsg.classList.add('hidden');
+        input.classList.remove('border-red-500');
+        input.classList.add('border-green-500');
+    } else if (input.value.length > 0) {
+        deleteBtn.disabled = true;
+        errorMsg.classList.remove('hidden');
+        input.classList.add('border-red-500');
+        input.classList.remove('border-green-500');
+    } else {
+        deleteBtn.disabled = true;
+        errorMsg.classList.add('hidden');
+        input.classList.remove('border-red-500', 'border-green-500');
+    }
+}
+
+/**
+ * Close delete modal
+ */
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.add('hidden');
+    window.deleteProductId = null;
+}
+
+/**
+ * Confirm delete after validation
+ */
+async function confirmDelete() {
+    const id = window.deleteProductId;
+    const deleteBtn = document.getElementById('confirmDeleteBtn');
+    const originalText = deleteBtn.innerHTML;
+    
+    // Show loading state
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<span class="material-icons-round animate-spin text-sm align-middle mr-1">sync</span> Menghapus...';
+    
+    try {
+        const response = await fetch('../api/produk/delete.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({
+                id_produk: id
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            closeDeleteModal();
+            showMessage('success', result.message);
+            loadProduk(); // Reload the data
+        } else {
+            showMessage('error', result.message);
         }
+    } catch (error) {
+        console.error('Error deleting produk:', error);
+        showMessage('error', 'Gagal menghapus produk');
+    } finally {
+        // Restore button state
+        deleteBtn.innerHTML = originalText;
+        deleteBtn.disabled = false;
     }
 }
 
