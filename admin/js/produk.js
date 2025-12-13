@@ -292,9 +292,28 @@ function resetProdukForm() {
     document.getElementById('terjual').value = '0';
     
     // Reset image previews
-    removeImagePreview('gambar1', 'preview1', 'removePreview1');
-    removeImagePreview('gambar2', 'preview2', 'removePreview2');
-    removeImagePreview('gambar3', 'preview3', 'removePreview3');
+    ['preview1', 'preview2', 'preview3'].forEach((previewId, index) => {
+        const previewDiv = document.getElementById(previewId);
+        const removeBtn = document.getElementById(`removePreview${index + 1}`);
+        
+        // Reset preview to default state
+        previewDiv.innerHTML = `
+            <span class="material-icons-round text-gray-400 text-4xl group-hover:text-primary transition-colors">cloud_upload</span>
+            <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                <label class="relative cursor-pointer rounded-md font-medium text-primary hover:text-primary-hover focus-within:outline-none" for="gambar${index + 1}">
+                    <span>Upload file</span>
+                    <input class="sr-only" id="gambar${index + 1}" name="gambar${index + 1}" type="file" accept=".jpg,.jpeg,.png" onchange="previewImage(this, '${previewId}', 'removePreview${index + 1}')">
+                </label>
+                <p class="pl-1">atau drag & drop</p>
+            </div>
+            <p class="text-xs text-gray-500">PNG, JPG up to 1MB</p>
+        `;
+        
+        // Hide remove button
+        if (removeBtn) {
+            removeBtn.classList.add('hidden');
+        }
+    });
 }
 
 /**
@@ -420,6 +439,26 @@ function populateProdukForm(produk) {
     // Load kategori and set value
     loadKategori().then(() => {
         document.getElementById('id_kategori').value = produk.id_kategori;
+    });
+    
+    // Display existing images
+    const imageFields = ['gambar1', 'gambar2', 'gambar3'];
+    imageFields.forEach((field, index) => {
+        const image = produk[field];
+        if (image && image.trim() !== '') {
+            const previewDiv = document.getElementById(`preview${index + 1}`);
+            const removeBtn = document.getElementById(`removePreview${index + 1}`);
+            
+            previewDiv.innerHTML = `
+                <img src="../public/images/${image}" alt="Preview" class="max-w-full max-h-48 mx-auto rounded-lg shadow-lg">
+                <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <p class="font-medium">${image}</p>
+                </div>
+            `;
+            
+            // Show remove button
+            removeBtn.classList.remove('hidden');
+        }
     });
 }
 
@@ -598,6 +637,12 @@ async function submitProdukForm(e) {
         // Prepare form data
         const formData = new FormData();
         
+        // IMPORTANT: Add ID produk first
+        if (id_produk && id_produk !== '') {
+            formData.append('id_produk', id_produk);
+            console.log('Added id_produk to FormData at beginning:', id_produk);
+        }
+        
         // Add regular form fields
         const fields = ['kode_produk', 'nama_produk', 'merk', 'id_kategori', 'deskripsi', 'ukuran', 'jumlah_stok', 'terjual'];
         
@@ -669,8 +714,26 @@ async function submitProdukForm(e) {
             }
         }
         
+        // Determine if it's update or create
+        const isUpdate = id_produk && id_produk !== '';
+        const apiUrl = isUpdate ? '../api/produk/update.php' : '../api/produk/new.php';
+        
+        console.log('Submitting form - isUpdate:', isUpdate);
+        console.log('Submitting form - id_produk:', id_produk);
+        
+        // Add old image filenames for update (to delete old images if replaced)
+        if (isUpdate) {
+            // Get current product data to preserve old image names
+            const currentProduct = allProdukData.find(p => p.id_produk == id_produk);
+            if (currentProduct) {
+                formData.append('old_gambar1', currentProduct.gambar1 || '');
+                formData.append('old_gambar2', currentProduct.gambar2 || '');
+                formData.append('old_gambar3', currentProduct.gambar3 || '');
+            }
+        }
+        
         // Make API call
-        const response = await fetch('../api/produk/new.php', {
+        const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${currentToken}`
@@ -681,7 +744,8 @@ async function submitProdukForm(e) {
         const result = await response.json();
         
         if (result.success) {
-            showModalMessage('success', result.message);
+            const message = isUpdate ? 'Produk berhasil diupdate' : result.message;
+            showModalMessage('success', message);
             setTimeout(() => {
                 closeModal();
                 loadProduk(); // Reload the data
