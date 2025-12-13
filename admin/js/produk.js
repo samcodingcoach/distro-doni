@@ -426,9 +426,32 @@ function populateProdukForm(produk) {
 /**
  * Delete produk
  */
-function deleteProduk(id, nama) {
+async function deleteProduk(id, nama) {
     if (confirm(`Apakah Anda yakin ingin menghapus produk "${nama}"?`)) {
-        showMessage('error', 'Fitur hapus belum diimplementasikan');
+        try {
+            const response = await fetch('../api/produk/delete.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${currentToken}`
+                },
+                body: JSON.stringify({
+                    id_produk: id
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showMessage('success', result.message);
+                loadProduk(); // Reload the data
+            } else {
+                showMessage('error', result.message);
+            }
+        } catch (error) {
+            console.error('Error deleting produk:', error);
+            showMessage('error', 'Gagal menghapus produk');
+        }
     }
 }
 
