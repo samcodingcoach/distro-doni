@@ -222,41 +222,50 @@
                         <label class="block text-slate-900 text-sm font-medium leading-normal mb-2">Nama Banner</label>
                         <input type="text" id="nama_banner" name="nama_banner" required
                                class="form-input flex w-full rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-primary focus:ring-primary h-11 px-4 text-sm placeholder:text-slate-400"
-                               placeholder="e.g., Summer Sale 2024">
+                               placeholder="contoh: Diskon Summer 2024">
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-slate-900 text-sm font-medium leading-normal mb-2">Judul</label>
                         <input type="text" id="judul" name="judul" required
                                class="form-input flex w-full rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-primary focus:ring-primary h-11 px-4 text-sm placeholder:text-slate-400"
-                               placeholder="e.g., 50% Off Everything">
+                               placeholder="contoh: Diskon 50% Semua Produk">
                     </div>
 
                     <div class="mb-4">
                         <label class="block text-slate-900 text-sm font-medium leading-normal mb-2">Deskripsi</label>
-                        <textarea id="deskripsi" name="deskripsi" rows="3"
-                                  class="form-textarea flex w-full rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-primary focus:ring-primary min-h-[80px] p-4 text-sm resize-y placeholder:text-slate-400"
-                                  placeholder="Enter banner description details..."></textarea>
+                        <div class="relative">
+                            <textarea id="deskripsi" name="deskripsi" rows="3"
+                                      class="form-textarea flex w-full rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-primary focus:ring-primary min-h-[80px] p-4 text-sm resize-y placeholder:text-slate-400"
+                                      placeholder="Masukkan detail deskripsi banner..."
+                                      oninput="updateWordCount()"></textarea>
+                            <div class="absolute bottom-2 right-2 text-xs text-slate-500">
+                                <span id="wordCount">0</span>/60 huruf
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-slate-900 text-sm font-medium leading-normal mb-2">Url Gambar</label>
+                        <label class="block text-slate-900 text-sm font-medium leading-normal mb-2">URL Gambar</label>
                         <div class="relative flex w-full items-center">
                             <input type="text" id="url_gambar" name="url_gambar"
                                    class="form-input flex w-full rounded-lg border border-slate-200 bg-white text-slate-900 focus:border-primary focus:ring-primary h-11 pl-4 pr-12 text-sm placeholder:text-slate-400"
-                                   placeholder="https://example.com/image.jpg">
+                                   placeholder="Tempel URL gambar di sini"
+                                   onkeydown="return false;"
+                                   onpaste="handlePaste(event); return false;">
                             <div class="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-slate-400 pointer-events-none">
                                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                 </svg>
                             </div>
                         </div>
+                        <p class="text-xs text-slate-500 mt-1">Klik kanan dan tempel atau gunakan Ctrl+V untuk memasukkan URL</p>
                     </div>
 
                     <div class="flex items-center justify-between py-2 border-t border-slate-100 mt-4">
                         <div class="flex flex-col">
                             <p class="text-slate-900 text-sm font-medium">Status Aktif</p>
-                            <p class="text-slate-500 text-xs">Enable or disable this banner on the storefront</p>
+                            <p class="text-slate-500 text-xs">Aktifkan atau nonaktifkan banner ini di halaman utama</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="aktif" name="aktif" value="1" class="sr-only peer">
@@ -268,11 +277,11 @@
                     <div class="flex justify-end space-x-3 mt-6 pt-4 border-t border-slate-100">
                         <button type="button" onclick="closeModal()"
                                 class="flex items-center justify-center h-10 px-6 rounded-lg border border-slate-200 bg-white text-slate-700 font-medium hover:bg-slate-50 transition-colors">
-                            Cancel
+                            Batal
                         </button>
                         <button type="submit" id="submitBtn"
                                 class="flex items-center justify-center h-10 px-6 rounded-lg bg-primary text-white font-medium hover:bg-primary/90 transition-colors shadow-sm">
-                            Save
+                            Simpan
                         </button>
                     </div>
                 </form>
@@ -429,6 +438,9 @@
         document.getElementById('deskripsi').value = banner.deskripsi;
         document.getElementById('url_gambar').value = banner.url_gambar;
         document.getElementById('aktif').checked = banner.aktif == 1;
+        
+        // Update character count after setting description
+        updateWordCount();
 
         document.getElementById('bannerModal').classList.remove('hidden');
     }
@@ -602,6 +614,34 @@
         const modal = document.getElementById('imageModal');
         modal.classList.add('hidden');
         document.body.style.overflow = 'auto';
+    }
+
+    // Update character count for description
+    function updateWordCount() {
+        const textarea = document.getElementById('deskripsi');
+        const charCount = document.getElementById('wordCount');
+        const text = textarea.value;
+        const chars = text.length;
+        
+        charCount.textContent = chars;
+        
+        // Cegah pengetikan jika melebihi 60 huruf
+        if (chars > 60) {
+            textarea.value = text.substring(0, 60);
+            charCount.textContent = 60;
+        }
+    }
+
+    // Handle paste event for URL input
+    function handlePaste(event) {
+        event.preventDefault();
+        const pasteData = (event.clipboardData || window.clipboardData).getData('text');
+        const urlInput = document.getElementById('url_gambar');
+        
+        // Check if pasted content looks like a URL
+        if (pasteData && (pasteData.startsWith('http://') || pasteData.startsWith('https://') || pasteData.startsWith('/'))) {
+            urlInput.value = pasteData;
+        }
     }
 
     // Load data on page load
