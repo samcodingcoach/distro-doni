@@ -17,8 +17,9 @@
             },
         }
     </script>
-    <link rel="stylesheet" href="assets/css/admin.css">
-    <script src="assets/js/admin.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="js/admin.js"></script>
     <style>
         .tab-content {
             display: none;
@@ -40,9 +41,7 @@
                 <div class="flex items-center space-x-4">
                     <!-- Menu Toggle Button -->
                     <button id="menuToggle" onclick="toggleMenu()" class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
+                        <i class="fas fa-bars h-6 w-6 flex items-center justify-center"></i>
                     </button>
                     <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Manajemen Banner</h1>
                 </div>
@@ -81,6 +80,11 @@
                         </a>
                     </li>
                     <li>
+                        <a href="distro.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Distro
+                        </a>
+                    </li>
+                    <li>
                         <button onclick="logout()" class="block lg:hidden px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 font-medium w-full text-left">
                             Logout
                         </button>
@@ -99,9 +103,7 @@
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-900">Menu</h2>
                 <button onclick="toggleMenu()" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <i class="fas fa-times h-6 w-6 flex items-center justify-center"></i>
                 </button>
             </div>
         </div>
@@ -132,6 +134,11 @@
                         Banner
                     </a>
                 </li>
+                <li>
+                    <a href="distro.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Distro
+                    </a>
+                </li>
                 <li class="border-t pt-2 mt-4">
                     <div class="px-3 py-2 text-sm text-gray-600">
                         User: <span id="mobileAdminName" class="font-medium"></span>
@@ -153,9 +160,7 @@
                            onkeyup="searchBanner()"
                            class="w-full px-4 py-2 pr-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
+                        <i class="fas fa-search h-5 w-5 text-gray-400 flex items-center justify-center"></i>
                     </div>
                 </div>
             </div>
@@ -210,9 +215,7 @@
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
                 <div>
                     <h1 id="modalTitle" class="text-xl font-bold text-gray-900 flex items-center gap-2">
-                        <svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                        </svg>
+                        <i class="fas fa-plus h-6 w-6 text-primary flex items-center justify-center"></i>
                         Tambah Banner
                     </h1>
                     <div class="text-sm text-gray-500 mt-1">
@@ -220,9 +223,7 @@
                     </div>
                 </div>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <i class="fas fa-times h-6 w-6 flex items-center justify-center"></i>
                 </button>
             </div>
 
@@ -239,15 +240,11 @@
             <div class="px-6 border-b border-gray-200 bg-white sticky top-0 z-10">
                 <div class="flex space-x-8">
                     <button class="tab-btn active py-4 px-1 border-b-2 border-transparent font-medium text-sm hover:text-gray-700 transition-colors focus:outline-none flex items-center gap-2" id="tab-basic" onclick="switchTab('basic')">
-                        <svg class="h-5 w-5 text-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                        <i class="fas fa-info-circle h-5 w-5 text-lg flex items-center justify-center"></i>
                         Informasi Dasar
                     </button>
                     <button class="tab-btn py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 transition-colors focus:outline-none flex items-center gap-2" id="tab-media" onclick="switchTab('media')">
-                        <svg class="h-5 w-5 text-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
+                        <i class="fas fa-image h-5 w-5 text-lg flex items-center justify-center"></i>
                         Gambar dan Lainnya
                     </button>
                 </div>
@@ -291,9 +288,7 @@
                                                placeholder="Tempel URL gambar di sini"
                                                oninput="previewBannerImage(this.value)">
                                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                                            </svg>
+                                            <i class="fas fa-link h-5 w-5 text-gray-400 flex items-center justify-center"></i>
                                         </div>
                                     </div>
                                     <p class="text-xs text-gray-500 mt-1">Masukkan URL gambar banner</p>
@@ -301,9 +296,7 @@
                                 <div>
                                     <div id="bannerImagePreview" class="border-2 border-dashed border-gray-300 rounded-lg p-3 h-24 flex items-center justify-center bg-gray-50">
                                         <div class="text-center">
-                                            <svg class="mx-auto h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                            </svg>
+                                            <i class="fas fa-image mx-auto h-10 w-10 text-gray-400 flex items-center justify-center"></i>
                                             <p class="mt-1 text-sm text-gray-500">Preview gambar</p>
                                         </div>
                                     </div>
@@ -331,9 +324,7 @@
                         Batal
                     </button>
                     <button type="submit" id="submitBtn" class="px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-medium shadow-lg shadow-blue-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary flex items-center gap-2">
-                        <svg class="h-5 w-5 text-sm" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
+                        <i class="fas fa-check h-5 w-5 text-sm flex items-center justify-center"></i>
                         Simpan Banner
                     </button>
                 </div>
@@ -347,9 +338,7 @@
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium text-white">Preview Gambar</h3>
                 <button onclick="closeImageModal()" class="text-white hover:text-gray-300">
-                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <i class="fas fa-times h-8 w-8 flex items-center justify-center"></i>
                 </button>
             </div>
             <div class="flex justify-center">
@@ -364,9 +353,7 @@
             <div class="bg-red-50 px-6 py-4 border-b border-red-200">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <svg class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
+                        <i class="fas fa-exclamation-triangle h-6 w-6 text-red-600 flex items-center justify-center"></i>
                     </div>
                     <div class="ml-3">
                         <h3 class="text-lg font-medium text-red-800">Konfirmasi Hapus Banner</h3>
@@ -398,9 +385,7 @@
                     Batal
                 </button>
                 <button type="button" id="confirmDeleteBannerBtn" onclick="confirmDeleteBanner()" disabled class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                    <svg class="h-4 w-4 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    <i class="fas fa-trash h-4 w-4 inline mr-1 flex items-center justify-center"></i>
                     Hapus Banner
                 </button>
             </div>
@@ -408,6 +393,7 @@
     </div>
 
     <script>
+    // Check authentication and get current data
     let currentToken = localStorage.getItem('admin_token');
     let currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
     let allBannerData = []; // Store all data for search
@@ -423,7 +409,10 @@
         document.getElementById('mobileAdminName').textContent = currentAdmin.username;
     }
 
-    // Toggle mobile menu
+    /**
+     * Toggle mobile menu
+     * Open or close mobile navigation menu
+     */
     function toggleMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
         const overlay = document.getElementById('mobileMenuOverlay');
@@ -441,15 +430,26 @@
         }
     }
 
-    // Load banner data
+    /**
+     * Load banner data from API
+     */
     async function loadBanner() {
         try {
+            showLoading('bannerTableBody', 'Memuat data banner...');
+
             const response = await fetch('../api/banner/list.php');
-            const data = await response.json();
+            
+            let data;
+            try {
+                const responseText = await response.text();
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                throw new Error('Server returned invalid JSON format: ' + parseError.message);
+            }
 
             const tbody = document.getElementById('bannerTableBody');
 
-            if (data.status === 'success' && data.data.length > 0) {
+            if (data.status === 'success' && data.data && data.data.length > 0) {
                 // Store all data for search
                 allBannerData = data.data;
 
@@ -463,10 +463,12 @@
                 allBannerData = [];
                 // Update data count to 0
                 document.getElementById('dataCount').textContent = '0';
-                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">Tidak ada data banner</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data banner</td></tr>';
             }
         } catch (error) {
+            console.error('Error loading banner:', error);
             showMessage('error', 'Gagal memuat data: ' + error.message);
+            document.getElementById('bannerTableBody').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Gagal memuat data. Silakan refresh halaman.</td></tr>';
         }
     }
 
@@ -661,11 +663,23 @@
         }
     });
 
+    /**
+     * Show loading state in table
+     */
+    function showLoading(tableId, message = 'Loading...') {
+        const tbody = document.getElementById(tableId);
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">${message}</td></tr>`;
+        }
+    }
+
     // Logout
     function logout() {
-        localStorage.removeItem('admin_token');
-        localStorage.removeItem('admin_data');
-        window.location.href = 'login.html';
+        if (confirm('Apakah Anda yakin ingin keluar?')) {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_data');
+            window.location.href = 'login.html';
+        }
     }
 
     // Show image modal

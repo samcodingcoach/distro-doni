@@ -839,10 +839,12 @@ async function submitProdukForm(e) {
 }
 
 /**
- * Logout
+ * Logout function
  */
 function logout() {
-    localStorage.removeItem('admin_token');
-    localStorage.removeItem('admin_data');
-    window.location.href = 'login.html';
+    if (confirm('Apakah Anda yakin ingin keluar?')) {
+        localStorage.removeItem('admin_token');
+        localStorage.removeItem('admin_data');
+        window.location.href = 'login.html';
+    }
 }

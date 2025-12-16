@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kategori - Admin Distro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="assets/css/admin.css">
-    <script src="assets/js/admin.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="js/admin.js"></script>
 </head>
 <body class="bg-gray-50">
     <!-- Header with Navigation -->
@@ -16,9 +17,7 @@
                 <div class="flex items-center space-x-4">
                     <!-- Menu Toggle Button -->
                     <button id="menuToggle" onclick="toggleMenu()" class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
+                        <i class="fas fa-bars h-6 w-6 flex items-center justify-center"></i>
                     </button>
                     <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Manajemen Kategori</h1>
                 </div>
@@ -52,6 +51,16 @@
                         </a>
                     </li>
                     <li>
+                        <a href="banner.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Banner
+                        </a>
+                    </li>
+                    <li>
+                        <a href="distro.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Distro
+                        </a>
+                    </li>
+                    <li>
                         <button onclick="logout()" class="block lg:hidden px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 font-medium w-full text-left">
                             Logout
                         </button>
@@ -70,9 +79,7 @@
             <div class="flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-gray-900">Menu</h2>
                 <button onclick="toggleMenu()" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <i class="fas fa-times h-6 w-6 flex items-center justify-center"></i>
                 </button>
             </div>
         </div>
@@ -98,6 +105,16 @@
                         Produk
                     </a>
                 </li>
+                <li>
+                    <a href="banner.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Banner
+                    </a>
+                </li>
+                <li>
+                    <a href="distro.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Distro
+                    </a>
+                </li>
                 <li class="border-t pt-2 mt-4">
                     <div class="px-3 py-2 text-sm text-gray-600">
                         User: <span id="mobileAdminName" class="font-medium"></span>
@@ -119,9 +136,7 @@
                            onkeyup="searchKategori()"
                            class="w-full px-4 py-2 pr-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
+                        <i class="fas fa-search h-5 w-5 text-gray-400 flex items-center justify-center"></i>
                     </div>
                 </div>
             </div>
@@ -248,9 +263,7 @@
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-medium text-white">Preview Gambar</h3>
                 <button onclick="closeImageModal()" class="text-white hover:text-gray-300">
-                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <i class="fas fa-times h-8 w-8 flex items-center justify-center"></i>
                 </button>
             </div>
             <div class="flex justify-center">
@@ -260,6 +273,7 @@
     </div>
 
     <script>
+    // Check authentication and get current data
     let currentToken = localStorage.getItem('admin_token');
     let currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
     let allKategoriData = []; // Store all data for search
@@ -275,7 +289,10 @@
         document.getElementById('mobileAdminName').textContent = currentAdmin.username;
     }
 
-    // Toggle mobile menu
+    /**
+     * Toggle mobile menu
+     * Open or close the mobile navigation menu
+     */
     function toggleMenu() {
         const mobileMenu = document.getElementById('mobileMenu');
         const overlay = document.getElementById('mobileMenuOverlay');
@@ -293,15 +310,26 @@
         }
     }
 
-    // Load kategori data
+    /**
+     * Load kategori data from API
+     */
     async function loadKategori() {
         try {
+            showLoading('kategoriTableBody', 'Memuat data kategori...');
+            
             const response = await fetch('../api/kategori/list.php');
-            const data = await response.json();
+            
+            let data;
+            try {
+                const responseText = await response.text();
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                throw new Error('Server returned invalid JSON format: ' + parseError.message);
+            }
             
             const tbody = document.getElementById('kategoriTableBody');
             
-            if (data.success && data.data.length > 0) {
+            if (data.success && data.data && data.data.length > 0) {
                 // Store all data for search
                 allKategoriData = data.data;
                 
@@ -318,7 +346,9 @@
                 tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada data kategori</td></tr>';
             }
         } catch (error) {
+            console.error('Error loading kategori:', error);
             showMessage('error', 'Gagal memuat data: ' + error.message);
+            document.getElementById('kategoriTableBody').innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Gagal memuat data. Silakan refresh halaman.</td></tr>';
         }
     }
 
@@ -502,19 +532,45 @@
         }
     });
 
-    // Submit form
+    /**
+     * Submit form - create or update kategori
+     */
     document.getElementById('kategoriForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
         const id_kategori = document.getElementById('id_kategori').value;
+        const nama_kategori = document.getElementById('nama_kategori').value.trim();
         const imageFile = document.getElementById('background_image').files[0];
         
+        // Validation
+        if (!nama_kategori) {
+            showModalMessage('error', 'Nama kategori harus diisi');
+            return;
+        }
+        
+        if (nama_kategori.length < 3) {
+            showModalMessage('error', 'Nama kategori minimal 3 karakter');
+            return;
+        }
+        
         const formData = new FormData();
-        formData.append('nama_kategori', document.getElementById('nama_kategori').value);
+        formData.append('nama_kategori', nama_kategori);
         formData.append('favorit', parseInt(document.getElementById('favorit').value));
         formData.append('aktif', parseInt(document.getElementById('aktif').value));
         
         if (imageFile) {
+            // Validate file again on submit
+            if (imageFile.size > 500 * 1024) {
+                showModalMessage('error', 'Ukuran gambar maksimal 500KB');
+                return;
+            }
+            
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(imageFile.type)) {
+                showModalMessage('error', 'Format file harus JPG atau PNG');
+                return;
+            }
+            
             formData.append('background_image', imageFile);
         }
         
@@ -523,18 +579,30 @@
         }
         
         const url = id_kategori ? '../api/kategori/update.php' : '../api/kategori/new.php';
-        const method = id_kategori ? 'POST' : 'POST';
+        const isUpdate = !!id_kategori;
+        
+        // Disable submit button during processing
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Menyimpan...';
         
         try {
             const response = await fetch(url, {
-                method: method,
+                method: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + currentToken
                 },
                 body: formData
             });
             
-            const data = await response.json();
+            let data;
+            try {
+                const responseText = await response.text();
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                throw new Error('Server returned invalid JSON format');
+            }
             
             if (data.success) {
                 showModalMessage('success', data.message);
@@ -546,18 +614,37 @@
                     showMessage('success', data.message);
                 }, 2000);
             } else {
-                showModalMessage('error', data.message);
+                showModalMessage('error', data.message || 'Terjadi kesalahan saat menyimpan data');
             }
         } catch (error) {
-            showMessage('error', 'Terjadi kesalahan: ' + error.message);
+            console.error('Submit error:', error);
+            showModalMessage('error', 'Terjadi kesalahan: ' + error.message);
+        } finally {
+            // Re-enable submit button
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
         }
     });
 
-    // Logout
+    /**
+     * Show loading state in table
+     */
+    function showLoading(tableId, message = 'Loading...') {
+        const tbody = document.getElementById(tableId);
+        if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">${message}</td></tr>`;
+        }
+    }
+
+    /**
+     * Logout function - using common function from admin.js
+     */
     function logout() {
-        localStorage.removeItem('admin_token');
-        localStorage.removeItem('admin_data');
-        window.location.href = 'login.html';
+        if (confirm('Apakah Anda yakin ingin keluar?')) {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_data');
+            window.location.href = 'login.html';
+        }
     }
 
     // Show image modal
