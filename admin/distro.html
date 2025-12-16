@@ -402,30 +402,77 @@
         // Save distro
         async function saveDistro() {
             try {
+                // Get the authentication token
+                const token = localStorage.getItem('admin_token');
 
-                
-                const formData = new FormData(document.getElementById('distroForm'));
-                const id = formData.get('id_distro');
-                
-                // Here you would typically send data to your backend API
-                // For now, we'll simulate the save operation
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-                
-                if (id) {
-                    showMessage('success', 'Data distro berhasil diperbarui!');
-                } else {
-                    showMessage('success', 'Data distro baru berhasil disimpan!');
+                // Check if token exists
+                if (!token) {
+                    showNotification('Sesi habis. Silakan login kembali.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    return;
                 }
-                
-                // Reload data after saving
-                setTimeout(() => {
-                    loadDistroData();
-                }, 2000);
-                
+
+                const formData = new FormData(document.getElementById('distroForm'));
+
+                // Convert FormData to a regular object
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    if(value.trim() !== '') { // Only include fields that have values
+                        data[key] = value.trim();
+                    }
+                }
+
+                // Prepare the API endpoint - we'll always use the update endpoint since there's likely only one distro record
+                const apiUrl = '../api/distro/update.php';
+
+                // Check if id_distro exists
+                if (!data.id_distro) {
+                    showNotification('ID Distro tidak ditemukan. Tidak dapat menyimpan perubahan.', 'error');
+                    return;
+                }
+
+                // Send the data to the API
+                const response = await fetch(apiUrl, {
+                    method: 'POST', // Using POST as it supports both POST and PUT
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Handle HTTP errors
+                if (!response.ok) {
+                    const errorResult = await response.json().catch(() => ({message: `HTTP error! Status: ${response.status}`}));
+                    throw new Error(errorResult.message || `HTTP error! Status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification(result.message || 'Data distro berhasil diperbarui!', 'success');
+
+                    // Update the current distro data with the updated values
+                    if (result.data) {
+                        currentDistro = result.data;
+                        populateForm(currentDistro); // Update form fields with new values
+                    }
+
+                    // Reload data after saving to refresh any other references
+                    setTimeout(() => {
+                        loadDistroData();
+                    }, 2000);
+                } else {
+                    showNotification(result.message || 'Terjadi kesalahan saat menyimpan data.', 'error');
+                }
+
             } catch (error) {
                 console.error('Error saving distro:', error);
-
-                showMessage('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba kembali.');
+                // Check if it's a custom error message or generic error
+                const errorMessage = error.message || 'Terjadi kesalahan saat menyimpan data. Silakan coba kembali.';
+                showNotification(errorMessage, 'error');
             }
         }
 
@@ -490,10 +537,24 @@
             // Get admin name from localStorage or session
             const adminName = localStorage.getItem('adminName') || 'Admin User';
             document.getElementById('adminName').textContent = adminName;
-            
+
             // Load distro data
             loadDistroData();
         });
+
+        // Debug function to test save functionality (optional)
+        function debugSaveDistro() {
+            console.log("Debug: Testing save function with current form data");
+            const formData = new FormData(document.getElementById('distroForm'));
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                if(value.trim() !== '') {
+                    data[key] = value.trim();
+                }
+            }
+            console.log("Data to be sent:", data);
+            saveDistro();
+        }
     </script>
 </body>
 </html>
