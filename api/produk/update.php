@@ -101,8 +101,7 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $terjual        = isset($_POST['terjual']) ? (int)$_POST['terjual'] : 0;
     
     // Debug log
-    error_log("Update Produk - POST data received: " . print_r($_POST, true));
-    error_log("Update Produk - Extracted id_produk: $id_produk");
+    error_log("Update Produk - id_produk extracted: $id_produk");
     
 } else {
     // Handle JSON input
@@ -238,7 +237,7 @@ if (!$stmt) {
 }
 
 // Bind parameters
-$types = 'issssddsiissssiiiii';
+$types = 'issssddsiissssiiiiii';
 $stmt->bind_param(
     $types,
     $id_kategori,
@@ -281,4 +280,3 @@ if ($stmt->execute()) {
 $stmt->close();
 $conn->close();
 echo json_encode($response);
-?>

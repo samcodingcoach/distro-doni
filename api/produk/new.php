@@ -27,7 +27,7 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $uploadDir = __DIR__ . '/../../public/images/';
     
     // Debug: Check if files are being sent
-    error_log("FILES array: " . print_r($_FILES, true));
+    error_log("FILES array keys: " . implode(', ', array_keys($_FILES)));
     
     foreach ($imageFields as $field) {
         if (isset($_FILES[$field]) && is_array($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
@@ -57,7 +57,11 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
             
             // Debug log
             error_log("Attempting to upload $field to: $uploadPath");
-            error_log("Upload dir permissions: " . substr(sprintf('%o', fileperms($uploadDir)), -4));
+            if (is_dir($uploadDir)) {
+                error_log("Upload dir permissions: " . substr(sprintf('%o', fileperms($uploadDir)), -4));
+            } else {
+                error_log("Upload dir does not exist: $uploadDir");
+            }
             error_log("File temp location: " . $file['tmp_name']);
             error_log("File exists in temp: " . (file_exists($file['tmp_name']) ? 'Yes' : 'No'));
             
@@ -67,37 +71,19 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
                 error_log("File exists after upload: " . (file_exists($uploadPath) ? 'Yes' : 'No'));
             } else {
                 error_log("Failed to upload $field");
-                error_log("Upload error: " . print_r(error_get_last(), true));
+                $lastError = error_get_last();
+                if ($lastError) {
+                    error_log("Upload error: " . $lastError['message']);
+                } else {
+                    error_log("Upload error: Unknown error during move_uploaded_file");
+                }
                 echo json_encode(['success' => false, 'message' => "Gagal upload gambar $field. Periksa permission folder."]);
                 exit;
             }
         } elseif (isset($_FILES[$field])) {
             // Log jika ada error upload
             $errorCode = $_FILES[$field]['error'];
-            $errorMsg = '';
-            switch($errorCode) {
-                case UPLOAD_ERR_INI_SIZE:
-                    $errorMsg = "File terlalu besar (melebihi upload_max_filesize)";
-                    break;
-                case UPLOAD_ERR_FORM_SIZE:
-                    $errorMsg = "File terlalu besar (melebihi MAX_FILE_SIZE)";
-                    break;
-                case UPLOAD_ERR_PARTIAL:
-                    $errorMsg = "File hanya terupload sebagian";
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    $errorMsg = "Tidak ada file yang diupload";
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $errorMsg = "Folder tmp tidak ada";
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    $errorMsg = "Tidak bisa menulis file ke disk";
-                    break;
-                default:
-                    $errorMsg = "Error upload kode: $errorCode";
-            }
-            error_log("Upload error for $field: $errorMsg");
+            error_log("Upload error for $field: code $errorCode");
         }
     }
     
@@ -120,8 +106,8 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $terjual       = isset($_POST['terjual']) ? (int)$_POST['terjual'] : 0;
     
     // Debug log for form data
-    error_log("POST data received: " . print_r($_POST, true));
-    error_log("FILES data received: " . print_r($_FILES, true));
+    error_log("POST keys received: " . implode(', ', array_keys($_POST)));
+    error_log("FILES keys received: " . implode(', ', array_keys($_FILES)));
     error_log("Extracted images - gambar1: $gambar1, gambar2: $gambar2, gambar3: $gambar3");
 } else {
     // Handle JSON input (for backwards compatibility)
@@ -213,7 +199,7 @@ if (!$stmt) {
 
 // tipe parameter sesuai urutan:
 // i = int, s = string, d = double
-$types = 'issssddsiisssiiiii'; // 19 karakter, sesuai 19 kolom
+$types = 'issssddsiissssiiiii'; // 20 karakter, sesuai 20 kolom
 $stmt->bind_param(
     $types,
     $id_kategori,   // i
@@ -246,4 +232,3 @@ if ($stmt->execute()) {
 
 $stmt->close();
 $conn->close();
-?>

@@ -55,7 +55,26 @@ function toggleMenu() {
 async function loadProduk() {
     try {
         const response = await fetch('../api/produk/list.php');
-        const data = await response.json();
+        
+        let data;
+        try {
+            const responseText = await response.text();
+            console.log('Raw response from list.php:', responseText); // Debug log
+            
+            // Try to parse as JSON
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON Parse Error in loadProduk:', parseError);
+                console.error('Response text:', responseText);
+                throw new Error('Server returned invalid JSON format when loading products');
+            }
+        } catch (error) {
+            if (error.message.includes('JSON')) {
+                throw error;
+            }
+            throw new Error('Failed to read response: ' + error.message);
+        }
         
         if (data.success && data.data.length > 0) {
             allProdukData = data.data;
@@ -80,7 +99,26 @@ async function loadProduk() {
 async function loadKategori() {
     try {
         const response = await fetch('../api/kategori/list.php');
-        const data = await response.json();
+        
+        let data;
+        try {
+            const responseText = await response.text();
+            console.log('Raw response from kategori/list.php:', responseText); // Debug log
+            
+            // Try to parse as JSON
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON Parse Error in loadKategori:', parseError);
+                console.error('Response text:', responseText);
+                throw new Error('Server returned invalid JSON format when loading categories');
+            }
+        } catch (error) {
+            if (error.message.includes('JSON')) {
+                throw error;
+            }
+            throw new Error('Failed to read response: ' + error.message);
+        }
         
         if (data.success && data.data.length > 0) {
             const select = document.getElementById('id_kategori');
@@ -536,7 +574,25 @@ async function confirmDelete() {
             })
         });
         
-        const result = await response.json();
+        let result;
+        try {
+            const responseText = await response.text();
+            console.log('Raw response from delete.php:', responseText); // Debug log
+            
+            // Try to parse as JSON
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON Parse Error in confirmDelete:', parseError);
+                console.error('Response text:', responseText);
+                throw new Error('Server returned invalid JSON format when deleting product');
+            }
+        } catch (error) {
+            if (error.message.includes('JSON')) {
+                throw error;
+            }
+            throw new Error('Failed to read response: ' + error.message);
+        }
         
         if (result.success) {
             closeDeleteModal();
@@ -741,7 +797,25 @@ async function submitProdukForm(e) {
             body: formData
         });
         
-        const result = await response.json();
+        let result;
+        try {
+            const responseText = await response.text();
+            console.log('Raw response:', responseText); // Debug log
+            
+            // Try to parse as JSON
+            try {
+                result = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Response text:', responseText);
+                throw new Error('Server returned invalid JSON format. Response: ' + responseText.substring(0, 200));
+            }
+        } catch (error) {
+            if (error.message.includes('JSON')) {
+                throw error;
+            }
+            throw new Error('Failed to read response: ' + error.message);
+        }
         
         if (result.success) {
             const message = isUpdate ? 'Produk berhasil diupdate' : result.message;
