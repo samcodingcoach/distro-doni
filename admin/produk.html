@@ -287,6 +287,10 @@
                         <span class="material-icons-round text-lg">perm_media</span>
                         Media & Lain-lain
                     </button>
+                    <button class="tab-btn py-4 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors focus:outline-none flex items-center gap-2" id="tab-ecommerce" onclick="switchTab('ecommerce')">
+                        <span class="material-icons-round text-lg">shopping_cart</span>
+                        E-Commerce
+                    </button>
                 </div>
             </div>
 
@@ -456,6 +460,34 @@
                         <div class="col-span-12 md:col-span-6">
                             <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="terjual">Terjual (Manual)</label>
                             <input class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm h-11" id="terjual" name="terjual" type="number" value="0" min="0" max="1000">
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: E-Commerce -->
+                    <div class="tab-content grid-cols-12 gap-6" id="content-ecommerce">
+                        <div class="col-span-12">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">Link Platform E-Commerce</h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Tambahkan link produk di berbagai platform e-commerce untuk memperluas jangkauan penjualan</p>
+                        </div>
+                        <div class="col-span-12">
+                            <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="shopee_link">Link Shopee</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">https://</span>
+                                </div>
+                                <input class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm pl-16 h-11" id="shopee_link" name="shopee_link" placeholder="shopee.co.id/..." type="url">
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Contoh: https://shopee.co.id/produk-anda</p>
+                        </div>
+                        <div class="col-span-12">
+                            <label class="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200" for="tiktok_link">Link TikTok</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">https://</span>
+                                </div>
+                                <input class="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-primary focus:ring-primary shadow-sm pl-16 h-11" id="tiktok_link" name="tiktok_link" placeholder="tiktok.com/..." type="url">
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Contoh: https://tiktok.com/@username/product/12345</p>
                         </div>
                     </div>
                 </div>
