@@ -35,6 +35,9 @@
             border-bottom-color: #137fec;
             border-bottom-width: 2px;
         }
+        .absolute.right-3.top-1\\/2.transform.-translate-y-1\\/2.text-blue-600 {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -215,27 +218,45 @@
                 <div class="tab-content active grid-cols-12 gap-4" id="content-basic">
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="nama_distro">Nama Distro</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="nama_distro" name="nama_distro" placeholder="Masukkan nama distro" type="text" required>
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="nama_distro" name="nama_distro" placeholder="Masukkan nama distro" type="text" required>
+                            <i class="fas fa-store absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="slogan">Slogan</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="slogan" name="slogan" placeholder="Masukkan slogan distro" type="text">
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="slogan" name="slogan" placeholder="Masukkan slogan distro" type="text">
+                            <i class="fas fa-quote-left absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="alamat">Alamat</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="alamat" name="alamat" placeholder="Masukkan alamat lengkap" type="text" required>
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="alamat" name="alamat" placeholder="Masukkan alamat lengkap" type="text" required>
+                            <i class="fas fa-map-marker-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                     <div class="col-span-12 md:col-span-6">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="kota">Kota</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="kota" name="kota" placeholder="Masukkan kota" type="text" required>
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="kota" name="kota" placeholder="Masukkan kota" type="text" required>
+                            <i class="fas fa-city absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                     <div class="col-span-12 md:col-span-6">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="provinsi">Provinsi</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="provinsi" name="provinsi" placeholder="Masukkan provinsi" type="text" required>
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="provinsi" name="provinsi" placeholder="Masukkan provinsi" type="text" required>
+                            <i class="fas fa-map absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="gps">GPS (Latitude, Longitude)</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="gps" name="gps" placeholder="Contoh: -6.2088, 106.8456" type="text">
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="gps" name="gps" placeholder="Contoh: -6.2088, 106.8456" type="text">
+                            <i class="fas fa-globe absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
                     </div>
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700">Lokasi Google Maps</label>
@@ -257,11 +278,19 @@
                 <div class="tab-content grid-cols-12 gap-4 hidden" id="content-contact">
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="no_telepon">Nomor Telepon</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="no_telepon" name="no_telepon" placeholder="Contoh: +62 21 1234 5678" type="text">
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="no_telepon" name="no_telepon" placeholder="Contoh: +62 21 1234 5678" type="text">
+                            <i id="phone-icon" class="fas fa-phone absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <a id="phone-link" href="#" class="fas fa-phone absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 hidden"></a>
+                        </div>
                     </div>
                     <div class="col-span-12">
                         <label class="block text-sm font-semibold mb-2 text-gray-700" for="email">Email</label>
-                        <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="email" name="email" placeholder="Contoh: info@distro.com" type="email">
+                        <div class="relative">
+                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="email" name="email" placeholder="Contoh: info@distro.com" type="email">
+                            <i id="email-icon" class="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <a id="email-link" href="#" class="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 hidden"></a>
+                        </div>
                     </div>
                 </div>
 
@@ -271,11 +300,19 @@
                     <div class="col-span-12 md:col-span-6 space-y-4">
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-gray-700" for="fb">Facebook</label>
-                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="fb" name="fb" placeholder="https://facebook.com/namadistro" type="text">
+                            <div class="relative">
+                                <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="fb" name="fb" placeholder="namadistro" type="url">
+                                <i id="fb-icon" class="fab fa-facebook-f absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <a id="fb-link" href="#" target="_blank" class="fab fa-facebook-f absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 hidden"></a>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-gray-700" for="twitter">Twitter</label>
-                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="twitter" name="twitter" placeholder="https://twitter.com/namadistro" type="text">
+                            <div class="relative">
+                                <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="twitter" name="twitter" placeholder="@namadistro" type="url">
+                                <i id="twitter-icon" class="fab fa-twitter absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <a id="twitter-link" href="#" target="_blank" class="fab fa-twitter absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 hidden"></a>
+                            </div>
                         </div>
                     </div>
                     
@@ -283,11 +320,19 @@
                     <div class="col-span-12 md:col-span-6 space-y-4">
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-gray-700" for="ig">Instagram</label>
-                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="ig" name="ig" placeholder="https://instagram.com/namadistro" type="text">
+                            <div class="relative">
+                                <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="ig" name="ig" placeholder="@namadistro" type="url">
+                                <i id="ig-icon" class="fab fa-instagram absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <a id="ig-link" href="#" target="_blank" class="fab fa-instagram absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 hidden"></a>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold mb-2 text-gray-700" for="youtube">YouTube</label>
-                            <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10" id="youtube" name="youtube" placeholder="https://youtube.com/@namadistro" type="text">
+                            <div class="relative">
+                                <input class="w-full rounded-md border-gray-300 bg-white text-gray-900 focus:border-primary focus:ring-primary shadow-sm h-10 pr-10" id="youtube" name="youtube" placeholder="@namadistro" type="url">
+                                <i id="youtube-icon" class="fab fa-youtube absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <a id="youtube-link" href="#" target="_blank" class="fab fa-youtube absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-600 hover:text-blue-800 hidden"></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -350,6 +395,9 @@
             document.getElementById('ig').value = distro.ig || '';
             document.getElementById('youtube').value = distro.youtube || '';
             document.getElementById('twitter').value = distro.twitter || '';
+            
+            // Update social media links
+            updateSocialLinks();
             
             // Update maps iframe if GPS exists
             updateMaps(distro.gps);
@@ -520,9 +568,116 @@
             }, 3000);
         }
 
+        // Update social media links
+        function updateSocialLinks() {
+            // Update social media links
+            const socialPlatforms = [
+                { id: 'fb', prefix: 'https://www.facebook.com/{fb}' },
+                { id: 'twitter', prefix: 'https://twitter.com/{twitter}' },
+                { id: 'ig', prefix: 'https://www.instagram.com/{ig}/' },
+                { id: 'youtube', prefix: 'https://www.youtube.com/@{youtube}' }
+            ];
+            
+            socialPlatforms.forEach(platform => {
+                const input = document.getElementById(platform.id);
+                const icon = document.getElementById(platform.id + '-icon');
+                const link = document.getElementById(platform.id + '-link');
+                
+                if (input.value.trim()) {
+                    let url = input.value.trim();
+                    
+                    // Remove any existing URL prefixes
+                    url = url.replace(/^https?:\/\/(www\.)?(facebook|fb|twitter|x|instagram|ig|youtube|youtu)\.com\//i, '');
+                    url = url.replace(/^@/, '');
+                    
+                    // Add the correct prefix with placeholder replacement
+                    url = platform.prefix.replace('{' + platform.id + '}', url);
+                    
+                    link.href = url;
+                    link.target = '_blank';
+                    icon.classList.add('hidden');
+                    link.classList.remove('hidden');
+                } else {
+                    icon.classList.remove('hidden');
+                    link.classList.add('hidden');
+                }
+            });
+            
+            // Update phone link
+            const phoneInput = document.getElementById('no_telepon');
+            const phoneIcon = document.getElementById('phone-icon');
+            const phoneLink = document.getElementById('phone-link');
+            
+            if (phoneInput.value.trim()) {
+                let phone = phoneInput.value.trim();
+                // Remove spaces and special characters for tel: protocol
+                phone = phone.replace(/[\s\-\(\)]/g, '');
+                if (!phone.startsWith('tel:') && !phone.startsWith('http')) {
+                    phone = 'tel:' + phone;
+                }
+                phoneLink.href = phone;
+                phoneIcon.classList.add('hidden');
+                phoneLink.classList.remove('hidden');
+            } else {
+                phoneIcon.classList.remove('hidden');
+                phoneLink.classList.add('hidden');
+            }
+            
+            // Update email link
+            const emailInput = document.getElementById('email');
+            const emailIcon = document.getElementById('email-icon');
+            const emailLink = document.getElementById('email-link');
+            
+            if (emailInput.value.trim()) {
+                let email = emailInput.value.trim();
+                if (!email.startsWith('mailto:') && !email.startsWith('http')) {
+                    email = 'mailto:' + email;
+                }
+                emailLink.href = email;
+                emailIcon.classList.add('hidden');
+                emailLink.classList.remove('hidden');
+            } else {
+                emailIcon.classList.remove('hidden');
+                emailLink.classList.add('hidden');
+            }
+        }
+
         // Update maps when GPS changes
         document.getElementById('gps').addEventListener('input', function(e) {
             updateMaps(e.target.value);
+        });
+
+        // Add event listeners for social media inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get admin name from localStorage or session
+            const adminName = localStorage.getItem('adminName') || 'Admin User';
+            document.getElementById('adminName').textContent = adminName;
+
+            // Load distro data
+            loadDistroData();
+            
+            // Add event listeners to social media inputs
+            const socialInputs = ['fb', 'twitter', 'ig', 'youtube'];
+            socialInputs.forEach(platform => {
+                const input = document.getElementById(platform);
+                if (input) {
+                    input.addEventListener('input', function() {
+                        updateSocialLinks();
+                    });
+                }
+            });
+            
+            // Add event listeners to email and phone inputs
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('no_telepon');
+            
+            if (emailInput) {
+                emailInput.addEventListener('input', updateSocialLinks);
+            }
+            
+            if (phoneInput) {
+                phoneInput.addEventListener('input', updateSocialLinks);
+            }
         });
 
         // Logout function
@@ -531,16 +686,6 @@
                 window.location.href = 'login.html';
             }
         }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get admin name from localStorage or session
-            const adminName = localStorage.getItem('adminName') || 'Admin User';
-            document.getElementById('adminName').textContent = adminName;
-
-            // Load distro data
-            loadDistroData();
-        });
 
         // Debug function to test save functionality (optional)
         function debugSaveDistro() {
