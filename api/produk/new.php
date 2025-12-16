@@ -112,6 +112,8 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $ukuran        = isset($_POST['ukuran']) ? trim($_POST['ukuran']) : '';
     $in_stok       = !empty($_POST['in_stok']) ? 1 : 0;
     $jumlah_stok   = isset($_POST['jumlah_stok']) ? (int)$_POST['jumlah_stok'] : 0;
+    $shopee_link   = isset($_POST['shopee_link']) ? trim($_POST['shopee_link']) : '';
+    $tiktok_link   = isset($_POST['tiktok_link']) ? trim($_POST['tiktok_link']) : '';
     $aktif         = !empty($_POST['aktif']) ? 1 : 0;
     $favorit       = !empty($_POST['favorit']) ? 1 : 0;
     $id_admin      = isset($_POST['id_admin']) ? (int)$_POST['id_admin'] : 0;
@@ -144,6 +146,8 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $gambar1       = isset($data['gambar1']) ? trim($data['gambar1']) : '';
     $gambar2       = isset($data['gambar2']) ? trim($data['gambar2']) : '';
     $gambar3       = isset($data['gambar3']) ? trim($data['gambar3']) : '';
+    $shopee_link   = isset($data['shopee_link']) ? trim($data['shopee_link']) : '';
+    $tiktok_link   = isset($data['tiktok_link']) ? trim($data['tiktok_link']) : '';
     $aktif         = !empty($data['aktif']) ? 1 : 0;
     $favorit       = !empty($data['favorit']) ? 1 : 0;
     $id_admin      = isset($data['id_admin']) ? (int)$data['id_admin'] : 0;
@@ -173,26 +177,28 @@ if ($result && $result->num_rows > 0) {
 }
 $check_stmt->close();
 
-// siapkan INSERT (17 kolom — sesuai struktur tabel Anda)
+// siapkan INSERT (19 kolom — sesuai struktur tabel Anda)
 $sql = "INSERT INTO produk (
-    id_kategori, 
-    nama_produk, 
-    merk, 
-    kode_produk, 
-    deskripsi, 
-    harga_aktif, 
-    harga_coret, 
-    ukuran, 
-    in_stok, 
-    jumlah_stok, 
-    gambar1, 
-    gambar2, 
-    gambar3, 
-    aktif, 
-    favorit, 
-    id_admin, 
+    id_kategori,
+    nama_produk,
+    merk,
+    kode_produk,
+    deskripsi,
+    harga_aktif,
+    harga_coret,
+    ukuran,
+    in_stok,
+    jumlah_stok,
+    gambar1,
+    gambar2,
+    gambar3,
+    shopee_link,
+    tiktok_link,
+    aktif,
+    favorit,
+    id_admin,
     terjual
-) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 error_log("SQL Query: " . $sql);
 error_log("Parameters: id_kategori=$id_kategori, nama_produk=$nama_produk, gambar1=$gambar1, gambar2=$gambar2, gambar3=$gambar3");
@@ -207,7 +213,7 @@ if (!$stmt) {
 
 // tipe parameter sesuai urutan:
 // i = int, s = string, d = double
-$types = 'issssddsiisssiiii'; // 17 karakter, sesuai 17 kolom
+$types = 'issssddsiisssiiiii'; // 19 karakter, sesuai 19 kolom
 $stmt->bind_param(
     $types,
     $id_kategori,   // i
@@ -223,6 +229,8 @@ $stmt->bind_param(
     $gambar1,       // s
     $gambar2,       // s
     $gambar3,       // s
+    $shopee_link,   // s
+    $tiktok_link,   // s
     $aktif,         // i
     $favorit,       // i
     $id_admin,      // i

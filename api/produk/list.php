@@ -10,36 +10,38 @@ $response = array();
 
 try {
     $query = "SELECT
-                p.id_produk, 
-                p.id_kategori, 
-                kategori.nama_kategori, 
-                p.nama_produk, 
-                p.merk, 
-                p.kode_produk, 
-                p.deskripsi, 
-                p.harga_aktif, 
-                p.harga_coret, 
-                p.ukuran, 
-                p.in_stok, 
-                p.jumlah_stok, 
-                p.gambar1, 
-                p.gambar2, 
-                p.gambar3, 
-                p.aktif, 
+                p.id_produk,
+                p.id_kategori,
+                kategori.nama_kategori,
+                p.nama_produk,
+                p.merk,
+                p.kode_produk,
+                p.deskripsi,
+                p.harga_aktif,
+                p.harga_coret,
+                p.ukuran,
+                p.in_stok,
+                p.jumlah_stok,
+                p.gambar1,
+                p.gambar2,
+                p.gambar3,
+                p.shopee_link,
+                p.tiktok_link,
+                p.aktif,
                 p.favorit,
-                p.terjual, 
-                p.update_at, 
-                p.id_admin, 
+                p.terjual,
+                p.update_at,
+                p.id_admin,
                 admin.username
               FROM
                 produk p
                 INNER JOIN
                 admin
-                ON 
+                ON
                     p.id_admin = admin.id_admin
                 INNER JOIN
                 kategori
-                ON 
+                ON
                     p.id_kategori = kategori.id_kategori
               ORDER BY p.favorit DESC, p.nama_produk ASC";
     

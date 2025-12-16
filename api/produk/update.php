@@ -93,6 +93,8 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $ukuran         = isset($_POST['ukuran']) ? trim($_POST['ukuran']) : '';
     $in_stok        = !empty($_POST['in_stok']) ? 1 : 0;
     $jumlah_stok    = isset($_POST['jumlah_stok']) ? (int)$_POST['jumlah_stok'] : 0;
+    $shopee_link    = isset($_POST['shopee_link']) ? trim($_POST['shopee_link']) : '';
+    $tiktok_link    = isset($_POST['tiktok_link']) ? trim($_POST['tiktok_link']) : '';
     $aktif          = !empty($_POST['aktif']) ? 1 : 0;
     $favorit        = !empty($_POST['favorit']) ? 1 : 0;
     $id_admin       = isset($_POST['id_admin']) ? (int)$_POST['id_admin'] : 0;
@@ -123,11 +125,13 @@ if (strpos($contentType, 'multipart/form-data') !== false) {
     $ukuran         = isset($data['ukuran']) ? trim($data['ukuran']) : '';
     $in_stok        = !empty($data['in_stok']) ? 1 : 0;
     $jumlah_stok    = isset($data['jumlah_stok']) ? (int)$data['jumlah_stok'] : 0;
+    $shopee_link    = isset($data['shopee_link']) ? trim($data['shopee_link']) : '';
+    $tiktok_link    = isset($data['tiktok_link']) ? trim($data['tiktok_link']) : '';
     $aktif          = !empty($data['aktif']) ? 1 : 0;
     $favorit        = !empty($data['favorit']) ? 1 : 0;
     $id_admin       = isset($data['id_admin']) ? (int)$data['id_admin'] : 0;
     $terjual        = isset($data['terjual']) ? (int)$data['terjual'] : 0;
-    
+
     $gambar1 = isset($data['gambar1']) ? trim($data['gambar1']) : null;
     $gambar2 = isset($data['gambar2']) ? trim($data['gambar2']) : null;
     $gambar3 = isset($data['gambar3']) ? trim($data['gambar3']) : null;
@@ -203,24 +207,26 @@ $gambar2_value = isset($uploadedImages['gambar2']) ? $uploadedImages['gambar2'] 
 $gambar3_value = isset($uploadedImages['gambar3']) ? $uploadedImages['gambar3'] : ($gambar3 !== null ? $gambar3 : $existingProduk['gambar3']);
 
 // Prepare UPDATE statement
-$stmt = $conn->prepare("UPDATE produk SET 
-    id_kategori = ?, 
-    nama_produk = ?, 
-    merk = ?, 
-    kode_produk = ?, 
-    deskripsi = ?, 
-    harga_aktif = ?, 
-    harga_coret = ?, 
-    ukuran = ?, 
-    in_stok = ?, 
-    jumlah_stok = ?, 
-    gambar1 = ?, 
-    gambar2 = ?, 
-    gambar3 = ?, 
-    aktif = ?, 
-    favorit = ?, 
-    id_admin = ?, 
-    terjual = ? 
+$stmt = $conn->prepare("UPDATE produk SET
+    id_kategori = ?,
+    nama_produk = ?,
+    merk = ?,
+    kode_produk = ?,
+    deskripsi = ?,
+    harga_aktif = ?,
+    harga_coret = ?,
+    ukuran = ?,
+    in_stok = ?,
+    jumlah_stok = ?,
+    gambar1 = ?,
+    gambar2 = ?,
+    gambar3 = ?,
+    shopee_link = ?,
+    tiktok_link = ?,
+    aktif = ?,
+    favorit = ?,
+    id_admin = ?,
+    terjual = ?
     WHERE id_produk = ?");
 
 if (!$stmt) {
@@ -232,7 +238,7 @@ if (!$stmt) {
 }
 
 // Bind parameters
-$types = 'issssddsiissssiiii';
+$types = 'issssddsiissssiiiii';
 $stmt->bind_param(
     $types,
     $id_kategori,
@@ -248,6 +254,8 @@ $stmt->bind_param(
     $gambar1_value,
     $gambar2_value,
     $gambar3_value,
+    $shopee_link,
+    $tiktok_link,
     $aktif,
     $favorit,
     $id_admin,
