@@ -31,9 +31,121 @@
             color: #137fec;
             border-bottom-color: #137fec;
         }
+        
+        /* Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+        
+        .loading-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .loading-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 12px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .progress-text {
+            font-size: 0.875rem;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border: 5px solid rgba(59, 130, 246, 0.2);
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner-icon {
+            position: absolute;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.7;
+                transform: scale(0.9);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-spinner">
+                <svg class="spinner-icon" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2v6m0 4v6m0 4v-6m0-10V2m0 6l-4.24 4.24M12 8l4.24 4.24M12 16l4.24-4.24M12 16l-4.24-4.24" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="loading-title">Memuat Data Banner</h2>
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">0%</p>
+        </div>
+    </div>
+
     <!-- Header with Navigation -->
     <header class="bg-white shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -398,6 +510,57 @@
     let currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
     let allBannerData = []; // Store all data for search
 
+    // Loading progress functions
+    function showLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        overlay.style.display = 'flex';
+        progressBar.style.width = '0%';
+        progressText.textContent = '0%';
+    }
+
+    function updateProgress(percent) {
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        progressBar.style.width = percent + '%';
+        progressText.textContent = percent + '%';
+    }
+
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        
+        // Ensure 100% before hiding
+        updateProgress(100);
+        
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 500);
+    }
+
+    // Simulate progress while loading
+    function simulateProgress(callback, duration = 2000) {
+        let progress = 0;
+        const increment = 100 / (duration / 50); // Update every 50ms
+        
+        const interval = setInterval(() => {
+            progress += increment;
+            if (progress >= 95) {
+                progress = 95; // Stop at 95%, let actual completion take it to 100%
+                clearInterval(interval);
+            }
+            updateProgress(Math.round(progress));
+        }, 50);
+        
+        return () => {
+            clearInterval(interval);
+            updateProgress(100);
+            callback();
+        };
+    }
+
     // Check auth
     if (!currentToken) {
         window.location.href = 'login.html';
@@ -434,9 +597,15 @@
      * Load banner data from API
      */
     async function loadBanner() {
+        // Show loading overlay
+        showLoading();
+        
+        // Start progress simulation
+        const completeProgress = simulateProgress(() => {
+            // This callback will be called when we want to complete the progress
+        }, 2000);
+        
         try {
-            showLoading('bannerTableBody', 'Memuat data banner...');
-
             const response = await fetch('../api/banner/list.php');
             
             let data;
@@ -465,8 +634,15 @@
                 document.getElementById('dataCount').textContent = '0';
                 tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada data banner</td></tr>';
             }
+            
+            // Complete progress and hide loading
+            completeProgress();
+            hideLoading();
         } catch (error) {
             console.error('Error loading banner:', error);
+            // Complete progress and hide loading even on error
+            completeProgress();
+            hideLoading();
             showMessage('error', 'Gagal memuat data: ' + error.message);
             document.getElementById('bannerTableBody').innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Gagal memuat data. Silakan refresh halaman.</td></tr>';
         }
@@ -613,6 +789,9 @@
     // Submit form
     document.getElementById('bannerForm').addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        // Show loading overlay
+        showLoading();
 
         const id_banner = document.getElementById('id_banner').value;
         const aktif = document.getElementById('aktif').checked ? 1 : 0;
@@ -647,6 +826,7 @@
             const data = await response.json();
 
             if (data.success) {
+                hideLoading();
                 showModalMessage('success', data.message);
                 // Close modal after 2 seconds and reload data
                 setTimeout(() => {
@@ -656,22 +836,16 @@
                     showMessage('success', data.message);
                 }, 2000);
             } else {
+                hideLoading();
                 showModalMessage('error', data.message);
             }
         } catch (error) {
+            hideLoading();
             showMessage('error', 'Terjadi kesalahan: ' + error.message);
         }
     });
 
-    /**
-     * Show loading state in table
-     */
-    function showLoading(tableId, message = 'Loading...') {
-        const tbody = document.getElementById(tableId);
-        if (tbody) {
-            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">${message}</td></tr>`;
-        }
-    }
+
 
     // Logout
     function logout() {
@@ -862,7 +1036,11 @@
     }
 
     // Load data on page load
-    loadBanner();
+    // Show loading immediately when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        showLoading();
+        loadBanner();
+    });
     </script>
 </body>
 </html>
