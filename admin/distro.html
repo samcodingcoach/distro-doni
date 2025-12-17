@@ -649,8 +649,9 @@
 
         // Add event listeners for social media inputs
         document.addEventListener('DOMContentLoaded', function() {
-            // Get admin name from localStorage or session
-            const adminName = localStorage.getItem('adminName') || 'Admin User';
+            // Get admin name from localStorage
+            const currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
+            const adminName = currentAdmin.username || 'Admin User';
             document.getElementById('adminName').textContent = adminName;
 
             // Load distro data
