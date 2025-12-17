@@ -11,6 +11,57 @@ let currentPage = 1;
 const itemsPerPage = 15;
 let filteredData = [];
 
+// Loading progress functions
+function showLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    overlay.style.display = 'flex';
+    progressBar.style.width = '0%';
+    progressText.textContent = '0%';
+}
+
+function updateProgress(percent) {
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    progressBar.style.width = percent + '%';
+    progressText.textContent = percent + '%';
+}
+
+function hideLoading() {
+    const overlay = document.getElementById('loadingOverlay');
+    
+    // Ensure 100% before hiding
+    updateProgress(100);
+    
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 500);
+}
+
+// Simulate progress while loading
+function simulateProgress(callback, duration = 2000) {
+    let progress = 0;
+    const increment = 100 / (duration / 50); // Update every 50ms
+    
+    const interval = setInterval(() => {
+        progress += increment;
+        if (progress >= 95) {
+            progress = 95; // Stop at 95%, let actual completion take it to 100%
+            clearInterval(interval);
+        }
+        updateProgress(Math.round(progress));
+    }, 50);
+    
+    return () => {
+        clearInterval(interval);
+        updateProgress(100);
+        callback();
+    };
+}
+
 // Check authentication
 if (!currentToken) {
     window.location.href = 'login.html';
@@ -23,6 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('adminName').textContent = currentAdmin.username;
         document.getElementById('mobileAdminName').textContent = currentAdmin.username;
     }
+    
+    // Show loading immediately when page loads
+    showLoading();
     
     // Load initial data
     loadProduk();
@@ -53,6 +107,11 @@ function toggleMenu() {
  * Load produk data from API
  */
 async function loadProduk() {
+    // Start progress simulation
+    const completeProgress = simulateProgress(() => {
+        // This callback will be called when we want to complete the progress
+    }, 2000);
+    
     try {
         const response = await fetch('../api/produk/list.php');
         
@@ -88,7 +147,14 @@ async function loadProduk() {
             tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada data produk</td></tr>';
             updatePagination();
         }
+        
+        // Complete progress and hide loading
+        completeProgress();
+        hideLoading();
     } catch (error) {
+        // Complete progress and hide loading even on error
+        completeProgress();
+        hideLoading();
         showMessage('error', 'Gagal memuat data: ' + error.message);
     }
 }
@@ -676,6 +742,9 @@ async function submitProdukForm(e) {
     const submitBtn = e.target.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
     
+    // Show loading overlay
+    showLoading();
+    
     // Show loading state
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<span class="material-icons-round animate-spin">sync</span> Menyimpan...';
@@ -822,6 +891,7 @@ async function submitProdukForm(e) {
         }
         
         if (result.success) {
+            hideLoading();
             const message = isUpdate ? 'Produk berhasil diupdate' : result.message;
             showModalMessage('success', message);
             setTimeout(() => {
@@ -829,11 +899,13 @@ async function submitProdukForm(e) {
                 loadProduk(); // Reload the data
             }, 1500);
         } else {
+            hideLoading();
             showModalMessage('error', result.message);
         }
         
     } catch (error) {
         console.error('Error saving produk:', error);
+        hideLoading();
         showModalMessage('error', error.message || 'Gagal menyimpan produk');
     } finally {
         // Restore button state

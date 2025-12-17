@@ -72,9 +72,121 @@
         #produkModal form > div:last-child {
             flex-shrink: 0;
         }
+        
+        /* Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+        
+        .loading-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .loading-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 12px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .progress-text {
+            font-size: 0.875rem;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border: 5px solid rgba(59, 130, 246, 0.2);
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner-icon {
+            position: absolute;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.7;
+                transform: scale(0.9);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-spinner">
+                <svg class="spinner-icon" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2v6m0 4v6m0 4v-6m0-10V2m0 6l-4.24 4.24M12 8l4.24 4.24M12 16l4.24-4.24M12 16l-4.24-4.24" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="loading-title">Memuat Data Produk</h2>
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">0%</p>
+        </div>
+    </div>
+
     <!-- Header with Navigation -->
     <header class="bg-white shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
