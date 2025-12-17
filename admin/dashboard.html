@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Distro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <script src="assets/js/admin.js"></script>
+    <style>
+        @keyframes float {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-15px); }
+        }
+        .animate-float {
+          animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header with Navigation -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <!-- Menu Toggle Button -->
+                    <button id="menuToggle" onclick="toggleMenu()" class="lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="adminName" class="text-sm text-gray-600 hidden sm:block"></span>
+                    <button onclick="logout()" class="bg-red-500 text-white px-3 py-1 sm:px-4 sm:py-2 rounded hover:bg-red-600 text-sm sm:text-base">Logout</button>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav id="navMenu" class="hidden lg:block border-t pt-4 pb-2">
+                <ul class="flex flex-col lg:flex-row lg:space-x-8 space-y-2 lg:space-y-0">
+                    <li>
+                        <a href="dashboard.html" class="block px-3 py-2 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-900 font-medium">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="admin.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Admin
+                        </a>
+                    </li>
+                    <li>
+                        <a href="kategori.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Kategori
+                        </a>
+                    </li>
+                    <li>
+                        <a href="produk.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Produk
+                        </a>
+                    </li>
+                    <li>
+                        <a href="banner.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Banner
+                        </a>
+                    </li>
+                    <li>
+                        <a href="distro.html" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                            Distro
+                        </a>
+                    </li>
+                    <li>
+                        <button onclick="logout()" class="block lg:hidden px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 font-medium w-full text-left">
+                            Logout
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div id="mobileMenuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden" onclick="toggleMenu()"></div>
+    
+    <!-- Mobile Navigation Slide -->
+    <div id="mobileMenu" class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform -translate-x-full transition-transform duration-300">
+        <div class="p-4 border-b">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-900">Menu</h2>
+                <button onclick="toggleMenu()" class="p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <nav class="p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="dashboard.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 hover:text-blue-900 font-medium">
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="admin.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Admin
+                    </a>
+                </li>
+                <li>
+                    <a href="kategori.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Kategori
+                    </a>
+                </li>
+                <li>
+                    <a href="produk.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Produk
+                    </a>
+                </li>
+                <li>
+                    <a href="banner.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Banner
+                    </a>
+                </li>
+                <li>
+                    <a href="distro.html" onclick="toggleMenu()" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                        Distro
+                    </a>
+                </li>
+                <li class="border-t pt-2 mt-4">
+                    <div class="px-3 py-2 text-sm text-gray-600">
+                        User: <span id="mobileAdminName" class="font-medium"></span>
+                    </div>
+                    <button onclick="logout()" class="block w-full px-3 py-2 rounded-md text-red-600 hover:bg-red-50 hover:text-red-700 font-medium text-left">
+                        Logout
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <main class="min-h-screen bg-gradient-to-br from-white via-gray-100 to-gray-200 flex items-center justify-center text-gray-800">
+        <div class="text-center px-6">
+            <!-- Icon / Illustration -->
+            <div class="flex justify-center mb-8">
+                <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center animate-float">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2" />
+                        <circle cx="12" cy="12" r="9" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-pulse">Sedang Dalam Pengembangan</h1>
+            <p class="text-lg md:text-xl text-gray-600 max-w-xl mx-auto mb-8">
+                Halaman ini sedang kami siapkan dengan fitur-fitur terbaik. <br class="hidden md:block" />
+                Mohon tunggu sebentar, kami akan segera hadir 🚀
+            </p>
+
+            <!-- Loading Animation -->
+            <div class="flex justify-center space-x-2">
+                <span class="w-3 h-3 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                <span class="w-3 h-3 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                <span class="w-3 h-3 bg-gray-500 rounded-full animate-bounce"></span>
+            </div>
+
+            <!-- Footer -->
+            <p class="mt-10 text-sm text-gray-500">© 2024 • Terima kasih atas kesabaran Anda</p>
+        </div>
+    </main>
+
+    <script>
+        let currentToken = localStorage.getItem('admin_token');
+        let currentAdmin = JSON.parse(localStorage.getItem('admin_data') || '{}');
+
+        // Check auth
+        if (!currentToken) {
+            window.location.href = 'login.html';
+        }
+
+        // Display admin name
+        if (currentAdmin.username) {
+            document.getElementById('adminName').textContent = currentAdmin.username;
+            document.getElementById('mobileAdminName').textContent = currentAdmin.username;
+        }
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            
+            if (mobileMenu.classList.contains('-translate-x-full')) {
+                // Open menu
+                mobileMenu.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                // Close menu
+                mobileMenu.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                localStorage.removeItem('admin_token');
+                localStorage.removeItem('admin_data');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>
