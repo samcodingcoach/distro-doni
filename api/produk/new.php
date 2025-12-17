@@ -199,7 +199,7 @@ if (!$stmt) {
 
 // tipe parameter sesuai urutan:
 // i = int, s = string, d = double
-$types = 'issssddsiissssiiiii'; // 20 karakter, sesuai 20 kolom
+    $types = 'issssddsiisssssiiii'; // 19 karakter untuk 19 parameter
 $stmt->bind_param(
     $types,
     $id_kategori,   // i
