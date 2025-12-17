@@ -479,6 +479,10 @@ function populateProdukForm(produk) {
         document.getElementById('id_kategori').value = produk.id_kategori;
     });
     
+    // Set e-commerce links
+    document.getElementById('shopee_link').value = produk.shopee_link || '';
+    document.getElementById('tiktok_link').value = produk.tiktok_link || '';
+    
     // Display existing images
     const imageFields = ['gambar1', 'gambar2', 'gambar3'];
     imageFields.forEach((field, index) => {
@@ -700,7 +704,7 @@ async function submitProdukForm(e) {
         }
         
         // Add regular form fields
-        const fields = ['kode_produk', 'nama_produk', 'merk', 'id_kategori', 'deskripsi', 'ukuran', 'jumlah_stok', 'terjual'];
+        const fields = ['kode_produk', 'nama_produk', 'merk', 'id_kategori', 'deskripsi', 'ukuran', 'jumlah_stok', 'terjual', 'shopee_link', 'tiktok_link'];
         
         fields.forEach(field => {
             const element = document.getElementById(field);
