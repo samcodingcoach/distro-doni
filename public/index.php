@@ -78,16 +78,8 @@
         <input class="form-input h-10 w-full rounded-full border-none bg-surface-light dark:bg-surface-dark pl-10 pr-4 text-sm placeholder:text-secondary-light dark:placeholder:text-secondary-dark focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="Search" type="search"/>
        </label>
        <div class="flex items-center gap-1 md:gap-2">
-        <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
-         <span class="material-symbols-outlined text-2xl">
-          person_outline
-         </span>
-        </button>
-        <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
-         <span class="material-symbols-outlined text-2xl">
-          favorite_border
-         </span>
-        </button>
+        
+        
         <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
          <span class="material-symbols-outlined text-2xl">
           shopping_bag
@@ -101,7 +93,7 @@
 
 
    <main class="flex-grow">
-   
+    <!-- konten utama di sini -->
    </main>
    <footer class="bg-surface-light dark:bg-surface-dark mt-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -116,21 +108,7 @@
           Contact Us
          </a>
         </li>
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          FAQ
-         </a>
-        </li>
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          Shipping
-         </a>
-        </li>
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          Returns
-         </a>
-        </li>
+        
        </ul>
       </div>
       <div>
@@ -138,69 +116,57 @@
         About Us
        </h3>
        <ul class="space-y-2 text-sm text-secondary-light dark:text-secondary-dark">
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          Our Story
-         </a>
-        </li>
+       
         <li>
          <a class="hover:text-primary transition-colors" href="#">
           Careers
          </a>
         </li>
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          Press
-         </a>
-        </li>
+        
        </ul>
       </div>
-      <div>
-       <h3 class="font-bold mb-4">
-        Legal
-       </h3>
-       <ul class="space-y-2 text-sm text-secondary-light dark:text-secondary-dark">
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          Terms of Service
-         </a>
-        </li>
-        <li>
-         <a class="hover:text-primary transition-colors" href="#">
-          Privacy Policy
-         </a>
-        </li>
-       </ul>
-      </div>
+     
       <div>
        <h3 class="font-bold mb-4">
         Follow Us
        </h3>
-       <div class="flex space-x-4">
-        <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
-         <svg class="h-6 w-6" fill="currentColor" viewbox="0 0 24 24">
-          <path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.22-1.95-.55v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.34 0 11.36-6.08 11.36-11.36 0-.17 0-.34-.01-.51.78-.57 1.45-1.28 1.99-2.09z">
-          </path>
-         </svg>
-        </a>
-        <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
-         <svg class="h-6 w-6" fill="currentColor" viewbox="0 0 24 24">
-          <path clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.477 2.926 8.27 6.953 9.524.508.094.693-.22.693-.488 0-.24-.008-.87-.012-1.708-2.84 1.23-3.44-1.18-3.44-1.18-.462-1.17-1.125-1.48-1.125-1.48-.92-.63.07-.616.07-.616 1.018.07 1.553 1.045 1.553 1.045.904 1.55 2.373 1.102 2.95.842.092-.654.354-1.102.644-1.354-2.25-.256-4.613-1.125-4.613-5.004 0-1.104.394-2.008 1.045-2.716-.104-.256-.453-1.284.1-2.678 0 0 .85-.272 2.784 1.04.808-.224 1.674-.336 2.536-.34.862.004 1.728.116 2.536.34 1.934-1.312 2.782-1.04 2.782-1.04.554 1.394.206 2.422.1 2.678.653.708 1.044 1.612 1.044 2.716 0 3.89-2.367 4.744-4.625 4.996.364.313.69.936.69 1.884 0 1.356-.012 2.45-.012 2.78 0 .27.183.586.698.486C19.078 20.266 22 16.477 22 12c0-5.523-4.477-10-10-10z" fill-rule="evenodd">
-          </path>
-         </svg>
-        </a>
-        <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
-         <svg class="h-6 w-6" fill="currentColor" viewbox="0 0 24 24">
-          <path clip-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.32 8.25c.01.12.01.24.01.37 0 3.8-2.9 8.18-8.18 8.18-1.62 0-3.13-.47-4.4-1.29.23.03.46.04.69.04 1.35 0 2.58-.46 3.57-1.23-.63-.01-1.17-.43-1.35-1-.09.02-.18.03-.28.03-.13 0-.26-.02-.38-.05.17-.34.66-.98 1.25-1.2-1.35.67-1.35.67-.66-.03-.57-.09-1.05-.33-1.44-.72.04-.63.04-.63.04.47-1.05 1.54-1.65 2.69-1.72-.05-.22-.08-.45-.08-.69 0-1.67 1.35-3.02 3.02-3.02.87 0 1.65.37 2.2.95.69-.14 1.33-.39 1.91-.73-.23.7-.7 1.3-1.32 1.68.61-.07 1.2-.23 1.73-.47-.42.6-.96 1.12-1.59 1.53z" fill-rule="evenodd">
-          </path>
-         </svg>
-        </a>
-       </div>
+
+        <div class="flex space-x-4">
+            <!-- Facebook -->
+            <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.99 3.66 9.13 8.44 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.45h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99C18.34 21.13 22 16.99 22 12z"/>
+                </svg>
+            </a>
+
+            <!-- Instagram -->
+            <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm10 2c1.66 0 3 1.34 3 3v10c0 1.66-1.34 3-3 3H7c-1.66 0-3-1.34-3-3V7c0-1.66 1.34-3 3-3h10zm-5 3.5A4.5 4.5 0 1 0 16.5 12 4.51 4.51 0 0 0 12 7.5zm0 7.4A2.9 2.9 0 1 1 14.9 12 2.9 2.9 0 0 1 12 14.9zM17.25 6.75a1.05 1.05 0 1 0 0 2.1 1.05 1.05 0 0 0 0-2.1z"/>
+                </svg>
+            </a>
+
+            <!-- Twitter (X) -->
+            <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.22-1.95-.55v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.52 8.52 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.34 0 11.36-6.08 11.36-11.36 0-.17 0-.34-.01-.51.78-.57 1.45-1.28 1.99-2.09z"/>
+                </svg>
+            </a>
+
+            <!-- YouTube -->
+            <a class="text-secondary-light dark:text-secondary-dark hover:text-primary transition-colors" href="#">
+                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M23.5 6.2s-.23-1.63-.94-2.35c-.9-.94-1.9-.94-2.36-.99C16.9 2.5 12 2.5 12 2.5h-.01s-4.9 0-8.2.36c-.46.05-1.46.05-2.36.99-.71.72-.94 2.35-.94 2.35S0 8.09 0 9.97v1.86c0 1.88.5 3.77.5 3.77s.23 1.63.94 2.35c.9.94 2.08.91 2.61 1.01 1.9.18 8 .36 8 .36s4.9-.01 8.2-.37c.46-.05 1.46-.05 2.36-.99.71-.72.94-2.35.94-2.35s.5-1.89.5-3.77V9.97c0-1.88-.5-3.77-.5-3.77zM9.75 14.68V7.82l6.5 3.43-6.5 3.43z"/>
+                </svg>
+            </a>
+        </div>
+
+
       </div>
      </div>
      <div class="mt-8 border-t border-surface-dark/20 dark:border-surface-light/20 pt-8 text-center text-sm text-secondary-light dark:text-secondary-dark">
       <p>
-       © 2024 APRIL. All rights reserved.
+       © 2026 APRIL. All rights reserved.
       </p>
      </div>
     </div>
