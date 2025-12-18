@@ -38,9 +38,121 @@
         .absolute.right-3.top-1\\/2.transform.-translate-y-1\\/2.text-blue-600 {
             cursor: pointer;
         }
+        
+        /* Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(3px);
+        }
+        
+        .loading-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .loading-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            border-radius: 12px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .progress-text {
+            font-size: 0.875rem;
+            color: #4b5563;
+            font-weight: 500;
+        }
+        
+        .loading-spinner {
+            width: 64px;
+            height: 64px;
+            border: 5px solid rgba(59, 130, 246, 0.2);
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem auto;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .spinner-icon {
+            position: absolute;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.7;
+                transform: scale(0.9);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-spinner">
+                <svg class="spinner-icon" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2v6m0 4v6m0 4v-6m0-10V2m0 6l-4.24 4.24M12 8l4.24 4.24M12 16l4.24-4.24M12 16l-4.24-4.24" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="loading-title">Memuat Data Distro</h2>
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+            <p id="progressText" class="progress-text">0%</p>
+        </div>
+    </div>
+
     <!-- Header with Navigation -->
     <header class="bg-white shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -361,8 +473,64 @@
     <script>
         let currentDistro = null;
 
+        // Loading progress functions
+        function showLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            overlay.style.display = 'flex';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0%';
+        }
+
+        function updateProgress(percent) {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = percent + '%';
+            progressText.textContent = percent + '%';
+        }
+
+        function hideLoading() {
+            const overlay = document.getElementById('loadingOverlay');
+            
+            // Ensure 100% before hiding
+            updateProgress(100);
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 500);
+        }
+
+        // Simulate progress while loading
+        function simulateProgress(callback, duration = 2000) {
+            let progress = 0;
+            const increment = 100 / (duration / 50); // Update every 50ms
+            
+            const interval = setInterval(() => {
+                progress += increment;
+                if (progress >= 95) {
+                    progress = 95; // Stop at 95%, let actual completion take it to 100%
+                    clearInterval(interval);
+                }
+                updateProgress(Math.round(progress));
+            }, 50);
+            
+            return () => {
+                clearInterval(interval);
+                updateProgress(100);
+                callback();
+            };
+        }
+
         // Load distro data from API
         async function loadDistroData() {
+            // Start progress simulation (loading already shown in DOMContentLoaded)
+            const completeProgress = simulateProgress(() => {
+                // This callback will be called when we want to complete progress
+            }, 2000);
+            
             try {
                 const response = await fetch('../api/distro/list.php');
                 const data = await response.json();
@@ -374,8 +542,15 @@
                 } else {
                     showMessage('info', 'Belum ada data distro. Silakan isi form berikut.');
                 }
+                
+                // Complete progress and hide loading
+                completeProgress();
+                hideLoading();
             } catch (error) {
                 console.error('Error loading distro data:', error);
+                // Complete progress and hide loading even on error
+                completeProgress();
+                hideLoading();
                 showMessage('error', 'Gagal memuat data distro. Silakan coba kembali.');
             }
         }
@@ -449,12 +624,17 @@
 
         // Save distro
         async function saveDistro() {
+            // Show loading overlay
+            if (!document.getElementById('loadingOverlay').style.display || document.getElementById('loadingOverlay').style.display === 'none') {
+                showLoading();
+            }
             try {
                 // Get the authentication token
                 const token = localStorage.getItem('admin_token');
 
                 // Check if token exists
                 if (!token) {
+                    hideLoading();
                     showNotification('Sesi habis. Silakan login kembali.', 'error');
                     setTimeout(() => {
                         window.location.href = 'login.html';
@@ -500,6 +680,7 @@
                 const result = await response.json();
 
                 if (result.success) {
+                    hideLoading();
                     showNotification(result.message || 'Data distro berhasil diperbarui!', 'success');
 
                     // Update the current distro data with the updated values
@@ -513,11 +694,13 @@
                         loadDistroData();
                     }, 2000);
                 } else {
+                    hideLoading();
                     showNotification(result.message || 'Terjadi kesalahan saat menyimpan data.', 'error');
                 }
 
             } catch (error) {
                 console.error('Error saving distro:', error);
+                hideLoading();
                 // Check if it's a custom error message or generic error
                 const errorMessage = error.message || 'Terjadi kesalahan saat menyimpan data. Silakan coba kembali.';
                 showNotification(errorMessage, 'error');
@@ -654,7 +837,8 @@
             const adminName = currentAdmin.username || 'Admin User';
             document.getElementById('adminName').textContent = adminName;
 
-            // Load distro data
+            // Load distro data with loading
+            showLoading();
             loadDistroData();
             
             // Add event listeners to social media inputs
