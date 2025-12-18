@@ -1,13 +1,20 @@
 <?php
-// Fetch distro data from API
-$curl = curl_init();
-curl_setopt($curl, CURLOPT_URL, 'http://localhost/distro/api/distro/list.php');
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($curl);
-curl_close($curl);
+// Fetch distro data by executing the API script in a separate process to avoid header conflicts
+$distro = null;
 
-$data = json_decode($response, true);
-$distro = isset($data['data'][0]) ? $data['data'][0] : null;
+// Use a method that ensures the API is properly executed without interfering with the current page
+$api_file_path = __DIR__ . '/../api/distro/list.php';
+
+if (file_exists($api_file_path)) {
+    // Execute the API script and capture its output
+    $command = 'php ' . escapeshellarg($api_file_path);
+    $api_output = shell_exec($command);
+
+    if ($api_output !== null) {
+        $data = json_decode($api_output, true);
+        $distro = isset($data['data'][0]) ? $data['data'][0] : null;
+    }
+}
 ?>
 
 <footer class="bg-surface-light dark:bg-surface-dark mt-12">
@@ -80,7 +87,7 @@ $distro = isset($data['data'][0]) ? $data['data'][0] : null;
      </div>
      <div class="mt-8 border-t border-surface-dark/20 dark:border-surface-light/20 pt-8 text-center text-sm text-secondary-light dark:text-secondary-dark">
       <p>
-       © 2026 APRIL. All rights reserved.
+       © <?php echo date('Y') . ' ' . ($distro ? $distro['nama_distro'] : 'APRIL'); ?>. All rights reserved.
       </p>
      </div>
     </div>
