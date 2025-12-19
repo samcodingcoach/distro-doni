@@ -3,8 +3,29 @@
  <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <?php
+  // Fetch distro data by executing the API script in a separate process to avoid header conflicts
+  $distro = null;
+
+  // Use a method that ensures the API is properly executed without interfering with the current page
+  $api_file_path = __DIR__ . '/../api/distro/list.php';
+
+  if (file_exists($api_file_path)) {
+      // Execute the API script and capture its output
+      $command = 'php ' . escapeshellarg($api_file_path);
+      $api_output = shell_exec($command);
+
+      if ($api_output !== null) {
+          $data = json_decode($api_output, true);
+          $distro = isset($data['data'][0]) ? $data['data'][0] : null;
+      }
+  }
+
+  $title_nama_distro = $distro ? $distro['nama_distro'] : 'APRIL';
+  $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
+  ?>
   <title>
-   APRIL - Modern Fashion
+   <?php echo htmlspecialchars($title_nama_distro); ?> - <?php echo htmlspecialchars($title_slogan); ?>
   </title>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
