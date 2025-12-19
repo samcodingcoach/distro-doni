@@ -87,6 +87,49 @@
 
    <main class="flex-grow">
     <!-- konten utama di sini -->
+    <!-- hero banner section -->
+        <?php
+        // Fetch banner data by executing the API script in a separate process to avoid header conflicts
+        $banner = null;
+
+        // Use a method that ensures the API is properly executed without interfering with the current page
+        $api_file_path = __DIR__ . '/../api/banner/list.php';
+
+        if (file_exists($api_file_path)) {
+            // Change to the API directory before executing to fix relative path issues
+            $command = 'cd ' . escapeshellarg(dirname($api_file_path)) . ' && php ' . escapeshellarg(basename($api_file_path));
+            $api_output = shell_exec($command);
+
+            if ($api_output !== null) {
+                $data = json_decode($api_output, true);
+                $banner = isset($data['data'][0]) ? $data['data'][0] : null;
+            }
+        }
+
+        $banner_judul = $banner['judul'] ?? null;
+        $banner_deskripsi = $banner['deskripsi'] ?? null;
+        $banner_url_gambar = $banner['url_gambar'] ?? null;
+        ?>
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex min-h-[60vh] flex-col items-center justify-center gap-6 rounded-xl bg-cover bg-center bg-no-repeat p-4 text-center" data-alt="A model wearing a stylish trench coat from the new autumn collection, posing in a minimalist urban setting." style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("<?php echo htmlspecialchars($banner_url_gambar); ?>");'>
+                <div class="flex flex-col gap-2">
+                    <h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] md:text-6xl">
+                        <?php echo htmlspecialchars($banner_judul); ?>
+                    </h1>
+                    <h2 class="text-white text-base font-normal leading-normal md:text-lg">
+                        <?php echo htmlspecialchars($banner_deskripsi); ?>
+                    </h2>
+                </div>
+                <button class="flex h-12 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary px-6 text-base font-bold leading-normal tracking-[0.015em] text-white transition-opacity hover:opacity-90">
+                    <span class="truncate">
+                        Shop Now
+                    </span>
+                </button>
+            </div>
+        </section>
+    
+    <!-- hero banner section -->
+
    </main>
 
 
