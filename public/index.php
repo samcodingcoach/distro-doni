@@ -57,7 +57,7 @@
          </path>
         </svg>
         <h2 class="text-xl font-bold tracking-[-0.015em]">
-         APRIL
+            <?php echo htmlspecialchars($title_nama_distro); ?>
         </h2>
        </a>
        <!-- daftar navigasi menu diambil dari api/kategori/list.php, ambil favorit true/1 sebanyak 5-->
@@ -88,6 +88,8 @@
    <main class="flex-grow">
     <!-- konten utama di sini -->
    </main>
+
+
    <?php include 'footer.php'; ?>
    <a class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg hover:bg-green-600 transition-colors" href="#">
     <svg class="bi bi-whatsapp" fill="currentColor" height="28" viewbox="0 0 16 16" width="28" xmlns="http://www.w3.org/2000/svg">
