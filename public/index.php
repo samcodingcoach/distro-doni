@@ -201,24 +201,54 @@
    <!--  section new arrival -->
 
   <!--  section shop by category -->
+        <?php
+        // Fetch kategori data by executing the API script in a separate process
+        $kategori_list = [];
+        $api_file_path = __DIR__ . '/../api/kategori/list.php';
 
+        if (file_exists($api_file_path)) {
+            $command = 'cd ' . escapeshellarg(dirname($api_file_path)) . ' && php ' . escapeshellarg(basename($api_file_path));
+            $api_output = shell_exec($command);
+
+            if ($api_output !== null) {
+                $data = json_decode($api_output, true);
+                if (isset($data['success']) && $data['success'] && isset($data['data'])) {
+                    // Filter categories: aktif=1, favorit=1, then sort by id_kategori asc and limit to 3
+                    $filtered_categories = array_filter($data['data'], function($kategori) {
+                        return $kategori['aktif'] == '1' && $kategori['favorit'] == '1';
+                    });
+                    
+                    // Sort by id_kategori ascending
+                    usort($filtered_categories, function($a, $b) {
+                        return intval($a['id_kategori']) - intval($b['id_kategori']);
+                    });
+                    
+                    // Limit to 3 categories
+                    $kategori_list = array_slice($filtered_categories, 0, 3);
+                }
+            }
+        }
+        ?>
         <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
                 Shop by Category
             </h2>
 
             <div class="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
-                
-                <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl" href="#">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105" 
-                        data-alt="A model wearing an elegant floral dress in a garden." 
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBfM_0NCQFLY1rDJS1m0bIz0-mUKl3x6irtMWdSOZwjhiVM9EEJSOFKghXdeQQ4Z9GcNBsHg-Ez9ZjoPJNg7zMW9tgk8Bw1YvBmedmOoLikKRxV3sbWPEGFeYFS5CDCH1ryJAlk6ko6qPEZudeXjhI03ZtCIP9s4xkrNA5-7X_o6CY0UYo2fQ6t3WyaEQIn9m1C8jccDS6BzpCCI1gQdR-dj_hAhwXbXvTvFL0wWw8ah6-D9SUfqksMod_2ZjnLSszdcAud1KE5wIM");'>
-                    </div>
-                    <div class="absolute inset-0 bg-black/30"></div>
-                    <h3 class="relative text-2xl font-bold text-white">
-                        Dresses
-                    </h3>
-                </a>
+                <?php if (!empty($kategori_list)): ?>
+                    <?php foreach ($kategori_list as $kategori): ?>
+                        <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl" href="#">
+                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105" 
+                                data-alt="<?php echo htmlspecialchars($kategori['nama_kategori']); ?>" 
+                                style='background-image: url("images/<?php echo !empty($kategori['background_url']) ? htmlspecialchars($kategori['background_url']) : 'kategori.png'; ?>");'>
+                            </div>
+                            <div class="absolute inset-0 bg-black/30"></div>
+                            <h3 class="relative text-2xl font-bold text-white">
+                                <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
+                            </h3>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
 
                 <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark" href="#">
                     <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
