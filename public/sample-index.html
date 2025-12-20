@@ -20,6 +20,10 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+    .scrollable-container {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
   </style>
   <script id="tailwind-config">
    tailwind.config = {
@@ -139,7 +143,7 @@
      <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
       New Arrivals
      </h2>
-     <div class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar">
+     <div class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
       <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
        <div class="relative overflow-hidden rounded-xl">
         <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
@@ -302,33 +306,7 @@
         </div>
        </div>
       </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         954 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-red-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         Out of Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="A brown leather tote bag on a neutral background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB2_PScvScAXYEjFFlC5sqi6q8mMn44v5XM-qLdefvIDEG1PtwB00VrXjZdKb1gwQHJJ-WhIuozgTZCt5cRlDX8j6EesJAbfFAkCfGvhf_FAqsG18w6znKdUbvyTH3j1VIhVBjQapObhM1fxjkSVjX793hCJeqgght0kaPJq7WEQlIIc9r109NQ_nrS--4673A9y7z9DqKuV5w13RSGeuJ2gJZpTgPHUjtlSGDJ7m5RnSHLpapBQRrcEn-4qa27AVbdG0RVeqlrqtM");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="The leather tote bag being carried by a model." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBztCWtDyCTVNrM1PVm93jZ2IXHsGSwafex9Sj8HiZu_GYvReaOtDhxkBZvBnRJ9yXXSAk1yPl4p0-l9ubWN6h11C0o6_TWhg1smOPUnsiG14Px7UPCVAI0HATah6qvNHHylZJfUisUm4AdVEUtdZSFgBVAHE-tjbv1puDE_RRhS9lUux9eVfR3h8Ps3Jb8i7RkDsNdhXyciO3_FgPnmUdpsNOLTy5FBUJcoAi69vWUedwlwfKjR-gQlkPrvcP_Gs-qHYrJMiIaz9Q");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         Leather Tote Bag
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $220.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $250.00
-         </p>
-        </div>
-       </div>
-      </div>
+
      </div>
     </section>
     
@@ -620,5 +598,62 @@
     </svg>
    </a>
   </div>
+  <script>
+    // Enhance touch scrolling for new arrivals section
+    document.addEventListener('DOMContentLoaded', function() {
+      const scrollContainer = document.querySelector('.scrollable-container');
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      if (scrollContainer) {
+        // Mouse events for desktop
+        scrollContainer.addEventListener('mousedown', (e) => {
+          isDown = true;
+          scrollContainer.classList.add('active:cursor-grabbing');
+          startX = e.pageX - scrollContainer.offsetLeft;
+          scrollLeft = scrollContainer.scrollLeft;
+        });
+
+        scrollContainer.addEventListener('mouseleave', () => {
+          isDown = false;
+          scrollContainer.classList.remove('active:cursor-grabbing');
+        });
+
+        scrollContainer.addEventListener('mouseup', () => {
+          isDown = false;
+          scrollContainer.classList.remove('active:cursor-grabbing');
+        });
+
+        scrollContainer.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - scrollContainer.offsetLeft;
+          const walk = (x - startX) * 2;
+          scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+
+        // Touch events for mobile
+        let touchStartX = 0;
+        let touchScrollLeft = 0;
+
+        scrollContainer.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+          touchScrollLeft = scrollContainer.scrollLeft;
+        });
+
+        scrollContainer.addEventListener('touchmove', (e) => {
+          if (!touchStartX) return;
+          const touchX = e.touches[0].clientX;
+          const walk = (touchStartX - touchX) * 1.5;
+          scrollContainer.scrollLeft = touchScrollLeft + walk;
+        });
+
+        scrollContainer.addEventListener('touchend', () => {
+          touchStartX = 0;
+        });
+      }
+    });
+  </script>
  </body>
 </html>
