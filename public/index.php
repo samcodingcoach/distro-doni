@@ -132,203 +132,42 @@
 
    <!--  section new arrival -->
 
-   <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-     <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
-      New Arrivals
-     </h2>
-     <div class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar">
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         1,532 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         In Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Model wearing a cream-colored classic trench coat." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUkyBqZVg0Dwr4HIsQN9EslrntKn00YGgKl_JUKQgFoUB-M3_F4XvCVZWDZAPQRDRKwWmi_i4jan74XT3YbR1yHUnDP4EtGwClO7l2tO7XAHJTdjgWLbNGjW2VP8L13hTXXrtRIiZOnQAjTsaGJVNEzTp368tm1JPC9cbZKOHOUjLho6v-XlQSlXaxieaLq6AYno_pTRuOYDgdDynCx7EQng7nAa5MJ95VNFM8WtFOxD6yJqpAUuGtgetilxQNFqG4uf6NF8AwcWI");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="A different view of the cream-colored trench coat, perhaps showing the back detail." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZN3npbI6BbbLxQ6DRnupOac9DYTGobVv6Wof9mEJ_9o1FCP3QiYfMa-h4wIX7X6Bj4nnlTbpLdrpHiC1ITHZj33CpIn2B5jq8pBrBhC6e6oQ-Fs9qUQ7ZcNHUsAmims4v_EMdI0sZzNOfv6_q9KwxskAHOvUI3pZmmFaxgkFxYhgCe5rEqDl3CK1nDZoNokcfnoTBAVDgc8IalY0fIwAAFBbCGpTip5Tus72o-ZCEJ79JA-W4XGS0eXXLLzpG0ZP-3yi5voILY4s");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         The Classic Trench Coat
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $189.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $220.00
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         2,104 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         In Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Close-up of a brown ribbed knit sweater on a hanger." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAgHaxp7qfWXd8X_1kAtRpmP8vWCf5LICobR3KXCXGgd5hOHBtKKNPoWDLmElVT2YJxm5_yeCN_LfvrPWV5fYorGfGSNh1EW2e1Wa2xQsyGhlMUWvFTDzqZKjJVt4Q8JLb7JqrRT6MnIUprAuUeCuDbUzSuy61gBg7Va89lCtytOkhvKSMxPZHPutzTTmE4waW0hbA_2m9NaqVUqbzQIV0zeD1R2NX7YgiHDMjisfZEpZ9xewdVQftQfDtEn_Bc0cayfdH2_j8eg4M");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="A model wearing the brown ribbed knit sweater." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAQOG6cL066_u-UDBuOQUIrM1z9qZmHg1lkfEyiOfFw88vrdusrp24HVqc_7KJ3AMBpBUbEjbZKh0E6vpLIOER4vONnh4qH-fvkmBV8i7mVqhjSx5SV1AE4rebiaJOfuNLCvXY-kDpSQeeMUqS9NFi1CIlMGJ1zB-lHiZBqckVLpC02tpcPrfLzUaaRIDNzmMYSVPNTXWwCFVlbvWK1Z9GucPdjlV6HX6kNd600MfcUfSWSsSKc8rsys_ZYCG5ddzWaaz5VaPD2u0I");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         Ribbed Knit Sweater
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $79.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $99.00
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         876 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-red-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         Out of Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Woman wearing beige high-waisted trousers." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZN3npbI6BbbLxQ6DRnupOac9DYTGobVv6Wof9mEJ_9o1FCP3QiYfMa-h4wIX7X6Bj4nnlTbpLdrpHiC1ITHZj33CpIn2B5jq8pBrBhC6e6oQ-Fs9qUQ7ZcNHUsAmims4v_EMdI0sZzNOfv6_q9KwxskAHOvUI3pZmmFaxgkFxYhgCe5rEqDl3CK1nDZoNokcfnoTBAVDgc8IalY0fIwAAFBbCGpTip5Tus72o-ZCEJ79JA-W4XGS0eXXLLzpG0ZP-3yi5voILY4s");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="A detailed shot of the fabric of the beige trousers." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUkyBqZVg0Dwr4HIsQN9EslrntKn00YGgKl_JUKQgFoUB-M3_F4XvCVZWDZAPQRDRKwWmi_i4jan74XT3YbR1yHUnDP4EtGwClO7l2tO7XAHJTdjgWLbNGjW2VP8L13hTXXrtRIiZOnQAjTsaGJVNEzTp368tm1JPC9cbZKOHOUjLho6v-XlQSlXaxieaLq6AYno_pTRuOYDgdDynCx7EQng7nAa5MJ95VNFM8WtFOxD6yJqpAUuGtgetilxQNFqG4uf6NF8AwcWI");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         High-Waisted Trousers
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $99.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $120.00
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         1,845 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         In Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Pair of black leather ankle boots on a neutral background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAQOG6cL066_u-UDBuOQUIrM1z9qZmHg1lkfEyiOfFw88vrdusrp24HVqc_7KJ3AMBpBUbEjbZKh0E6vpLIOER4vONnh4qH-fvkmBV8i7mVqhjSx5SV1AE4rebiaJOfuNLCvXY-kDpSQeeMUqS9NFi1CIlMGJ1zB-lHiZBqckVLpC02tpcPrfLzUaaRIDNzmMYSVPNTXWwCFVlbvWK1Z9GucPdjlV6HX6kNd600MfcUfSWSsSKc8rsys_ZYCG5ddzWaaz5VaPD2u0I");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="A model wearing the black leather ankle boots with an outfit." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAgHaxp7qfWXd8X_1kAtRpmP8vWCf5LICobR3KXCXGgd5hOHBtKKNPoWDLmElVT2YJxm5_yeCN_LfvrPWV5fYorGfGSNh1EW2e1Wa2xQsyGhlMUWvFTDzqZKjJVt4Q8JLb7JqrRT6MnIUprAuUeCuDbUzSuy61gBg7Va89lCtytOkhvKSMxPZHPutzTTmE4waW0hbA_2m9NaqVUqbzQIV0zeD1R2NX7YgiHDMjisfZEpZ9xewdVQftQfDtEn_Bc0cayfdH2_j8eg4M");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         Leather Ankle Boots
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $149.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $175.00
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         3,120 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         In Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Woman wearing a silk camisole top." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBroOCqTBXbbPxZOO5vppRQcQJQZ9aXIosT9Zxz1rhrTJzCDOvHLu0tmMsMHZo-AZBmteF4Sx8bcFJVVZQKSoNLDPD7U_YWXaPsWlZhn5L0VgZZku9ktaLePsPdGA8knQtN6GYmUL4oAC3QS658R3dDPPMAvb-jFagM2lvu6vE0zlANOePXoZ1Pnb1rVRdFJky8CoPxztAlXXQMfOiLAxY6jBWmnHDjVH0nycLEKf10RFRAJk5I8pDcvU6MaA9PgKYT70UbFMqXYc8");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="Another view of the silk camisole, perhaps on a different model or background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA5BWEosez1mXcOGEFbfrBfFYev1txdXgpMr_1GRsyiWDzTQrZ3skX_HNkmwNDa12wwdZNeSlaBvXvz5iU63Olo3Yf-2mslvrbq65Mn95n_uvBBdYDdtZ9uRRLoJxisVmEvPqWhryO6LPqyv9-9rOBIfPH8Dy6InPpfxgmx0g-pJJ4dB5-9mgbUu3LrxAJMf_nLVxNbFK5XQsDbpXvLv9XG-nBOX0iMErP5JdN1qQ8-McQDCrvMik1dmeISI1Bf9kmiVubopj98Sks");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         Silk Camisole
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $65.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $85.00
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         1,490 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         In Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Model wearing wide-leg denim jeans." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA5BWEosez1mXcOGEFbfrBfFYev1txdXgpMr_1GRsyiWDzTQrZ3skX_HNkmwNDa12wwdZNeSlaBvXvz5iU63Olo3Yf-2mslvrbq65Mn95n_uvBBdYDdtZ9uRRLoJxisVmEvPqWhryO6LPqyv9-9rOBIfPH8Dy6InPpfxgmx0g-pJJ4dB5-9mgbUu3LrxAJMf_nLVxNbFK5XQsDbpXvLv9XG-nBOX0iMErP5JdN1qQ8-McQDCrvMik1dmeISI1Bf9kmiVubopj98Sks");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="Back view of the wide-leg denim jeans." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBroOCqTBXbbPxZOO5vppRQcQJQZ9aXIosT9Zxz1rhrTJzCDOvHLu0tmMsMHZo-AZBmteF4Sx8bcFJVVZQKSoNLDPD7U_YWXaPsWlZhn5L0VgZZku9ktaLePsPdGA8knQtN6GYmUL4oAC3QS658R3dDPPMAvb-jFagM2lvu6vE0zlANOePXoZ1Pnb1rVRdFJky8CoPxztAlXXQMfOiLAxY6jBWmnHDjVH0nycLEKf10RFRAJk5I8pDcvU6MaA9PgKYT70UbFMqXYc8");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         Wide-Leg Denim
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $110.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $130.00
-         </p>
-        </div>
-       </div>
-      </div>
-      <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-       <div class="relative overflow-hidden rounded-xl">
-        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         954 sold
-        </div>
-        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-red-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-         Out of Stock
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="A brown leather tote bag on a neutral background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB2_PScvScAXYEjFFlC5sqi6q8mMn44v5XM-qLdefvIDEG1PtwB00VrXjZdKb1gwQHJJ-WhIuozgTZCt5cRlDX8j6EesJAbfFAkCfGvhf_FAqsG18w6znKdUbvyTH3j1VIhVBjQapObhM1fxjkSVjX793hCJeqgght0kaPJq7WEQlIIc9r109NQ_nrS--4673A9y7z9DqKuV5w13RSGeuJ2gJZpTgPHUjtlSGDJ7m5RnSHLpapBQRrcEn-4qa27AVbdG0RVeqlrqtM");'>
-        </div>
-        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="The leather tote bag being carried by a model." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBztCWtDyCTVNrM1PVm93jZ2IXHsGSwafex9Sj8HiZu_GYvReaOtDhxkBZvBnRJ9yXXSAk1yPl4p0-l9ubWN6h11C0o6_TWhg1smOPUnsiG14Px7UPCVAI0HATah6qvNHHylZJfUisUm4AdVEUtdZSFgBVAHE-tjbv1puDE_RRhS9lUux9eVfR3h8Ps3Jb8i7RkDsNdhXyciO3_FgPnmUdpsNOLTy5FBUJcoAi69vWUedwlwfKjR-gQlkPrvcP_Gs-qHYrJMiIaz9Q");'>
-        </div>
-       </div>
-       <div>
-        <p class="text-base font-medium leading-normal">
-         Leather Tote Bag
-        </p>
-        <div class="flex items-center gap-2">
-         <p class="text-sm font-normal leading-normal text-primary">
-          $220.00
-         </p>
-         <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-          $250.00
-         </p>
-        </div>
-       </div>
-      </div>
-     </div>
-    </section>
-    <!--  section new arrival -->
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
+            New Arrivals
+            </h2>
+            <div class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
+                <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
+                    <div class="relative overflow-hidden rounded-xl">
+                        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
+                        1,532 sold
+                        </div>
+                        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
+                        In Stock
+                        </div>
+                        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Model wearing a cream-colored classic trench coat." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUkyBqZVg0Dwr4HIsQN9EslrntKn00YGgKl_JUKQgFoUB-M3_F4XvCVZWDZAPQRDRKwWmi_i4jan74XT3YbR1yHUnDP4EtGwClO7l2tO7XAHJTdjgWLbNGjW2VP8L13hTXXrtRIiZOnQAjTsaGJVNEzTp368tm1JPC9cbZKOHOUjLho6v-XlQSlXaxieaLq6AYno_pTRuOYDgdDynCx7EQng7nAa5MJ95VNFM8WtFOxD6yJqpAUuGtgetilxQNFqG4uf6NF8AwcWI");'>
+                        </div>
+                        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="A different view of the cream-colored trench coat, perhaps showing the back detail." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZN3npbI6BbbLxQ6DRnupOac9DYTGobVv6Wof9mEJ_9o1FCP3QiYfMa-h4wIX7X6Bj4nnlTbpLdrpHiC1ITHZj33CpIn2B5jq8pBrBhC6e6oQ-Fs9qUQ7ZcNHUsAmims4v_EMdI0sZzNOfv6_q9KwxskAHOvUI3pZmmFaxgkFxYhgCe5rEqDl3CK1nDZoNokcfnoTBAVDgc8IalY0fIwAAFBbCGpTip5Tus72o-ZCEJ79JA-W4XGS0eXXLLzpG0ZP-3yi5voILY4s");'>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-base font-medium leading-normal">
+                        The Classic Trench Coat
+                        </p>
+                        <div class="flex items-center gap-2">
+                        <p class="text-sm font-normal leading-normal text-primary">
+                        $189.00
+                        </p>
+                        <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
+                        $220.00
+                        </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+   <!--  section new arrival -->
 
    </main>
 
