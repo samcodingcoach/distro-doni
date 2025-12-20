@@ -200,6 +200,37 @@
 
    <!--  section new arrival -->
 
+  <!--  section shop by category -->
+
+        <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
+                Shop by Category
+            </h2>
+
+            <div class="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
+                
+                <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl" href="#">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105" 
+                        data-alt="A model wearing an elegant floral dress in a garden." 
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBfM_0NCQFLY1rDJS1m0bIz0-mUKl3x6irtMWdSOZwjhiVM9EEJSOFKghXdeQQ4Z9GcNBsHg-Ez9ZjoPJNg7zMW9tgk8Bw1YvBmedmOoLikKRxV3sbWPEGFeYFS5CDCH1ryJAlk6ko6qPEZudeXjhI03ZtCIP9s4xkrNA5-7X_o6CY0UYo2fQ6t3WyaEQIn9m1C8jccDS6BzpCCI1gQdR-dj_hAhwXbXvTvFL0wWw8ah6-D9SUfqksMod_2ZjnLSszdcAud1KE5wIM");'>
+                    </div>
+                    <div class="absolute inset-0 bg-black/30"></div>
+                    <h3 class="relative text-2xl font-bold text-white">
+                        Dresses
+                    </h3>
+                </a>
+
+                <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark" href="#">
+                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <h3 class="relative text-2xl font-bold text-foreground-light dark:text-foreground-dark group-hover:text-white transition-colors duration-300">
+                        All Category
+                    </h3>
+                </a>
+            </div>
+        </section>
+       
+   <!-- section shop by category -->
+
    </main>
 
 
