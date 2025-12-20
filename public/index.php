@@ -41,6 +41,10 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+    .scrollable-container {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
   </style>
   <script src="script/tailwind-config.js"></script>
  </head>
@@ -131,39 +135,66 @@
     <!-- hero banner section -->
 
    <!--  section new arrival -->
+        <?php
+        // Fetch produk data by executing the API script in a separate process
+        $produk_list = [];
+        $api_file_path = __DIR__ . '/../api/produk/list.php';
 
+        if (file_exists($api_file_path)) {
+            $command = 'cd ' . escapeshellarg(dirname($api_file_path)) . ' && php ' . escapeshellarg(basename($api_file_path));
+            $api_output = shell_exec($command);
+
+            if ($api_output !== null) {
+                $data = json_decode($api_output, true);
+                if (isset($data['success']) && $data['success'] && isset($data['data'])) {
+                    // Limit to 6 products
+                    $produk_list = array_slice($data['data'], 0, 6);
+                }
+            }
+        }
+        ?>
         <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
             New Arrivals
             </h2>
             <div class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
-                <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
-                    <div class="relative overflow-hidden rounded-xl">
-                        <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-                        1,532 sold
+                <?php if (!empty($produk_list)): ?>
+                    <?php foreach ($produk_list as $produk): ?>
+                        <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
+                            <div class="relative overflow-hidden rounded-xl">
+                                <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
+                                    <?php echo htmlspecialchars($produk['terjual']); ?> sold
+                                </div>
+                                <div class="absolute bottom-2 right-2 z-10 rounded-lg <?php echo $produk['in_stok'] == '1' ? 'bg-green-600/50' : 'bg-red-600/50'; ?> backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
+                                    <?php echo $produk['in_stok'] == '1' ? 'In Stock' : 'Out of Stock'; ?>
+                                </div>
+                                <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="<?php echo htmlspecialchars($produk['nama_produk']); ?>" style='background-image: url("images/<?php echo htmlspecialchars($produk['gambar1']); ?>");'>
+                                </div>
+                                <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="<?php echo htmlspecialchars($produk['nama_produk']); ?>" style='background-image: url("<?php echo !empty($produk['gambar3']) ? 'images/' . htmlspecialchars($produk['gambar3']) : 'images/' . htmlspecialchars($produk['gambar1']); ?>");'>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-base font-medium leading-normal">
+                                    <?php echo htmlspecialchars($produk['nama_produk']); ?>
+                                </p>
+                                <div class="flex items-center gap-2">
+                                    <p class="text-sm font-normal leading-normal text-primary">
+                                        IDR <?php echo number_format((int)$produk['harga_aktif'], 0, ',', '.'); ?>
+                                    </p>
+                                    <?php if (!empty($produk['harga_coret']) && $produk['harga_coret'] > 0): ?>
+                                        <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
+                                            IDR <?php echo number_format((int)$produk['harga_coret'], 0, ',', '.'); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
                         </div>
-                        <div class="absolute bottom-2 right-2 z-10 rounded-lg bg-green-600/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
-                        In Stock
-                        </div>
-                        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Model wearing a cream-colored classic trench coat." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDUkyBqZVg0Dwr4HIsQN9EslrntKn00YGgKl_JUKQgFoUB-M3_F4XvCVZWDZAPQRDRKwWmi_i4jan74XT3YbR1yHUnDP4EtGwClO7l2tO7XAHJTdjgWLbNGjW2VP8L13hTXXrtRIiZOnQAjTsaGJVNEzTp368tm1JPC9cbZKOHOUjLho6v-XlQSlXaxieaLq6AYno_pTRuOYDgdDynCx7EQng7nAa5MJ95VNFM8WtFOxD6yJqpAUuGtgetilxQNFqG4uf6NF8AwcWI");'>
-                        </div>
-                        <div class="w-full bg-center bg-no-repeat aspect-[3/4] bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="A different view of the cream-colored trench coat, perhaps showing the back detail." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZN3npbI6BbbLxQ6DRnupOac9DYTGobVv6Wof9mEJ_9o1FCP3QiYfMa-h4wIX7X6Bj4nnlTbpLdrpHiC1ITHZj33CpIn2B5jq8pBrBhC6e6oQ-Fs9qUQ7ZcNHUsAmims4v_EMdI0sZzNOfv6_q9KwxskAHOvUI3pZmmFaxgkFxYhgCe5rEqDl3CK1nDZoNokcfnoTBAVDgc8IalY0fIwAAFBbCGpTip5Tus72o-ZCEJ79JA-W4XGS0eXXLLzpG0ZP-3yi5voILY4s");'>
-                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="flex items-center justify-center w-full py-8">
+                        <p class="text-secondary-light dark:text-secondary-dark">No products available</p>
                     </div>
-                    <div>
-                        <p class="text-base font-medium leading-normal">
-                        The Classic Trench Coat
-                        </p>
-                        <div class="flex items-center gap-2">
-                        <p class="text-sm font-normal leading-normal text-primary">
-                        $189.00
-                        </p>
-                        <p class="text-sm font-normal leading-normal text-secondary-light dark:text-secondary-dark line-through">
-                        $220.00
-                        </p>
-                        </div>
-                    </div>
-                </div>
+                <?php endif; ?>
             </div>
         </section>
 
@@ -180,5 +211,6 @@
     </svg>
    </a>
   </div>
+  <script src="script/newarrival_touch.js"></script>
  </body>
 </html>
