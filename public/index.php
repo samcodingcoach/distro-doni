@@ -261,6 +261,34 @@
        
    <!-- section shop by category -->
 
+    <!-- best seller -->
+       <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">Best Sellers</h2>
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+    <div class="group relative overflow-hidden rounded-xl aspect-[3/4]">
+      <div class="w-full h-full bg-center bg-no-repeat bg-cover absolute inset-0 transition-opacity duration-500 ease-in-out group-hover:opacity-0" data-alt="Woman wearing a silk camisole top." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBroOCqTBXbbPxZOO5vppRQcQJQZ9aXIosT9Zxz1rhrTJzCDOvHLu0tmMsMHZo-AZBmteF4Sx8bcFJVVZQKSoNLDPD7U_YWXaPsWlZhn5L0VgZZku9ktaLePsPdGA8knQtN6GYmUL4oAC3QS658R3dDPPMAvb-jFagM2lvu6vE0zlANOePXoZ1Pnb1rVRdFJky8CoPxztAlXXQMfOiLAxY6jBWmnHDjVH0nycLEKf10RFRAJk5I8pDcvU6MaA9PgKYT70UbFMqXYc8");'></div>
+      <div class="w-full h-full bg-center bg-no-repeat bg-cover opacity-0 transition-opacity duration-500 ease-in-out group-hover:opacity-100" data-alt="Another view of the silk camisole, perhaps on a different model or background." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA5BWEosez1mXcOGEFbfrBfFYev1txdXgpMr_1GRsyiWDzTQrZ3skX_HNkmwNDa12wwdZNeSlaBvXvz5iU63Olo3Yf-2mslvrbq65Mn95n_uvBBdYDdtZ9uRRLoJxisVmEvPqWhryO6LPqyv9-9rOBIfPH8Dy6InPpfxgmx0g-pJJ4dB5-9mgbUu3LrxAJMf_nLVxNbFK5XQsDbpXvLv9XG-nBOX0iMErP5JdN1qQ8-McQDCrvMik1dmeISI1Bf9kmiVubopj98Sks");'></div>
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <h3 class="text-white text-lg font-bold mb-1">Silk Camisole</h3>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-primary font-bold">$65.00</span>
+          <span class="text-white/60 line-through text-sm">$85.00</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2 mb-6">
+          <span class="bg-white/20 text-white text-xs font-semibold px-2 py-1 rounded">1,234 sold</span>
+          <span class="bg-green-600/80 text-white text-xs font-semibold px-2 py-1 rounded">In Stock</span>
+        </div>
+        <div class="flex flex-col gap-2 w-full max-w-[180px]">
+          <button class="w-full bg-[#ee4d2d] hover:bg-[#d03e1e] text-white text-sm font-bold py-2 rounded transition-colors">Shopee</button>
+          <button class="w-full bg-black hover:bg-gray-900 border border-white/20 text-white text-sm font-bold py-2 rounded transition-colors">TikTok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- best seller -->
+
    </main>
 
 
