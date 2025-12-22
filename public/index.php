@@ -351,8 +351,14 @@
                     </div>
                 </div>
 
+                <?php
+                // Parse GPS coordinates
+                $gps_coords = explode(',', $distro['gps']);
+                $latitude = isset($gps_coords[0]) ? trim($gps_coords[0]) : '';
+                $longitude = isset($gps_coords[1]) ? trim($gps_coords[1]) : '';
+                ?>
                 <div class="aspect-video overflow-hidden rounded-xl">
-                    <iframe allowfullscreen="" class="w-full h-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.250529618143!2d144.9613613153177!3d-37.81720997975195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642b4758afc1d%3A0x3119524ed33c8b8a!2sFlinders%20Street%20Station!5e0:3m2:1sen!2sau!4v1687483788753!5m2!1sen!2sau" style="border:0;">
+                    <iframe allowfullscreen="" class="w-full h-full" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d997.4195273151761!2d<?php echo htmlspecialchars($longitude); ?>!3d<?php echo htmlspecialchars($latitude); ?>!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sid!2sid!4v1766382075981!5m2!1sid!2sid" style="border:0;">
                     </iframe>
                 </div>
             </div>
