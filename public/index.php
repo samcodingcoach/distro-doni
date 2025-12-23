@@ -124,11 +124,11 @@
                         <?php echo htmlspecialchars($banner_deskripsi); ?>
                     </h2>
                 </div>
-                <button class="flex h-12 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary px-6 text-base font-bold leading-normal tracking-[0.015em] text-white transition-opacity hover:opacity-90">
+                <a href="product.php" class="flex h-12 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary px-6 text-base font-bold leading-normal tracking-[0.015em] text-white transition-opacity hover:opacity-90">
                     <span class="truncate">
                         Shop Now
                     </span>
-                </button>
+                </a>
             </div>
         </section>
     
