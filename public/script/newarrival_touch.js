@@ -1,6 +1,8 @@
 // Enhance touch scrolling for new arrivals section
 document.addEventListener('DOMContentLoaded', function() {
-  const scrollContainer = document.querySelector('.scrollable-container');
+  const scrollContainer = document.getElementById('newArrivalsContainer');
+  const prevButton = document.getElementById('newArrivalsPrev');
+  const nextButton = document.getElementById('newArrivalsNext');
   let isDown = false;
   let startX;
   let scrollLeft;
@@ -51,5 +53,49 @@ document.addEventListener('DOMContentLoaded', function() {
     scrollContainer.addEventListener('touchend', () => {
       touchStartX = 0;
     });
+
+    // Navigation button functionality
+    if (prevButton && nextButton) {
+      // Show/hide buttons based on scroll position
+      function updateButtonVisibility() {
+        const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+        
+        // Show both buttons if there's overflow
+        if (maxScroll > 0) {
+          prevButton.style.opacity = scrollContainer.scrollLeft > 0 ? '1' : '0';
+          nextButton.style.opacity = scrollContainer.scrollLeft < maxScroll ? '1' : '0';
+        } else {
+          // Hide both buttons if no overflow
+          prevButton.style.opacity = '0';
+          nextButton.style.opacity = '0';
+        }
+      }
+
+      // Scroll functions
+      prevButton.addEventListener('click', () => {
+        const scrollAmount = scrollContainer.clientWidth * 0.8; // Scroll 80% of container width
+        scrollContainer.scrollBy({
+          left: -scrollAmount,
+          behavior: 'smooth'
+        });
+      });
+
+      nextButton.addEventListener('click', () => {
+        const scrollAmount = scrollContainer.clientWidth * 0.8; // Scroll 80% of container width
+        scrollContainer.scrollBy({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      });
+
+      // Update button visibility on scroll
+      scrollContainer.addEventListener('scroll', updateButtonVisibility);
+      
+      // Initial visibility check
+      setTimeout(updateButtonVisibility, 100);
+      
+      // Update on window resize
+      window.addEventListener('resize', updateButtonVisibility);
+    }
   }
 });

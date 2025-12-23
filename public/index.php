@@ -157,7 +157,18 @@
             <h2 class="text-foreground-light dark:text-foreground-dark text-2xl md:text-3xl font-bold leading-tight tracking-[-0.015em] mb-6">
             New Arrivals
             </h2>
-            <div class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
+            <div class="relative">
+                <button id="newArrivalsPrev" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm rounded-full h-12 w-12 flex items-center justify-center shadow-lg hover:bg-black/50 transition-all duration-200 opacity-0 hover:opacity-100">
+                    <span class="material-symbols-outlined text-2xl text-white">
+                        chevron_left
+                    </span>
+                </button>
+                <button id="newArrivalsNext" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/30 backdrop-blur-sm rounded-full h-12 w-12 flex items-center justify-center shadow-lg hover:bg-black/50 transition-all duration-200 opacity-0 hover:opacity-100">
+                    <span class="material-symbols-outlined text-2xl text-white">
+                        chevron_right
+                    </span>
+                </button>
+                <div id="newArrivalsContainer" class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
                 <?php if (!empty($produk_list)): ?>
                     <?php foreach ($produk_list as $produk): ?>
                         <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
@@ -195,6 +206,7 @@
                         <p class="text-secondary-light dark:text-secondary-dark">No products available</p>
                     </div>
                 <?php endif; ?>
+            </div>
             </div>
         </section>
 
