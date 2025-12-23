@@ -171,7 +171,7 @@
                 <div id="newArrivalsContainer" class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
                 <?php if (!empty($produk_list)): ?>
                     <?php foreach ($produk_list as $produk): ?>
-                        <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw]">
+                        <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw] cursor-pointer" onclick="openProductModal(<?php echo $produk['id_produk']; ?>)">
                             <div class="relative overflow-hidden rounded-xl">
                                 <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
                                     <?php echo htmlspecialchars($produk['terjual']); ?> sold
@@ -390,6 +390,10 @@
     </svg>
    </a>
   </div>
+  
+  <!-- Include Product Modal -->
+  <?php include 'modal/product-modal.php'; ?>
+  
   <script src="script/newarrival_touch.js"></script>
  </body>
 </html>
