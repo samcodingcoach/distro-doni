@@ -89,14 +89,120 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
    </header>
 
    <main class="flex-grow">
-    <!-- Product content area -->
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <h1 class="text-foreground-light dark:text-foreground-dark text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em] mb-8">
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Breadcrumb -->
+        <nav class="flex text-sm text-secondary-light dark:text-secondary-dark mb-6">
+          <a href="index.php" class="hover:text-primary transition-colors">Home</a>
+          <span class="mx-2">/</span>
+          <span class="font-medium text-foreground-light dark:text-foreground-dark">
             All Products
-        </h1>
-        
+          </span>
+        </nav>
+
+        <!-- Header + Filter -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 border-b border-surface-light dark:border-surface-dark/50 pb-6">
+          <div>
+            <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">
+              All Products
+            </h1>
+            <p class="text-secondary-light dark:text-secondary-dark">
+              Discover our latest collection designed for the modern lifestyle.
+            </p>
+          </div>
+
+          <!-- FILTER -->
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="text-sm font-medium mr-1 hidden sm:inline-block">
+              Filter by:
+            </span>
+
+            <!-- Price -->
+            <div class="relative">
+              <button
+                type="button"
+                class="filter-btn flex items-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium"
+                data-target="price-filter"
+              >
+                Price
+                <span class="material-symbols-outlined text-base">expand_more</span>
+              </button>
+
+              <div
+                id="price-filter"
+                class="filter-menu absolute z-20 mt-2 w-48 rounded-lg bg-white dark:bg-surface-dark shadow-lg hidden"
+              >
+                <ul class="py-2 text-sm">
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-price="under100000">Under 100.000</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-price="100000-500000">100.000-500.000</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-price="500000-1000000">500.000-1.000.000</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-price="lowest">Lowest</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-price="highest">Highest</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Size -->
+            <div class="relative">
+              <button
+                type="button"
+                class="filter-btn flex items-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium"
+                data-target="size-filter"
+              >
+                Size
+                <span class="material-symbols-outlined text-base">expand_more</span>
+              </button>
+
+              <div
+                id="size-filter"
+                class="filter-menu absolute z-20 mt-2 w-32 rounded-lg bg-white dark:bg-surface-dark shadow-lg hidden"
+              >
+                <ul class="py-2 text-sm">
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="S">S</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="M">M</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="XL">XL</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="XXL">XXL</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="XXXL">XXXL</li>
+                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="Unknown">Unknown</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Brand -->
+            <div class="relative">
+              <button
+                type="button"
+                class="filter-btn flex items-center gap-2 px-4 py-2 bg-surface-light dark:bg-surface-dark rounded-full text-sm font-medium"
+                data-target="brand-filter"
+              >
+                Brand
+                <span class="material-symbols-outlined text-base">expand_more</span>
+              </button>
+
+              <div
+                id="brand-filter"
+                class="filter-menu absolute z-20 mt-2 w-40 rounded-lg bg-white dark:bg-surface-dark shadow-lg hidden"
+              >
+                <ul class="py-2 text-sm" id="brand-list">
+                  <!-- Brands will be loaded dynamically -->
+                </ul>
+              </div>
+            </div>
+
+            <div class="h-6 w-px bg-surface-dark/10 dark:bg-surface-light/10 mx-2"></div>
+
+            <!-- Sort -->
+            <select id="sort-select" class="form-select border-none bg-transparent py-2 pl-2 pr-8 text-sm font-medium focus:ring-0 cursor-pointer">
+              <option value="featured">Sort by: Featured</option>
+              <option value="price-low-high">Price: Low to High</option>
+              <option value="price-high-low">Price: High to Low</option>
+              <option value="newest">Newest</option>
+            </select>
+          </div>
+        </div>
+
         <?php include 'all-itemproduct.php'; ?>
-    </div>
+    </section>
    </main>
 
    <?php include 'footer.php'; ?>
@@ -107,5 +213,61 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
     </svg>
    </a>
   </div>
+
+  <!-- FILTER SCRIPT -->
+  <script>
+    // Load brands from API
+    async function loadBrands() {
+      try {
+        const response = await fetch('../api/produk/list.php');
+        const data = await response.json();
+        
+        if (data.success && data.data) {
+          // Extract unique brands and sort alphabetically
+          const brands = [...new Set(data.data.map(product => product.merk).filter(brand => brand && brand.trim() !== ''))];
+          brands.sort((a, b) => a.localeCompare(b));
+          
+          const brandList = document.getElementById('brand-list');
+          brandList.innerHTML = '';
+          
+          brands.forEach(brand => {
+            const li = document.createElement('li');
+            li.className = 'px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark';
+            li.setAttribute('data-brand', brand);
+            li.textContent = brand;
+            brandList.appendChild(li);
+          });
+        }
+      } catch (error) {
+        console.error('Error loading brands:', error);
+      }
+    }
+
+    // Initialize brand loading on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadBrands();
+      
+      // Filter menu interactions
+      document.addEventListener("click", function (e) {
+        const buttons = document.querySelectorAll(".filter-btn");
+        const menus = document.querySelectorAll(".filter-menu");
+
+        buttons.forEach((btn) => {
+          const target = document.getElementById(btn.dataset.target);
+
+          if (btn.contains(e.target)) {
+            menus.forEach((menu) => {
+              if (menu !== target) menu.classList.add("hidden");
+            });
+            target.classList.toggle("hidden");
+          }
+        });
+
+        if (![...buttons].some((btn) => btn.contains(e.target))) {
+          menus.forEach((menu) => menu.classList.add("hidden"));
+        }
+      });
+    });
+  </script>
  </body>
 </html>
