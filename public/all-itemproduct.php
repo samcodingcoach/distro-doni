@@ -30,7 +30,7 @@ $current_products = array_slice($products, $offset, $items_per_page);
 <div class="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10">
     <?php if (!empty($current_products)): ?>
         <?php foreach ($current_products as $product): ?>
-            <div class="group flex flex-col gap-3">
+            <div class="group flex flex-col gap-3 cursor-pointer" onclick="openProductModal(<?php echo $product['id_produk']; ?>)">
                 <div class="relative overflow-hidden rounded-xl">
                     <?php if ($product['terjual'] > 0): ?>
                         <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
