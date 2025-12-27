@@ -161,18 +161,18 @@ function updateModalContent(product) {
     thumbnailsContainer.innerHTML = '';
     
     // Add image 1 thumbnail
-    const thumb1 = createThumbnail(product.gambar1, product.nama_produk, true);
+    const thumb1 = createThumbnail(product.gambar1, product.nama_produk, 0);
     thumbnailsContainer.appendChild(thumb1);
     
     // Add image 2 thumbnail if exists
     if (product.gambar2) {
-        const thumb2 = createThumbnail(product.gambar2, product.nama_produk, false);
+        const thumb2 = createThumbnail(product.gambar2, product.nama_produk, 1);
         thumbnailsContainer.appendChild(thumb2);
     }
     
     // Add image 3 thumbnail if exists
     if (product.gambar3) {
-        const thumb3 = createThumbnail(product.gambar3, product.nama_produk, false);
+        const thumb3 = createThumbnail(product.gambar3, product.nama_produk, 2);
         thumbnailsContainer.appendChild(thumb3);
     }
     
@@ -259,8 +259,9 @@ function updateThumbnailSelection(activeIndex) {
     const thumbnailsContainer = document.getElementById('modalThumbnails').querySelector('.flex');
     const thumbnails = thumbnailsContainer.querySelectorAll('div');
     
-    thumbnails.forEach((thumb, index) => {
-        if (index === activeIndex) {
+    thumbnails.forEach((thumb) => {
+        const thumbIndex = parseInt(thumb.getAttribute('data-index'));
+        if (thumbIndex === activeIndex) {
             thumb.classList.remove('border-transparent', 'hover:border-primary/50');
             thumb.classList.add('border-primary');
         } else {
@@ -306,9 +307,10 @@ function setupImageNavigation(altText) {
     }
 }
 
-function createThumbnail(imageName, altText, isActive) {
+function createThumbnail(imageName, altText, index) {
     const div = document.createElement('div');
-    div.className = `flex h-full flex-1 flex-col rounded-lg border-2 ${isActive ? 'border-primary' : 'border-transparent hover:border-primary/50'} min-w-20 cursor-pointer`;
+    div.className = `flex h-full flex-1 flex-col rounded-lg border-2 ${index === 0 ? 'border-primary' : 'border-transparent hover:border-primary/50'} min-w-20 cursor-pointer`;
+    div.setAttribute('data-index', index);
     
     const img = document.createElement('div');
     img.className = 'w-full bg-center bg-no-repeat aspect-square bg-cover rounded';
@@ -319,12 +321,9 @@ function createThumbnail(imageName, altText, isActive) {
     
     // Add click handler to change main image
     div.addEventListener('click', function() {
-        // Find the index of this image in the current product images array
-        const index = window.currentProductImages.indexOf(imageName);
-        if (index !== -1) {
-            window.currentImageIndex = index;
-            updateMainImage(index);
-        }
+        const clickedIndex = parseInt(this.getAttribute('data-index'));
+        window.currentImageIndex = clickedIndex;
+        updateMainImage(clickedIndex);
     });
     
     return div;
