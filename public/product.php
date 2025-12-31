@@ -157,13 +157,8 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
                 id="size-filter"
                 class="filter-menu absolute z-20 mt-2 w-32 rounded-lg bg-white dark:bg-surface-dark shadow-lg hidden"
               >
-                <ul class="py-2 text-sm">
-                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="S">S</li>
-                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="M">M</li>
-                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="XL">XL</li>
-                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="XXL">XXL</li>
-                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="XXXL">XXXL</li>
-                  <li class="px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark" data-size="Unknown">Unknown</li>
+                <ul class="py-2 text-sm" id="size-list">
+                  <!-- Sizes will be loaded dynamically from API -->
                 </ul>
               </div>
             </div>
@@ -242,7 +237,7 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
       sort: 'featured'
     };
 
-    // Load products and brands from API
+    // Load products, brands, and sizes from API
     async function loadProductsAndBrands() {
       try {
         const response = await fetch('../api/produk/list.php');
@@ -266,6 +261,43 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
             li.textContent = brand;
             brandList.appendChild(li);
           });
+
+          // Load sizes from ukuran field
+          const sizes = [...new Set(allProducts.map(product => product.ukuran).filter(size => size && size.trim() !== ''))];
+          sizes.sort((a, b) => {
+            // Custom sort: S, M, L, XL, XXL, etc.
+            const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+            const aIndex = sizeOrder.indexOf(a.toUpperCase());
+            const bIndex = sizeOrder.indexOf(b.toUpperCase());
+            
+            if (aIndex !== -1 && bIndex !== -1) {
+              return aIndex - bIndex;
+            } else if (aIndex !== -1) {
+              return -1;
+            } else if (bIndex !== -1) {
+              return 1;
+            } else {
+              return a.localeCompare(b);
+            }
+          });
+          
+          const sizeList = document.getElementById('size-list');
+          sizeList.innerHTML = '';
+          
+          sizes.forEach(size => {
+            const li = document.createElement('li');
+            li.className = 'px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark';
+            li.setAttribute('data-size', size);
+            li.textContent = size;
+            sizeList.appendChild(li);
+          });
+
+          // Add "Unknown" option for products without size
+          const unknownLi = document.createElement('li');
+          unknownLi.className = 'px-4 py-2 cursor-pointer hover:bg-surface-light dark:hover:bg-background-dark';
+          unknownLi.setAttribute('data-size', 'Unknown');
+          unknownLi.textContent = 'Unknown';
+          sizeList.appendChild(unknownLi);
         }
       } catch (error) {
         console.error('Error loading products and brands:', error);
@@ -293,11 +325,16 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
 
         // Size filter
         if (currentFilters.size && currentFilters.size !== 'Unknown') {
-          if (!product.ukuran || !product.ukuran.toLowerCase().includes(currentFilters.size.toLowerCase())) {
+          if (!product.ukuran || product.ukuran.trim() === '') {
+            return false;
+          }
+          // Exact match for size from API ukuran field
+          if (product.ukuran.toUpperCase() !== currentFilters.size.toUpperCase()) {
             return false;
           }
         } else if (currentFilters.size === 'Unknown') {
-          if (product.ukuran && product.ukuran.trim() !== '' && product.ukuran.toLowerCase() !== 'unknown') {
+          // Show products with no size or empty size
+          if (product.ukuran && product.ukuran.trim() !== '') {
             return false;
           }
         }
