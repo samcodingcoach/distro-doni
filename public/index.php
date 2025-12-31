@@ -68,12 +68,26 @@
        <?php include 'navbar.php'; ?>
       </div>
       <div class="flex flex-1 items-center justify-end gap-2 md:gap-4">
-       <label class="relative hidden sm:block w-full max-w-xs">
-        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary-light dark:text-secondary-dark">
-         search
-        </span>
-        <input class="form-input h-10 w-full rounded-full border-none bg-surface-light dark:bg-surface-dark pl-10 pr-4 text-sm placeholder:text-secondary-light dark:placeholder:text-secondary-dark focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="Search" type="search"/>
-       </label>
+       <div class="relative hidden sm:block w-full max-w-xs">
+        <label class="relative w-full">
+         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary-light dark:text-secondary-dark">
+          search
+         </span>
+         <input
+            id="main-search-input"
+            class="form-input h-10 w-full rounded-full border-none bg-surface-light dark:bg-surface-dark pl-10 pr-4 text-sm placeholder:text-secondary-light dark:placeholder:text-secondary-dark focus:outline-none focus:ring-2 focus:ring-primary/50"
+            placeholder="Search"
+            type="search"
+         />
+        </label>
+
+        <!-- Search Results Dropdown -->
+        <div id="main-search-results" class="absolute left-0 right-0 mt-2 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 hidden">
+            <div id="main-search-results-content" class="py-2 max-h-96 overflow-y-auto">
+                <!-- Search results will be populated here -->
+            </div>
+        </div>
+       </div>
        <div class="flex items-center gap-1 md:gap-2">
         
         
@@ -393,7 +407,90 @@
   
   <!-- Include Product Modal -->
   <?php include 'modal/product-modal.php'; ?>
-  
+
+  <!-- Main search functionality -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('main-search-input');
+        const searchResults = document.getElementById('main-search-results');
+        const searchResultsContent = document.getElementById('main-search-results-content');
+        let searchTimeout;
+
+        // Show search results when typing
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+
+            // Debounce search requests
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
+                searchResults.classList.add('hidden');
+            }
+        });
+
+        function performSearch(query) {
+            if (query.length < 1) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            // Show loading state
+            searchResultsContent.innerHTML = '<div class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">Searching...</div>';
+            searchResults.classList.remove('hidden');
+
+            // Make AJAX request to search API
+            fetch('/distro/api/produk/search.php?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        displaySearchResults(data.data);
+                    } else {
+                        searchResultsContent.innerHTML = '<div class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">No results found</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Search error:', error);
+                    searchResultsContent.innerHTML = '<div class="px-4 py-3 text-red-500 text-sm">Error performing search</div>';
+                });
+        }
+
+        function displaySearchResults(results) {
+            if (results.length === 0) {
+                searchResultsContent.innerHTML = '<div class="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">No results found</div>';
+                return;
+            }
+
+            let html = '';
+            results.forEach(product => {
+                html += '<a href="product.php?id=' + product.id_produk + '" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors main-search-result-item border-b border-gray-100 dark:border-gray-700 last:border-b-0">' +
+                        '<div class="font-bold uppercase text-gray-900 dark:text-white text-sm">' + product.nama_produk + '</div>' +
+                        '<div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex flex-wrap gap-2">' +
+                            '<span class="font-medium px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">' + product.nama_kategori + '</span>' +
+                            '<span>' + product.merk + '</span>' +
+                            '<span class="font-medium">Kode: ' + product.kode_produk + '</span>' +
+                            '<span class="font-bold text-primary">Rp. ' + parseInt(product.harga_aktif).toLocaleString() + '</span>' +
+                        '</div>' +
+                        '</a>';
+            });
+
+            searchResultsContent.innerHTML = html;
+
+            // Add event listeners to search result items
+            document.querySelectorAll('.main-search-result-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    searchResults.classList.add('hidden');
+                    searchInput.value = ''; // Clear the search after selection
+                });
+            });
+        }
+    });
+  </script>
   <script src="script/newarrival_touch.js"></script>
  </body>
 </html>
