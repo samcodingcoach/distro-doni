@@ -50,7 +50,7 @@ if (file_exists($api_file_path)) {
 <nav class="hidden md:flex items-center gap-8">
     <?php if (!empty($favorite_categories)): ?>
         <?php foreach ($favorite_categories as $kategori): ?>
-            <a class="text-sm font-medium hover:text-primary dark:hover:text-primary transition-colors" href="#">
+            <a class="text-sm font-medium hover:text-primary dark:hover:text-primary transition-colors" href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>">
                 <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
             </a>
         <?php endforeach; ?>
@@ -72,7 +72,7 @@ if (file_exists($api_file_path)) {
             <div class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div class="py-2">
                     <?php foreach ($non_favorite_categories as $kategori): ?>
-                        <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" href="#">
+                        <a class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>">
                             <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
                         </a>
                     <?php endforeach; ?>

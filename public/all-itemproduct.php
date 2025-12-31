@@ -1,4 +1,7 @@
 <?php
+// Get category filter from URL
+$category_filter = isset($_GET['kategori']) ? $_GET['kategori'] : null;
+
 // Fetch product data from API
 $product_api_file = __DIR__ . '/../api/produk/list.php';
 $products = [];
@@ -10,7 +13,19 @@ if (file_exists($product_api_file)) {
     if ($api_output !== null) {
         $data = json_decode($api_output, true);
         if (isset($data['success']) && $data['success'] === true && isset($data['data'])) {
-            $products = $data['data'];
+            $all_products = $data['data'];
+            
+            // Apply category filter if provided
+            if ($category_filter) {
+                foreach ($all_products as $product) {
+                    if ($product['nama_kategori'] && 
+                        strtolower($product['nama_kategori']) === strtolower($category_filter)) {
+                        $products[] = $product;
+                    }
+                }
+            } else {
+                $products = $all_products;
+            }
         }
     }
 }

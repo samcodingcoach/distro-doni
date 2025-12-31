@@ -16,8 +16,17 @@ if (file_exists($api_file_path)) {
     }
 }
 
+// Get category parameter from URL
+$category_filter = isset($_GET['kategori']) ? $_GET['kategori'] : null;
+
 $title_nama_distro = $distro ? $distro['nama_distro'] : 'APRIL';
 $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
+
+// Set page title based on category filter
+$page_title = $category_filter ? htmlspecialchars(ucfirst($category_filter)) : 'All Products';
+$page_description = $category_filter 
+    ? "Discover our " . htmlspecialchars(ucfirst($category_filter)) . " collection designed for the modern lifestyle."
+    : "Discover our latest collection designed for the modern lifestyle.";
 ?>
 <!DOCTYPE html>
 <html class="light" lang="en">
@@ -95,19 +104,27 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
         <nav class="flex text-sm text-secondary-light dark:text-secondary-dark mb-6">
           <a href="index.php" class="hover:text-primary transition-colors">Home</a>
           <span class="mx-2">/</span>
-          <span class="font-medium text-foreground-light dark:text-foreground-dark">
-            All Products
-          </span>
+          <?php if ($category_filter): ?>
+            <a href="product.php" class="hover:text-primary transition-colors">All Products</a>
+            <span class="mx-2">/</span>
+            <span class="font-medium text-foreground-light dark:text-foreground-dark">
+              <?php echo htmlspecialchars(ucfirst($category_filter)); ?>
+            </span>
+          <?php else: ?>
+            <span class="font-medium text-foreground-light dark:text-foreground-dark">
+              All Products
+            </span>
+          <?php endif; ?>
         </nav>
 
         <!-- Header + Filter -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 border-b border-surface-light dark:border-surface-dark/50 pb-6">
           <div>
             <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-2">
-              All Products
+              <?php echo $page_title; ?>
             </h1>
             <p class="text-secondary-light dark:text-secondary-dark">
-              Discover our latest collection designed for the modern lifestyle.
+              <?php echo $page_description; ?>
             </p>
           </div>
 
@@ -223,6 +240,7 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
     let allProducts = [];
     let filteredProducts = [];
     let currentFilters = {
+      category: '<?php echo $category_filter ? htmlspecialchars($category_filter) : ''; ?>',
       price: null,
       size: null,
       brand: null
@@ -300,6 +318,14 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
     // Filter products based on current filters
     function filterProducts() {
       filteredProducts = allProducts.filter(product => {
+        // Category filter (only apply if not already filtered by PHP)
+        if (currentFilters.category && document.location.search.includes('kategori=') === false) {
+          if (!product.nama_kategori || 
+              product.nama_kategori.toLowerCase() !== currentFilters.category.toLowerCase()) {
+            return false;
+          }
+        }
+
         // Price filter
         if (currentFilters.price) {
           const price = parseInt(product.harga_aktif);
@@ -550,6 +576,10 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
       // Create array of active filters
       const activeFilters = [];
       
+      if (currentFilters.category) {
+        activeFilters.push({ type: 'category', label: `Category: ${currentFilters.category}` });
+      }
+      
       if (currentFilters.price) {
         let priceLabel = '';
         switch(currentFilters.price) {
@@ -600,13 +630,24 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
 
     // Remove specific filter
     function removeFilter(filterType) {
+      if (filterType === 'category') {
+        // Redirect to product.php without category parameter
+        window.location.href = 'product.php';
+        return;
+      }
       currentFilters[filterType] = null;
       filterProducts();
     }
 
     // Clear all filters
     function clearAllFilters() {
+      if (currentFilters.category) {
+        // Redirect to product.php without category parameter
+        window.location.href = 'product.php';
+        return;
+      }
       currentFilters = {
+        category: '<?php echo $category_filter ? htmlspecialchars($category_filter) : ''; ?>',
         price: null,
         size: null,
         brand: null
