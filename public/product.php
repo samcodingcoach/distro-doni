@@ -185,14 +185,6 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
             </div>
 
             <div class="h-6 w-px bg-surface-dark/10 dark:bg-surface-light/10 mx-2"></div>
-
-            <!-- Sort -->
-            <select id="sort-select" class="form-select border-none bg-transparent py-2 pl-2 pr-8 text-sm font-medium focus:ring-0 cursor-pointer">
-              <option value="featured">Sort by: Featured</option>
-              <option value="price-low-high">Price: Low to High</option>
-              <option value="price-high-low">Price: High to Low</option>
-              <option value="newest">Newest</option>
-            </select>
           </div>
         </div>
 
@@ -233,8 +225,7 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
     let currentFilters = {
       price: null,
       size: null,
-      brand: null,
-      sort: 'featured'
+      brand: null
     };
 
     // Load products, brands, and sizes from API
@@ -351,9 +342,6 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
         return true;
       });
 
-      // Apply sorting
-      applySorting();
-      
       // Update display
       updateProductDisplay();
       
@@ -361,30 +349,7 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
       updateActiveFiltersDisplay();
     }
 
-    // Apply sorting to filtered products
-    function applySorting() {
-      switch (currentFilters.sort) {
-        case 'price-low-high':
-          filteredProducts.sort((a, b) => parseInt(a.harga_aktif) - parseInt(b.harga_aktif));
-          break;
-        case 'price-high-low':
-          filteredProducts.sort((a, b) => parseInt(b.harga_aktif) - parseInt(a.harga_aktif));
-          break;
-        case 'newest':
-          // Assuming products have an id where higher numbers are newer
-          filteredProducts.sort((a, b) => parseInt(b.id_produk) - parseInt(a.id_produk));
-          break;
-        case 'lowest':
-          filteredProducts.sort((a, b) => parseInt(a.harga_aktif) - parseInt(b.harga_aktif));
-          break;
-        case 'highest':
-          filteredProducts.sort((a, b) => parseInt(b.harga_aktif) - parseInt(a.harga_aktif));
-          break;
-        default:
-          // featured - keep original order
-          break;
-      }
-    }
+
 
     // Update product display with filtered results and pagination
     function updateProductDisplay() {
@@ -644,8 +609,7 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
       currentFilters = {
         price: null,
         size: null,
-        brand: null,
-        sort: currentFilters.sort // Keep sorting
+        brand: null
       };
       filterProducts();
     }
@@ -698,15 +662,7 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
         }
       });
 
-      // Handle sort dropdown
-      const sortSelect = document.getElementById('sort-select');
-      if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-          currentFilters.sort = this.value;
-          applySorting();
-          updateProductDisplay();
-        });
-      }
+
 
       // Add clear all filters button listener
       const clearAllBtn = document.getElementById('clearAllFilters');
