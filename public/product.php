@@ -91,7 +91,7 @@ $page_description = $category_filter
         </label>
 
         <!-- Search Results Dropdown -->
-        <div id="main-search-results" class="absolute left-0 right-0 mt-2 bg-white dark:bg-surface-dark rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 hidden">
+        <div id="main-search-results" class="absolute left-0 right-0 mt-2 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 hidden">
             <div id="main-search-results-content" class="py-2 max-h-96 overflow-y-auto">
                 <!-- Search results will be populated here -->
             </div>
@@ -785,10 +785,13 @@ $page_description = $category_filter
 
             let html = '';
             results.forEach(product => {
-                html += '<a href="product.php?id=' + product.id_produk + '" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors main-search-result-item border-b border-gray-100 dark:border-gray-700 last:border-b-0">' +
-                        '<div class="font-medium text-gray-900 dark:text-white">' + product.nama_produk + '</div>' +
-                        '<div class="text-xs text-gray-500 dark:text-gray-400 mt-1">' +
-                            product.nama_kategori + ' | ' + product.merk + ' | ' + product.kode_produk + ' | Rp. ' + parseInt(product.harga_aktif).toLocaleString() +
+                html += '<a href="product.php?id=' + product.id_produk + '" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors main-search-result-item border-b border-gray-100 dark:border-gray-700 last:border-b-0">' +
+                        '<div class="font-bold uppercase text-gray-900 dark:text-white text-sm">' + product.nama_produk + '</div>' +
+                        '<div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex flex-wrap gap-2">' +
+                            '<span class="font-medium px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">' + product.nama_kategori + '</span>' +
+                            '<span>' + product.merk + '</span>' +
+                            '<span class="font-medium">Kode: ' + product.kode_produk + '</span>' +
+                            '<span class="font-bold text-primary">Rp. ' + parseInt(product.harga_aktif).toLocaleString() + '</span>' +
                         '</div>' +
                         '</a>';
             });
