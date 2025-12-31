@@ -247,9 +247,11 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
           allProducts = data.data;
           filteredProducts = [...allProducts];
           
-          // Load brands
-          const brands = [...new Set(allProducts.map(product => product.merk).filter(brand => brand && brand.trim() !== ''))];
-          brands.sort((a, b) => a.localeCompare(b));
+          // Load brands from merk field
+          const brands = [...new Set(allProducts.map(product => product.merk)
+            .filter(brand => brand && brand.trim() !== '')
+            .map(brand => brand.trim()))];
+          brands.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
           
           const brandList = document.getElementById('brand-list');
           brandList.innerHTML = '';
@@ -341,7 +343,9 @@ $title_slogan = $distro ? $distro['slogan'] : 'Modern Fashion';
 
         // Brand filter
         if (currentFilters.brand) {
-          if (product.merk !== currentFilters.brand) return false;
+          if (!product.merk || product.merk.trim() === '' || product.merk.trim().toLowerCase() !== currentFilters.brand.trim().toLowerCase()) {
+            return false;
+          }
         }
 
         return true;
