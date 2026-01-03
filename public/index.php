@@ -468,7 +468,7 @@
 
             let html = '';
             results.forEach(product => {
-                html += '<a href="product.php?id=' + product.id_produk + '" class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors main-search-result-item border-b border-gray-100 dark:border-gray-700 last:border-b-0">' +
+                html += '<div class="block px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors main-search-result-item border-b border-gray-100 dark:border-gray-700 last:border-b-0 cursor-pointer" data-product-id="' + product.id_produk + '">' +
                         '<div class="font-bold uppercase text-gray-900 dark:text-white text-sm">' + product.nama_produk + '</div>' +
                         '<div class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex flex-wrap gap-2">' +
                             '<span class="font-medium px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded">' + product.nama_kategori + '</span>' +
@@ -476,7 +476,7 @@
                             '<span class="font-medium">Kode: ' + product.kode_produk + '</span>' +
                             '<span class="font-bold text-primary">Rp. ' + parseInt(product.harga_aktif).toLocaleString() + '</span>' +
                         '</div>' +
-                        '</a>';
+                        '</div>';
             });
 
             searchResultsContent.innerHTML = html;
@@ -484,8 +484,10 @@
             // Add event listeners to search result items
             document.querySelectorAll('.main-search-result-item').forEach(item => {
                 item.addEventListener('click', function() {
+                    const productId = this.getAttribute('data-product-id');
                     searchResults.classList.add('hidden');
                     searchInput.value = ''; // Clear the search after selection
+                    openProductModal(productId); // Open modal instead of navigating
                 });
             });
         }
