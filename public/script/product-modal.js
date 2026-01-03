@@ -12,6 +12,8 @@ function openProductModal(productId) {
                 if (modal) {
                     modal.classList.remove('hidden');
                     document.body.style.overflow = 'hidden';
+                    // Initialize zoom functionality
+                    initializeZoomOnModalOpen();
                 }
             }
         })
@@ -19,6 +21,8 @@ function openProductModal(productId) {
             console.error('Error fetching product details:', error);
         });
 }
+
+
 
 function closeProductModal() {
     const modal = document.getElementById('productModal');
@@ -156,11 +160,31 @@ function updateModalContent(product) {
 
 function updateMainImage(index) {
     const mainImage = document.getElementById('modalMainImage');
+    const imageLoader = document.getElementById('imageLoader');
     if (mainImage && window.currentProductImages && window.currentProductImages[index]) {
-        mainImage.style.backgroundImage = `url("images/${window.currentProductImages[index]}")`;
+        // Show loader
+        if (imageLoader) {
+            imageLoader.classList.remove('hidden');
+        }
+        
+        // Load new image
+        const img = new Image();
+        img.onload = function() {
+            mainImage.src = this.src;
+            // Hide loader
+            if (imageLoader) {
+                imageLoader.classList.add('hidden');
+            }
+            // Reset zoom when image changes
+            resetZoom();
+        };
+        img.src = 'images/' + window.currentProductImages[index];
         
         // Update thumbnail borders to match current image
         updateThumbnailSelection(index);
+        
+        // Update zoom index to stay in sync
+        window.currentImageIndex = index;
     }
 }
 
@@ -223,7 +247,7 @@ function setupImageNavigation(altText) {
 
 function createThumbnail(imageName, altText, index) {
     const div = document.createElement('div');
-    div.className = `flex h-full flex-1 flex-col rounded-lg border-2 ${index === 0 ? 'border-primary' : 'border-transparent hover:border-primary/50'} min-w-20 cursor-pointer`;
+    div.className = `flex h-full flex-col rounded-lg border-2 ${index === 0 ? 'border-primary' : 'border-transparent hover:border-primary/50'} min-w-12 sm:min-w-14 md:min-w-16 lg:min-w-20 cursor-pointer`;
     div.setAttribute('data-index', index);
     
     const img = document.createElement('div');
@@ -247,9 +271,182 @@ function numberFormat(num) {
     return new Intl.NumberFormat('id-ID').format(parseInt(num) || 0);
 }
 
+// Pan and Zoom functionality
+let imageZoomState = {
+    scale: 1,
+    minScale: 1,
+    maxScale: 5,
+    translateX: 0,
+    translateY: 0,
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    lastTouchDistance: 0
+};
+
+function initializeImageZoom() {
+    const container = document.getElementById('imageContainer');
+    const image = document.getElementById('modalMainImage');
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const zoomResetBtn = document.getElementById('zoomResetBtn');
+    const zoomLevel = document.getElementById('zoomLevel');
+    
+    if (!container || !image) return;
+    
+    // Mouse events
+    container.addEventListener('mousedown', startDrag);
+    container.addEventListener('mousemove', drag);
+    container.addEventListener('mouseup', endDrag);
+    container.addEventListener('mouseleave', endDrag);
+    container.addEventListener('wheel', handleWheel);
+    
+    // Touch events
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd);
+    
+    // Button events
+    if (zoomInBtn) zoomInBtn.addEventListener('click', () => zoom(1.2));
+    if (zoomOutBtn) zoomOutBtn.addEventListener('click', () => zoom(0.8));
+    if (zoomResetBtn) zoomResetBtn.addEventListener('click', resetZoom);
+    
+    // Double click to zoom
+    container.addEventListener('dblclick', handleDoubleClick);
+}
+
+function startDrag(e) {
+    if (imageZoomState.scale <= 1) return;
+    
+    imageZoomState.isDragging = true;
+    imageZoomState.startX = e.clientX - imageZoomState.translateX;
+    imageZoomState.startY = e.clientY - imageZoomState.translateY;
+}
+
+function drag(e) {
+    if (!imageZoomState.isDragging) return;
+    
+    e.preventDefault();
+    imageZoomState.translateX = e.clientX - imageZoomState.startX;
+    imageZoomState.translateY = e.clientY - imageZoomState.startY;
+    
+    updateImageTransform();
+}
+
+function endDrag() {
+    imageZoomState.isDragging = false;
+}
+
+function handleWheel(e) {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    zoom(delta);
+}
+
+function handleTouchStart(e) {
+    if (e.touches.length === 1) {
+        if (imageZoomState.scale > 1) {
+            imageZoomState.isDragging = true;
+            imageZoomState.startX = e.touches[0].clientX - imageZoomState.translateX;
+            imageZoomState.startY = e.touches[0].clientY - imageZoomState.translateY;
+        }
+    } else if (e.touches.length === 2) {
+        imageZoomState.isDragging = false;
+        imageZoomState.lastTouchDistance = getTouchDistance(e.touches);
+    }
+}
+
+function handleTouchMove(e) {
+    e.preventDefault();
+    
+    if (e.touches.length === 1 && imageZoomState.isDragging) {
+        imageZoomState.translateX = e.touches[0].clientX - imageZoomState.startX;
+        imageZoomState.translateY = e.touches[0].clientY - imageZoomState.startY;
+        updateImageTransform();
+    } else if (e.touches.length === 2) {
+        const currentDistance = getTouchDistance(e.touches);
+        const scale = currentDistance / imageZoomState.lastTouchDistance;
+        imageZoomState.lastTouchDistance = currentDistance;
+        zoom(scale);
+    }
+}
+
+function handleTouchEnd() {
+    imageZoomState.isDragging = false;
+}
+
+function getTouchDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+function handleDoubleClick(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    
+    if (imageZoomState.scale === 1) {
+        zoom(2);
+        imageZoomState.translateX = -x;
+        imageZoomState.translateY = -y;
+    } else {
+        resetZoom();
+    }
+    updateImageTransform();
+}
+
+function zoom(delta) {
+    const newScale = imageZoomState.scale * delta;
+    imageZoomState.scale = Math.max(imageZoomState.minScale, Math.min(imageZoomState.maxScale, newScale));
+    
+    if (imageZoomState.scale === 1) {
+        imageZoomState.translateX = 0;
+        imageZoomState.translateY = 0;
+    }
+    
+    updateImageTransform();
+    updateZoomLevel();
+}
+
+function resetZoom() {
+    imageZoomState.scale = 1;
+    imageZoomState.translateX = 0;
+    imageZoomState.translateY = 0;
+    updateImageTransform();
+    updateZoomLevel();
+}
+
+function updateImageTransform() {
+    const image = document.getElementById('modalMainImage');
+    if (image) {
+        image.style.transform = `translate(${imageZoomState.translateX}px, ${imageZoomState.translateY}px) scale(${imageZoomState.scale})`;
+    }
+}
+
+function updateZoomLevel() {
+    const zoomLevel = document.getElementById('zoomLevel');
+    if (zoomLevel) {
+        zoomLevel.textContent = `${Math.round(imageZoomState.scale * 100)}%`;
+    }
+}
+
 // Close modal on Escape key
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
-        closeProductModal();
+        const zoomModal = document.getElementById('imageZoomModal');
+        if (zoomModal && !zoomModal.classList.contains('hidden')) {
+            closeImageZoom();
+        } else {
+            closeProductModal();
+        }
     }
 });
+
+// Initialize zoom when modal opens
+function initializeZoomOnModalOpen() {
+    setTimeout(() => {
+        initializeImageZoom();
+        updateZoomLevel();
+    }, 100);
+}

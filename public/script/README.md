@@ -31,7 +31,18 @@ This directory contains organized JavaScript modules for the distro website.
   - Escape key to close modal
 - **Dependencies**: None
 
-### 4. newarrival_touch.js
+### 4. product-filter.js
+- **Purpose**: Product filtering and pagination functionality
+- **Loaded on**: product.php
+- **Features**:
+  - Dynamic product filtering (price, size, brand, category)
+  - AJAX loading of products, brands, and sizes
+  - Pagination with ellipsis
+  - Active filters display with remove functionality
+  - Real-time filter updates
+- **Dependencies**: product-modal.js (for openProductModal function)
+
+### 5. newarrival_touch.js
 - **Purpose**: Touch and carousel functionality for new arrivals section
 - **Loaded on**: index.php
 - **Features**:
@@ -40,11 +51,21 @@ This directory contains organized JavaScript modules for the distro website.
 - **Dependencies**: None
 
 ## Loading Order
+
+### For index.php
 ```html
 <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
 <script src="script/search.js"></script>
 <script src="script/newarrival_touch.js"></script>
+```
+
+### For product.php
+```html
+<script src="script/tailwind-config.js"></script>
+<script src="script/product-modal.js"></script>
+<script src="script/search.js"></script>
+<script src="script/product-filter.js"></script>
 ```
 
 ## Benefits
