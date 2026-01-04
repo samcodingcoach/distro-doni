@@ -40,6 +40,7 @@ $page_description = $category_filter
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
   </script>
   <style type="text/tailwindcss">
@@ -300,9 +301,16 @@ $page_description = $category_filter
            <span class="font-medium text-foreground-light dark:text-foreground-dark">Total:</span>
            <span class="font-semibold text-primary" id="cart-total">Rp 0</span>
          </div>
-         <button class="w-full rounded-lg bg-primary text-white py-3 font-medium hover:bg-primary/90 transition-colors">
-           Checkout
-         </button>
+         <div class="flex gap-2">
+           <button id="clear-cart-btn" class="flex items-center justify-center gap-2 px-3 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-red-50 hover:border-red-300 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:border-red-800 dark:hover:text-red-400 transition-all duration-200 shadow-sm hover:shadow-md">
+             <span class="material-symbols-outlined text-lg">delete_sweep</span>
+             <span class="hidden sm:inline">Clear All</span>
+           </button>
+           <button id="request-whatsapp-btn" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]">
+             <i class="fab fa-whatsapp text-lg" style="color: white"></i>
+             <span>Request via WhatsApp</span>
+           </button>
+         </div>
        </div>
      </div>
    </div>
@@ -474,6 +482,48 @@ $page_description = $category_filter
                     
                     addToCart(product);
                 }
+            }
+        });
+        
+        // Clear cart button handler
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#clear-cart-btn')) {
+                if (cartItems.length > 0 && confirm('Are you sure you want to clear all items from your cart?')) {
+                    cartItems = [];
+                    renderCartItems();
+                    showNotification('Cart cleared!');
+                }
+            }
+        });
+        
+        // Request via WhatsApp button handler
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#request-whatsapp-btn')) {
+                if (cartItems.length === 0) {
+                    showNotification('Your cart is empty!');
+                    return;
+                }
+                
+                const phoneNumber = '628123456789'; // Replace with actual WhatsApp number
+                let message = 'Halo, saya ingin memesan produk berikut:\n\n';
+                let total = 0;
+                
+                cartItems.forEach((item, index) => {
+                    const subtotal = item.harga_aktif * item.qty;
+                    total += subtotal;
+                    message += `${index + 1}. ${item.nama_produk}\n`;
+                    message += `   Kode: ${item.kode_produk}\n`;
+                    message += `   Harga: Rp ${item.harga_aktif.toLocaleString('id-ID')} x ${item.qty}\n`;
+                    message += `   Subtotal: Rp ${subtotal.toLocaleString('id-ID')}\n\n`;
+                });
+                
+                message += `Total: Rp ${total.toLocaleString('id-ID')}\n\n`;
+                message += 'Mohon informasikan ketersediaan dan cara pemesanannya. Terima kasih!';
+                
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+                
+                window.open(whatsappUrl, '_blank');
             }
         });
         
