@@ -111,7 +111,7 @@
                     </p>
                     
                     <!-- Add to Cart Button -->
-                    <button class="w-full py-2 sm:py-3 md:py-4 px-3 sm:px-4 md:px-6 rounded-full bg-primary hover:bg-[#b00e44] text-white text-sm sm:text-base md:text-lg font-bold shadow-lg shadow-primary/25 hover:shadow-xl active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+                    <button id="add-to-cart-btn" class="w-full py-2 sm:py-3 md:py-4 px-3 sm:px-4 md:px-6 rounded-full bg-primary hover:bg-[#b00e44] text-white text-sm sm:text-base md:text-lg font-bold shadow-lg shadow-primary/25 hover:shadow-xl active:scale-[0.99] transition-all flex items-center justify-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                         <span class="material-symbols-outlined text-lg sm:text-xl md:text-2xl">shopping_cart</span>
                         <span>Add to Cart</span>
                     </button>

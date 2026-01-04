@@ -253,7 +253,7 @@ $page_description = $category_filter
      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="cart-backdrop"></div>
      
      <!-- Cart Panel -->
-     <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-surface-dark shadow-xl transform translate-x-full transition-transform duration-300" id="cart-panel">
+     <div class="absolute right-0 top-0 h-full w-full max-w-md sm:max-w-lg bg-white dark:bg-surface-dark shadow-xl transform translate-x-full transition-transform duration-300" id="cart-panel">
        <!-- Cart Header -->
        <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
          <h2 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark">Shopping Cart</h2>
@@ -326,15 +326,7 @@ $page_description = $category_filter
         const cartBadge = document.getElementById('cart-badge');
         
         // Cart data (will be populated from backend)
-        let cartItems = [
-            {
-                nama_produk: 'Sample Product',
-                kode_produk: 'PRD001',
-                harga_aktif: 150000,
-                qty: 1,
-                gambar: 'https://via.placeholder.com/80x80'
-            }
-        ];
+        let cartItems = [];
         
         function openCart() {
             cartModal.classList.remove('hidden');
@@ -372,25 +364,25 @@ $page_description = $category_filter
                     total += subtotal;
                     
                     html += `
-                        <div class="flex gap-4 mb-4 p-3 bg-surface-light dark:bg-background-dark rounded-lg">
-                            <div class="h-20 w-20 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                        <div class="flex gap-3 sm:gap-4 mb-3 sm:mb-4 p-3 bg-surface-light dark:bg-background-dark rounded-lg">
+                            <div class="h-16 w-16 sm:h-20 sm:w-20 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0">
                                 <img src="${item.gambar}" alt="${item.nama_produk}" class="h-full w-full object-cover">
                             </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-foreground-light dark:text-foreground-dark">${item.nama_produk}</h3>
-                                <p class="text-sm text-secondary-light dark:text-secondary-dark">Kode: ${item.kode_produk}</p>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-medium text-foreground-light dark:text-foreground-dark text-sm sm:text-base truncate">${item.nama_produk}</h3>
+                                <p class="text-xs sm:text-sm text-secondary-light dark:text-secondary-dark">Kode: ${item.kode_produk}</p>
                                 <p class="text-sm font-medium text-primary">Rp ${item.harga_aktif.toLocaleString('id-ID')}</p>
                                 
                                 <div class="flex items-center gap-2 mt-2">
-                                    <button class="decrease-qty h-8 w-8 rounded-full bg-surface-light dark:bg-background-dark flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-600" data-index="${index}">
-                                        <span class="material-symbols-outlined text-sm">remove</span>
+                                    <button class="decrease-qty h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-surface-light dark:bg-background-dark flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-600" data-index="${index}">
+                                        <span class="material-symbols-outlined text-xs sm:text-sm">remove</span>
                                     </button>
-                                    <span class="text-sm font-medium w-8 text-center qty-display">${item.qty}</span>
-                                    <button class="increase-qty h-8 w-8 rounded-full bg-surface-light dark:bg-background-dark flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-600" data-index="${index}">
-                                        <span class="material-symbols-outlined text-sm">add</span>
+                                    <span class="text-xs sm:text-sm font-medium w-6 sm:w-8 text-center qty-display">${item.qty}</span>
+                                    <button class="increase-qty h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-surface-light dark:bg-background-dark flex items-center justify-center hover:bg-gray-300 dark:hover:bg-gray-600" data-index="${index}">
+                                        <span class="material-symbols-outlined text-xs sm:text-sm">add</span>
                                     </button>
                                     <button class="ml-auto text-red-500 hover:text-red-700 remove-item" data-index="${index}">
-                                        <span class="material-symbols-outlined text-sm">delete</span>
+                                        <span class="material-symbols-outlined text-sm sm:text-base">delete</span>
                                     </button>
                                 </div>
                             </div>
@@ -431,6 +423,59 @@ $page_description = $category_filter
                 });
             }
         }
+        
+        // Add to cart function
+        function addToCart(product) {
+            const existingItemIndex = cartItems.findIndex(item => item.kode_produk === product.kode_produk);
+            
+            if (existingItemIndex > -1) {
+                cartItems[existingItemIndex].qty += 1;
+            } else {
+                cartItems.push({
+                    ...product,
+                    qty: 1
+                });
+            }
+            
+            renderCartItems();
+            
+            // Show success notification
+            showNotification('Product added to cart!');
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-20 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-pulse';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+        
+        // Add to cart button click handler
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#add-to-cart-btn')) {
+                const modal = document.getElementById('productModal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    const productName = document.getElementById('modalProductName').textContent;
+                    const productCode = document.getElementById('modalProductCode').textContent;
+                    const productPrice = document.getElementById('modalPrice').textContent.replace(/[^\d]/g, '');
+                    const productImage = document.getElementById('modalMainImage').src;
+                    
+                    const product = {
+                        nama_produk: productName,
+                        kode_produk: productCode,
+                        harga_aktif: parseInt(productPrice),
+                        gambar: productImage
+                    };
+                    
+                    addToCart(product);
+                }
+            }
+        });
         
         // Event listeners
         cartButton.addEventListener('click', openCart);
