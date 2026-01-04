@@ -336,6 +336,22 @@ $page_description = $category_filter
         // Cart data (will be populated from backend)
         let cartItems = [];
         
+        // Cart persistence functions
+        function saveCartToStorage() {
+            localStorage.setItem('shoppingCart', JSON.stringify(cartItems));
+        }
+        
+        function loadCartFromStorage() {
+            const savedCart = localStorage.getItem('shoppingCart');
+            if (savedCart) {
+                try {
+                    cartItems = JSON.parse(savedCart);
+                } catch (e) {
+                    cartItems = [];
+                }
+            }
+        }
+        
         function openCart() {
             cartModal.classList.remove('hidden');
             setTimeout(() => {
@@ -409,6 +425,7 @@ $page_description = $category_filter
                         const index = parseInt(e.currentTarget.dataset.index);
                         if (cartItems[index].qty > 1) {
                             cartItems[index].qty--;
+                            saveCartToStorage();
                             renderCartItems();
                         }
                     });
@@ -418,6 +435,7 @@ $page_description = $category_filter
                     btn.addEventListener('click', (e) => {
                         const index = parseInt(e.currentTarget.dataset.index);
                         cartItems[index].qty++;
+                        saveCartToStorage();
                         renderCartItems();
                     });
                 });
@@ -426,6 +444,7 @@ $page_description = $category_filter
                     btn.addEventListener('click', (e) => {
                         const index = parseInt(e.currentTarget.dataset.index);
                         cartItems.splice(index, 1);
+                        saveCartToStorage();
                         renderCartItems();
                     });
                 });
@@ -445,6 +464,7 @@ $page_description = $category_filter
                 });
             }
             
+            saveCartToStorage();
             renderCartItems();
             
             // Show success notification
@@ -490,6 +510,7 @@ $page_description = $category_filter
             if (e.target.closest('#clear-cart-btn')) {
                 if (cartItems.length > 0 && confirm('Are you sure you want to clear all items from your cart?')) {
                     cartItems = [];
+                    saveCartToStorage();
                     renderCartItems();
                     showNotification('Cart cleared!');
                 }
@@ -538,6 +559,9 @@ $page_description = $category_filter
                 closeCartModal();
             }
         });
+        
+        // Load cart from storage on page load
+        loadCartFromStorage();
         
         // Initial render
         renderCartItems();
