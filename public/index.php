@@ -31,6 +31,7 @@
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries">
   </script>
   <style type="text/tailwindcss">
@@ -93,11 +94,14 @@
        <div class="flex items-center gap-1 md:gap-2">
         
         
-        <button class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
-         <span class="material-symbols-outlined text-2xl">
-          shopping_bag
-         </span>
-        </button>
+        <div class="relative">
+            <button id="cart-button" class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
+             <span class="material-symbols-outlined text-2xl">
+              shopping_bag
+             </span>
+            </button>
+            <span id="cart-badge" class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs text-white flex items-center justify-center hidden">0</span>
+        </div>
        </div>
       </div>
      </div>
@@ -187,7 +191,7 @@
                 <div id="newArrivalsContainer" class="flex overflow-x-auto space-x-4 md:space-x-6 pb-4 no-scrollbar scroll-smooth scrollable-container cursor-grab active:cursor-grabbing">
                 <?php if (!empty($produk_list)): ?>
                     <?php foreach ($produk_list as $produk): ?>
-                        <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw] cursor-pointer" onclick="openProductModal(<?php echo $produk['id_produk']; ?>)">
+                        <div class="group flex flex-col gap-3 flex-shrink-0 w-[45vw] sm:w-[30vw] md:w-[22vw] lg:w-[20vw] cursor-pointer" onclick="addToCartFromNewArrivals(<?php echo htmlspecialchars(json_encode($produk)); ?>)">
                             <div class="relative overflow-hidden rounded-xl">
                                 <div class="absolute bottom-2 left-2 z-10 rounded-lg bg-black/50 backdrop-blur-sm px-2.5 py-1 text-xs font-semibold text-white">
                                     <?php echo htmlspecialchars($produk['terjual']); ?> sold
@@ -398,6 +402,46 @@
    </main>
 
 
+   <!-- Shopping Cart Modal -->
+   <div id="cart-modal" class="fixed inset-0 z-50 hidden">
+     <!-- Backdrop -->
+     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="cart-backdrop"></div>
+     
+     <!-- Cart Panel -->
+     <div class="absolute right-0 top-0 h-full w-full max-w-md sm:max-w-lg bg-white dark:bg-surface-dark shadow-xl transform translate-x-full transition-transform duration-300" id="cart-panel">
+       <!-- Cart Header -->
+       <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
+         <h2 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark">Shopping Cart</h2>
+         <button id="close-cart" class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-light dark:hover:bg-background-dark">
+           <span class="material-symbols-outlined">close</span>
+         </button>
+       </div>
+       
+       <!-- Cart Items Container -->
+       <div class="flex-1 overflow-y-auto p-4" id="cart-items-container">
+         <!-- Cart items will be dynamically populated here -->
+       </div>
+       
+       <!-- Cart Footer -->
+       <div class="border-t border-gray-200 dark:border-gray-700 p-4">
+         <div class="flex justify-between mb-4">
+           <span class="font-medium text-foreground-light dark:text-foreground-dark">Total:</span>
+           <span class="font-semibold text-primary" id="cart-total">Rp 0</span>
+         </div>
+         <div class="flex gap-2">
+           <button id="clear-cart-btn" class="flex items-center justify-center gap-2 px-3 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-red-50 hover:border-red-300 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:border-red-800 dark:hover:text-red-400 transition-all duration-200 shadow-sm hover:shadow-md">
+             <span class="material-symbols-outlined text-lg">delete_sweep</span>
+             <span class="hidden sm:inline">Clear All</span>
+           </button>
+           <button id="request-whatsapp-btn" class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]">
+             <i class="fab fa-whatsapp text-lg" style="color: white"></i>
+             <span>Request via WhatsApp</span>
+           </button>
+         </div>
+       </div>
+     </div>
+   </div>
+
    <?php include 'footer.php'; ?>
    <a class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-lg hover:bg-green-600 transition-colors" href="#">
     <svg class="bi bi-whatsapp" fill="currentColor" height="28" viewbox="0 0 16 16" width="28" xmlns="http://www.w3.org/2000/svg">
@@ -410,5 +454,22 @@
   <!-- Include Product Modal -->
   <?php include 'modal/product-modal.php'; ?>
   <script src="script/newarrival_touch.js"></script>
+  <script src="script/cart.js"></script>
+  <script>
+    function addToCartFromNewArrivals(product) {
+        const cartProduct = {
+            nama_produk: product.nama_produk,
+            kode_produk: product.kode_produk,
+            harga_aktif: parseInt(product.harga_aktif),
+            gambar: 'images/' + product.gambar1
+        };
+        
+        // Open product modal first
+        openProductModal(product.id_produk);
+        
+        // Also add to cart (optional - you can remove this if you only want add to cart from modal)
+        // window.cartFunctions.addToCart(cartProduct);
+    }
+  </script>
  </body>
 </html>
