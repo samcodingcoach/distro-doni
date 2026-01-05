@@ -453,8 +453,12 @@
   
   <!-- Include Product Modal -->
   <?php include 'modal/product-modal.php'; ?>
+  <script>
+    // Pass phone number from PHP to JavaScript
+    window.distroPhone = '<?php echo $distro && isset($distro['no_telepon']) ? ($distro['no_telepon'][0] === '0' ? '62' . substr($distro['no_telepon'], 1) : $distro['no_telepon']) : '628123456789'; ?>';
+  </script>
   <script src="script/newarrival_touch.js"></script>
-  <script src="script/cart.js"></script>
+  <script src="script/cart.js?v=<?php echo time(); ?>"></script>
   <script>
     function addToCartFromNewArrivals(product) {
         const cartProduct = {

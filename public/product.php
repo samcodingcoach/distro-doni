@@ -525,7 +525,7 @@ $page_description = $category_filter
                     return;
                 }
                 
-                const phoneNumber = '628123456789'; // Replace with actual WhatsApp number
+                const phoneNumber = '<?php echo $distro && isset($distro['no_telepon']) ? ($distro['no_telepon'][0] === '0' ? '62' . substr($distro['no_telepon'], 1) : $distro['no_telepon']) : '628123456789'; ?>';
                 let message = 'Halo, saya ingin memesan produk berikut:\n\n';
                 let total = 0;
                 

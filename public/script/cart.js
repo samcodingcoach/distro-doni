@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            const phoneNumber = '628123456789'; // Replace with actual WhatsApp number
+            const phoneNumber = window.distroPhone || '628123456789'; // Use phone number from PHP
             let message = 'Halo, saya ingin memesan produk berikut:\\n\\n';
             let total = 0;
             
@@ -239,6 +239,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load cart from storage on page load
     loadCartFromStorage();
+    
+
     
     // Initial render
     renderCartItems();
