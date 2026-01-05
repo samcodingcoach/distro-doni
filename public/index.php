@@ -269,7 +269,7 @@
             <div class="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-4">
                 <?php if (!empty($kategori_list)): ?>
                     <?php foreach ($kategori_list as $kategori): ?>
-                        <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl" href="#">
+                        <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl" href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>">
                             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105" 
                                 data-alt="<?php echo htmlspecialchars($kategori['nama_kategori']); ?>" 
                                 style='background-image: url("images/<?php echo !empty($kategori['background_url']) ? htmlspecialchars($kategori['background_url']) : 'kategori.png'; ?>");'>
@@ -282,7 +282,7 @@
                     <?php endforeach; ?>
                 <?php endif; ?>
 
-                <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark" href="#">
+                <a class="group relative flex h-80 items-center justify-center overflow-hidden rounded-xl bg-surface-light dark:bg-surface-dark" href="all-categories.php">
                     <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <h3 class="relative text-2xl font-bold text-foreground-light dark:text-foreground-dark group-hover:text-white transition-colors duration-300">
                         All Category
