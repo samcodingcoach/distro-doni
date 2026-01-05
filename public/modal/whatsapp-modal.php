@@ -89,11 +89,11 @@
           
           <!-- Submit Button -->
           <button 
-            class="w-full bg-primary hover:bg-[#b00e44] text-white h-11 rounded-lg font-bold text-sm shadow-lg shadow-primary/25 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2" 
+            class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white text-sm font-medium hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]" 
             type="submit"
           >
-            <span class="material-symbols-outlined text-lg">send</span>
-            Send Message
+            <i class="fab fa-whatsapp text-lg" style="color: white"></i>
+            <span>Send Message</span>
           </button>
         </form>
       </div>
