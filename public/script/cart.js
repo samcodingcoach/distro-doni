@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCartItems() {
         const container = document.getElementById('cart-items-container');
         const totalElement = document.getElementById('cart-total');
+        const itemCountElement = document.getElementById('cart-item-count');
         
         if (cartItems.length === 0) {
             container.innerHTML = `
@@ -55,14 +56,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
             totalElement.textContent = 'Rp 0';
+            if (itemCountElement) itemCountElement.textContent = '0';
             cartBadge.classList.add('hidden');
         } else {
             let html = '';
             let total = 0;
+            let totalItems = 0;
             
             cartItems.forEach((item, index) => {
                 const subtotal = item.harga_aktif * item.qty;
                 total += subtotal;
+                totalItems += item.qty;
                 
                 html += `
                     <div class="flex gap-3 sm:gap-4 mb-3 sm:mb-4 p-3 bg-surface-light dark:bg-background-dark rounded-lg">
@@ -93,7 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             container.innerHTML = html;
             totalElement.textContent = `Rp ${total.toLocaleString('id-ID')}`;
-            cartBadge.textContent = cartItems.reduce((sum, item) => sum + item.qty, 0);
+            if (itemCountElement) itemCountElement.textContent = `${totalItems} ${totalItems > 1 ? 'items' : 'item'}`;
+            cartBadge.textContent = totalItems;
             cartBadge.classList.remove('hidden');
             
             // Add event listeners for quantity controls

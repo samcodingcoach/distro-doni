@@ -46,6 +46,43 @@
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
+    
+    /* Custom transparent scrollbar for cart */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Dark mode scrollbar */
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.3);
+    }
+    
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Firefox scrollbar */
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    }
+    
+    .dark .custom-scrollbar {
+        scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+    }
   </style>
   <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
@@ -418,16 +455,25 @@
        </div>
        
        <!-- Cart Items Container -->
-       <div class="flex-1 overflow-y-auto p-4" id="cart-items-container">
+       <div class="flex-1 overflow-y-auto p-4 max-h-[calc(100vh-280px)] custom-scrollbar" id="cart-items-container">
          <!-- Cart items will be dynamically populated here -->
        </div>
        
        <!-- Cart Footer -->
-       <div class="border-t border-gray-200 dark:border-gray-700 p-4">
-         <div class="flex justify-between mb-4">
-           <span class="font-medium text-foreground-light dark:text-foreground-dark">Total:</span>
-           <span class="font-semibold text-primary" id="cart-total">Rp 0</span>
+       <div class="border-t border-gray-200 dark:border-gray-700 p-4 space-y-4">
+         <!-- Summary Section -->
+         <div class="space-y-2">
+           <div class="flex justify-between text-sm">
+             <span class="text-secondary-light dark:text-secondary-dark">Items:</span>
+             <span class="font-medium text-foreground-light dark:text-foreground-dark" id="cart-item-count">0</span>
+           </div>
+           <div class="flex justify-between">
+             <span class="text-base font-semibold text-foreground-light dark:text-foreground-dark">Total:</span>
+             <span class="text-lg font-bold text-primary" id="cart-total">Rp 0</span>
+           </div>
          </div>
+         
+         <!-- Action Buttons -->
          <div class="flex gap-2">
            <button id="clear-cart-btn" class="flex items-center justify-center gap-2 px-3 py-3 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-surface-dark text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-red-50 hover:border-red-300 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:border-red-800 dark:hover:text-red-400 transition-all duration-200 shadow-sm hover:shadow-md">
              <span class="material-symbols-outlined text-lg">delete_sweep</span>
