@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
 
+    // Make closeMobileMenu globally accessible
+    window.closeMobileMenu = closeMobileMenuFunc;
+
     // Event listeners
     mobileMenuToggle.addEventListener('click', openMobileMenu);
     closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
@@ -47,9 +50,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // Show loading state
+            mobileSearchResultsContent.innerHTML = `
+                <div class="px-4 py-3 text-center text-secondary-light dark:text-secondary-dark">
+                    <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                    Searching...
+                </div>
+            `;
+            mobileSearchResults.classList.remove('hidden');
+
             searchTimeout = setTimeout(() => {
                 performMobileSearch(query);
-            }, 300);
+            }, 400); // Increased debounce time slightly
         });
 
         // Close search results when clicking outside
@@ -70,13 +82,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Cache for search results
+    const searchCache = new Map();
+    let currentSearchQuery = '';
+
     // Mobile search function
     async function performMobileSearch(query) {
+        // Avoid duplicate searches
+        if (currentSearchQuery === query && searchCache.has(query)) {
+            displayMobileSearchResults(searchCache.get(query), query);
+            return;
+        }
+
+        currentSearchQuery = query;
+
         try {
             const response = await fetch(`../api/produk/search.php?q=${encodeURIComponent(query)}`);
             const data = await response.json();
 
             if (data.success && data.data && data.data.length > 0) {
+                // Cache the results
+                searchCache.set(query, data.data);
                 displayMobileSearchResults(data.data, query);
             } else {
                 mobileSearchResultsContent.innerHTML = `
@@ -102,17 +128,24 @@ document.addEventListener('DOMContentLoaded', function() {
         let html = '';
         
         products.slice(0, 5).forEach(product => {
-            // Use actual product image if available
-            const imageUrl = product.gambar1 ? `../images/${product.gambar1}` : '../images/placeholder.png';
+            // Use actual product image if available - fix path to use images/ not ../images/
+            const imageUrl = product.gambar1 ? `images/${product.gambar1}` : 'images/placeholder.png';
             const price = parseInt(product.harga_aktif).toLocaleString('id-ID');
             const originalPrice = product.harga_coret ? parseInt(product.harga_coret).toLocaleString('id-ID') : null;
             const inStock = product.in_stok == '1';
             
             html += `
-                <a href="product.php?id=${product.id_produk}" class="block hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
+                <div onclick="openProductModal(${product.id_produk}); closeMobileMenu();" class="block hover:bg-surface-light dark:hover:bg-surface-dark transition-colors cursor-pointer">
                     <div class="flex items-center gap-3 p-3">
-                        <div class="relative w-12 h-12 flex-shrink-0">
-                            <img src="${imageUrl}" alt="${product.nama_produk}" class="w-full h-full object-cover rounded-lg" onerror="this.src='../images/placeholder.png'">
+                        <div class="relative w-12 h-12 flex-shrink-0 overflow-hidden rounded-lg bg-surface-light dark:bg-surface-dark">
+                            ${product.gambar1 ? 
+                                `<img src="${imageUrl}" alt="${product.nama_produk}" class="w-full h-full object-cover transition-opacity duration-300" style="opacity: 0;" onload="this.style.opacity='1'" onerror="this.onerror=null; this.src='images/placeholder.png'; this.style.opacity='1';">` :
+                                `<div class="w-full h-full flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-2xl text-secondary-light dark:text-secondary-dark">
+                                        shopping_bag
+                                    </span>
+                                </div>`
+                            }
                             ${!inStock ? '<div class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center"><span class="text-white text-xs font-semibold">Out</span></div>' : ''}
                         </div>
                         <div class="flex-1 min-w-0">
@@ -133,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </div>
                         </div>
                     </div>
-                </a>
+                </div>
             `;
         });
 
