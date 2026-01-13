@@ -102,17 +102,18 @@ document.addEventListener('DOMContentLoaded', function() {
         let html = '';
         
         products.slice(0, 5).forEach(product => {
-            // Use placeholder image since search API doesn't include image
-            const imageUrl = '../images/placeholder.png';
+            // Use actual product image if available
+            const imageUrl = product.gambar1 ? `../images/${product.gambar1}` : '../images/placeholder.png';
             const price = parseInt(product.harga_aktif).toLocaleString('id-ID');
+            const originalPrice = product.harga_coret ? parseInt(product.harga_coret).toLocaleString('id-ID') : null;
+            const inStock = product.in_stok == '1';
             
             html += `
                 <a href="product.php?id=${product.id_produk}" class="block hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
                     <div class="flex items-center gap-3 p-3">
-                        <div class="w-12 h-12 bg-surface-light dark:bg-surface-dark rounded-lg flex items-center justify-center">
-                            <span class="material-symbols-outlined text-2xl text-secondary-light dark:text-secondary-dark">
-                                shopping_bag
-                            </span>
+                        <div class="relative w-12 h-12 flex-shrink-0">
+                            <img src="${imageUrl}" alt="${product.nama_produk}" class="w-full h-full object-cover rounded-lg" onerror="this.src='../images/placeholder.png'">
+                            ${!inStock ? '<div class="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center"><span class="text-white text-xs font-semibold">Out</span></div>' : ''}
                         </div>
                         <div class="flex-1 min-w-0">
                             <p class="text-sm font-medium text-foreground-light dark:text-foreground-dark truncate">
@@ -122,9 +123,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="text-sm text-primary font-semibold">
                                     IDR ${price}
                                 </p>
+                                ${originalPrice ? `<p class="text-xs text-secondary-light dark:text-secondary-dark line-through">IDR ${originalPrice}</p>` : ''}
+                            </div>
+                            <div class="flex items-center gap-2 mt-1">
                                 <p class="text-xs text-secondary-light dark:text-secondary-dark">
                                     ${product.nama_kategori}
                                 </p>
+                                ${product.terjual > 0 ? `<span class="text-xs text-green-600 dark:text-green-400">${product.terjual} sold</span>` : ''}
                             </div>
                         </div>
                     </div>
@@ -142,6 +147,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         mobileSearchResultsContent.innerHTML = html;
         mobileSearchResults.classList.remove('hidden');
+    }
+
+    // Mobile All Categories Dropdown
+    const mobileAllCategoriesBtn = document.getElementById('mobile-all-categories-btn');
+    const mobileDropdownCategories = document.getElementById('mobile-dropdown-categories');
+    const mobileDropdownArrow = document.getElementById('mobile-dropdown-arrow');
+    
+    if (mobileAllCategoriesBtn && mobileDropdownCategories && mobileDropdownArrow) {
+        mobileAllCategoriesBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const isHidden = mobileDropdownCategories.classList.contains('hidden');
+            
+            if (isHidden) {
+                mobileDropdownCategories.classList.remove('hidden');
+                mobileDropdownArrow.style.transform = 'rotate(180deg)';
+            } else {
+                mobileDropdownCategories.classList.add('hidden');
+                mobileDropdownArrow.style.transform = 'rotate(0deg)';
+            }
+        });
     }
 
     // Close mobile menu when clicking on category links

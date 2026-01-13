@@ -83,6 +83,43 @@
     .dark .custom-scrollbar {
         scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
     }
+    
+    /* Mobile transparent scrollbar */
+    .mobile-transparent-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .mobile-transparent-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .mobile-transparent-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 2px;
+    }
+    
+    .mobile-transparent-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Dark mode mobile scrollbar */
+    .dark .mobile-transparent-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .dark .mobile-transparent-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Firefox mobile scrollbar */
+    .mobile-transparent-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+    
+    .dark .mobile-transparent-scrollbar {
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
   </style>
   <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
@@ -191,21 +228,45 @@
            </div>
            
            <!-- Mobile Categories -->
-           <div class="flex-1 overflow-y-auto p-4">
+           <div class="flex-1 overflow-y-auto p-4 mobile-transparent-scrollbar">
                <h3 class="text-sm font-semibold text-secondary-light dark:text-secondary-dark mb-3">Categories</h3>
                <nav class="space-y-2">
                    <?php 
-                   // Combine and display all categories for mobile
-                   $all_mobile_categories = array_merge($favorite_categories ?? [], $non_favorite_categories ?? []);
-                   if (!empty($all_mobile_categories)): ?>
-                       <?php foreach ($all_mobile_categories as $kategori): ?>
+                   // Display top 4 favorite categories like desktop navbar
+                   $top_mobile_categories = array_slice($favorite_categories ?? [], 0, 4);
+                   if (!empty($top_mobile_categories)): ?>
+                       <?php foreach ($top_mobile_categories as $kategori): ?>
                            <a href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>" class="block px-4 py-3 rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
                                <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
                            </a>
                        <?php endforeach; ?>
-                   <?php else: ?>
-                       <p class="text-secondary-light dark:text-secondary-dark px-4 py-2">No categories available</p>
                    <?php endif; ?>
+
+                   <!-- All Categories Dropdown for Mobile -->
+                   <div class="mobile-category-dropdown">
+                       <button id="mobile-all-categories-btn" class="w-full px-4 py-3 rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors flex items-center justify-between">
+                           <span>All Categories</span>
+                           <svg class="w-4 h-4 transition-transform" id="mobile-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                           </svg>
+                       </button>
+                       
+                       <div id="mobile-dropdown-categories" class="hidden pl-4 pr-4 pb-2 space-y-2">
+                           <?php 
+                           // Get remaining categories (non-favorites and any favorites beyond top 4)
+                           $remaining_mobile_categories = array_merge(
+                               array_slice($favorite_categories ?? [], 4), 
+                               $non_favorite_categories ?? []
+                           );
+                           if (!empty($remaining_mobile_categories)): ?>
+                               <?php foreach ($remaining_mobile_categories as $kategori): ?>
+                                   <a href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>" class="block px-4 py-2 rounded text-sm text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
+                                       <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
+                                   </a>
+                               <?php endforeach; ?>
+                           <?php endif; ?>
+                       </div>
+                   </div>
                </nav>
            </div>
        </div>

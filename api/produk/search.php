@@ -20,7 +20,13 @@ try {
                 kategori.nama_kategori,
                 produk.merk,
                 produk.kode_produk,
-                produk.harga_aktif
+                produk.harga_aktif,
+                produk.harga_coret,
+                produk.gambar1,
+                produk.gambar2,
+                produk.gambar3,
+                produk.terjual,
+                produk.in_stok
               FROM
                 produk
                 INNER JOIN
