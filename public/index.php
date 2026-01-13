@@ -87,6 +87,7 @@
   <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
 <script src="script/search.js"></script>
+<script src="script/mobile-menu.js"></script>
  </head>
  <body class="font-display bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark">
   <div class="relative flex min-h-screen w-full flex-col">
@@ -139,12 +140,76 @@
             </button>
             <span id="cart-badge" class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs text-white flex items-center justify-center hidden">0</span>
         </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-toggle" class="md:hidden flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
+            <span class="material-symbols-outlined text-2xl">
+                menu
+            </span>
+        </button>
        </div>
       </div>
      </div>
     </div>
    </header>
 
+   <!-- Mobile Menu Overlay -->
+   <div id="mobile-menu" class="fixed inset-0 z-40 hidden">
+       <!-- Backdrop -->
+       <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+       
+       <!-- Menu Panel -->
+       <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-surface-dark shadow-xl transform translate-x-full transition-transform duration-300" id="mobile-menu-panel">
+           <!-- Menu Header -->
+           <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
+               <h2 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark">Menu</h2>
+               <button id="close-mobile-menu" class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-light dark:hover:bg-background-dark">
+                   <span class="material-symbols-outlined">close</span>
+               </button>
+           </div>
+           
+           <!-- Mobile Search -->
+           <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+               <div class="relative">
+                   <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary-light dark:text-secondary-dark">
+                       search
+                   </span>
+                   <input
+                       id="mobile-search-input"
+                       class="form-input h-10 w-full rounded-full border-none bg-surface-light dark:bg-surface-dark pl-10 pr-4 text-sm placeholder:text-secondary-light dark:placeholder:text-secondary-dark focus:outline-none focus:ring-2 focus:ring-primary/50"
+                       placeholder="Search products..."
+                       type="search"
+                   />
+               </div>
+               
+               <!-- Mobile Search Results -->
+               <div id="mobile-search-results" class="absolute left-4 right-4 mt-2 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 hidden">
+                   <div id="mobile-search-results-content" class="py-2 max-h-96 overflow-y-auto">
+                       <!-- Search results will be populated here -->
+                   </div>
+               </div>
+           </div>
+           
+           <!-- Mobile Categories -->
+           <div class="flex-1 overflow-y-auto p-4">
+               <h3 class="text-sm font-semibold text-secondary-light dark:text-secondary-dark mb-3">Categories</h3>
+               <nav class="space-y-2">
+                   <?php 
+                   // Combine and display all categories for mobile
+                   $all_mobile_categories = array_merge($favorite_categories ?? [], $non_favorite_categories ?? []);
+                   if (!empty($all_mobile_categories)): ?>
+                       <?php foreach ($all_mobile_categories as $kategori): ?>
+                           <a href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>" class="block px-4 py-3 rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
+                               <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
+                           </a>
+                       <?php endforeach; ?>
+                   <?php else: ?>
+                       <p class="text-secondary-light dark:text-secondary-dark px-4 py-2">No categories available</p>
+                   <?php endif; ?>
+               </nav>
+           </div>
+       </div>
+   </div>
 
    <main class="flex-grow">
     <!-- konten utama di sini -->
