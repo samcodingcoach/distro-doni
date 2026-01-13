@@ -3,3 +3,5 @@ search productnya, gambar tidak terlihat dan saya tetap ingin categories seperti
 4 teratas,lalu selainnya all categories, pastikan mobile menu dapat divertical scroll  scrollnya cantik transparant bukan bawaan
 
 sepertinya ada masalah pada gambar result search. kedap kedip menampilkanya
+
+lakukan juga pada product.php karna halaman ini tidak ada menu mobilenya

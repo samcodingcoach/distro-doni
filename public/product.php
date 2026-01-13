@@ -92,11 +92,49 @@ $page_description = $category_filter
     .dark .custom-scrollbar {
         scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
     }
+    
+    /* Mobile transparent scrollbar */
+    .mobile-transparent-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .mobile-transparent-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .mobile-transparent-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 2px;
+    }
+    
+    .mobile-transparent-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Dark mode mobile scrollbar */
+    .dark .mobile-transparent-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .dark .mobile-transparent-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Firefox mobile scrollbar */
+    .mobile-transparent-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+    
+    .dark .mobile-transparent-scrollbar {
+        scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
   </style>
   <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
 <script src="script/search.js"></script>
 <script src="script/product-filter.js"></script>
+<script src="script/mobile-menu.js"></script>
  </head>
  <body class="font-display bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark">
   <div class="relative flex min-h-screen w-full flex-col">
@@ -149,11 +187,139 @@ $page_description = $category_filter
             </button>
             <span id="cart-badge" class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-xs text-white flex items-center justify-center hidden">0</span>
         </div>
+        
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-toggle" class="md:hidden flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
+            <span class="material-symbols-outlined text-2xl">
+                menu
+            </span>
+        </button>
        </div>
       </div>
      </div>
     </div>
    </header>
+
+   <!-- Mobile Menu Overlay -->
+   <div id="mobile-menu" class="fixed inset-0 z-40 hidden">
+       <!-- Backdrop -->
+       <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+       
+       <!-- Menu Panel -->
+       <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-white dark:bg-surface-dark shadow-xl transform translate-x-full transition-transform duration-300" id="mobile-menu-panel">
+           <!-- Menu Header -->
+           <div class="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 p-4">
+               <h2 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark">Menu</h2>
+               <button id="close-mobile-menu" class="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-light dark:hover:bg-background-dark">
+                   <span class="material-symbols-outlined">close</span>
+               </button>
+           </div>
+           
+           <!-- Mobile Search -->
+           <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+               <div class="relative">
+                   <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary-light dark:text-secondary-dark">
+                       search
+                   </span>
+                   <input
+                       id="mobile-search-input"
+                       class="form-input h-10 w-full rounded-full border-none bg-surface-light dark:bg-surface-dark pl-10 pr-4 text-sm placeholder:text-secondary-light dark:placeholder:text-secondary-dark focus:outline-none focus:ring-2 focus:ring-primary/50"
+                       placeholder="Search products..."
+                       type="search"
+                   />
+               </div>
+               
+               <!-- Mobile Search Results -->
+               <div id="mobile-search-results" class="absolute left-4 right-4 mt-2 bg-surface-light dark:bg-surface-dark rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 z-50 hidden">
+                   <div id="mobile-search-results-content" class="py-2 max-h-96 overflow-y-auto">
+                       <!-- Search results will be populated here -->
+                   </div>
+               </div>
+           </div>
+           
+           <!-- Mobile Categories -->
+           <div class="flex-1 overflow-y-auto p-4 mobile-transparent-scrollbar">
+               <h3 class="text-sm font-semibold text-secondary-light dark:text-secondary-dark mb-3">Categories</h3>
+               <nav class="space-y-2">
+                   <?php 
+                   // Fetch categories for mobile menu - same as index.php
+                   $favorite_categories = [];
+                   $non_favorite_categories = [];
+                   
+                   $api_file_path = __DIR__ . '/../api/kategori/list.php';
+                   
+                   if (file_exists($api_file_path)) {
+                       $command = 'php ' . escapeshellarg($api_file_path);
+                       $api_output = shell_exec($command);
+                       
+                       if ($api_output) {
+                           $json_start = strpos($api_output, '{');
+                           if ($json_start !== false) {
+                               $json_str = substr($api_output, $json_start);
+                               $response_data = json_decode($json_str, true);
+                               
+                               if ($response_data && isset($response_data['success']) && $response_data['success'] === true) {
+                                   $all_categories = $response_data['data'];
+                                   
+                                   foreach ($all_categories as $kategori) {
+                                       if ($kategori['favorit'] == '1' && $kategori['aktif'] == '1') {
+                                           $favorite_categories[] = $kategori;
+                                       } elseif ($kategori['favorit'] == '0' && $kategori['aktif'] == '1') {
+                                           $non_favorite_categories[] = $kategori;
+                                       }
+                                   }
+                                   
+                                   usort($favorite_categories, function($a, $b) {
+                                       return strcasecmp($a['nama_kategori'], $b['nama_kategori']);
+                                   });
+                                   
+                                   usort($non_favorite_categories, function($a, $b) {
+                                       return strcasecmp($a['nama_kategori'], $b['nama_kategori']);
+                                   });
+                               }
+                           }
+                       }
+                   }
+                   
+                   // Display top 4 favorite categories like desktop navbar
+                   $top_mobile_categories = array_slice($favorite_categories ?? [], 0, 4);
+                   if (!empty($top_mobile_categories)): ?>
+                       <?php foreach ($top_mobile_categories as $kategori): ?>
+                           <a href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>" class="block px-4 py-3 rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
+                               <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
+                           </a>
+                       <?php endforeach; ?>
+                   <?php endif; ?>
+
+                   <!-- All Categories Dropdown for Mobile -->
+                   <div class="mobile-category-dropdown">
+                       <button id="mobile-all-categories-btn" class="w-full px-4 py-3 rounded-lg text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors flex items-center justify-between">
+                           <span>All Categories</span>
+                           <svg class="w-4 h-4 transition-transform" id="mobile-dropdown-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                           </svg>
+                       </button>
+                       
+                       <div id="mobile-dropdown-categories" class="hidden pl-4 pr-4 pb-2 space-y-2">
+                           <?php 
+                           // Get remaining categories (non-favorites and any favorites beyond top 4)
+                           $remaining_mobile_categories = array_merge(
+                               array_slice($favorite_categories ?? [], 4), 
+                               $non_favorite_categories ?? []
+                           );
+                           if (!empty($remaining_mobile_categories)): ?>
+                               <?php foreach ($remaining_mobile_categories as $kategori): ?>
+                                   <a href="product.php?kategori=<?php echo urlencode($kategori['nama_kategori']); ?>" class="block px-4 py-2 rounded text-sm text-foreground-light dark:text-foreground-dark hover:bg-surface-light dark:hover:bg-surface-dark transition-colors">
+                                       <?php echo htmlspecialchars($kategori['nama_kategori']); ?>
+                                   </a>
+                               <?php endforeach; ?>
+                           <?php endif; ?>
+                       </div>
+                   </div>
+               </nav>
+           </div>
+       </div>
+   </div>
 
    <main class="flex-grow">
     <section id="product-page-content" class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
