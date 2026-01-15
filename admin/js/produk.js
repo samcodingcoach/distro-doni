@@ -144,7 +144,7 @@ async function loadProduk() {
             allProdukData = [];
             filteredData = [];
             const tbody = document.getElementById('produkTableBody');
-            tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada data produk</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">Tidak ada data produk</td></tr>';
             updatePagination();
         }
         
@@ -225,6 +225,7 @@ function displayProduk() {
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${startIndex + index + 1}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${produk.kode_produk || '-'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-xs" title="${produk.nama_produk}">${produk.nama_produk}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${produk.merk || '-'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${produk.nama_kategori}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStockColorClass(produk.jumlah_stok)}">
@@ -241,7 +242,7 @@ function displayProduk() {
             </tr>
         `).join('');
     } else {
-        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-500">Tidak ada data yang ditemukan</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">Tidak ada data yang ditemukan</td></tr>';
     }
 }
 
@@ -300,7 +301,8 @@ function searchProduk() {
     } else {
         filteredData = allProdukData.filter(produk => 
             (produk.kode_produk && produk.kode_produk.toLowerCase().includes(searchTerm)) ||
-            (produk.nama_produk && produk.nama_produk.toLowerCase().includes(searchTerm))
+            (produk.nama_produk && produk.nama_produk.toLowerCase().includes(searchTerm)) ||
+            (produk.merk && produk.merk.toLowerCase().includes(searchTerm))
         );
     }
     
