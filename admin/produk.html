@@ -168,6 +168,30 @@
                 transform: scale(0.9);
             }
         }
+        
+        /* Custom Dropdown Styles */
+        .kategori-option {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: #1f2937;
+            transition: background-color 0.15s ease-in-out;
+        }
+        
+        .kategori-option:hover, .kategori-option.selected {
+            background-color: #f3f4f6;
+        }
+        
+        .kategori-option.no-results {
+            color: #6b7280;
+            cursor: default;
+            font-style: italic;
+        }
+        
+        .kategori-arrow.rotate-180 {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -313,7 +337,7 @@
         <div class="mb-4 flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-4 lg:space-y-0">
             <div class="w-full lg:w-2/3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                 <div class="relative flex-1">
-                    <input type="text" id="searchInput" placeholder="Cari kode produk atau nama produk..." 
+                    <input type="text" id="searchInput" placeholder="Cari kode produk, nama produk, atau merk..." 
                            onkeyup="searchProduk()"
                            class="w-full px-4 py-2 pr-10 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <div class="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -333,6 +357,27 @@
                         <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           
                         </svg>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                    </div>
+                    <input type="text" id="kategoriInput" placeholder="Filter Kategori..." 
+                           class="appearance-none pl-10 pr-20 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white" autocomplete="off">
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-10">
+                        <svg id="kategoriArrow" class="h-5 w-5 text-gray-400 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </div>
+                    <button id="clearKategoriBtn" type="button" class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 hidden">
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                    <div id="kategoriOptions" class="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg z-50 hidden max-h-60 overflow-y-auto">
                     </div>
                 </div>
             </div>

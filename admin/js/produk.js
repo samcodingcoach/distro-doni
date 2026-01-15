@@ -80,9 +80,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load initial data
     loadProduk();
+    loadKategoriForFilter();
     
     // Setup form submission
     document.getElementById('produkForm').addEventListener('submit', submitProdukForm);
+    
+    // Setup kategori dropdown
+    setupKategoriDropdown();
 });
 
 /**
@@ -199,6 +203,244 @@ async function loadKategori() {
 }
 
 /**
+ * Load kategori data for filter dropdown
+ */
+async function loadKategoriForFilter() {
+    try {
+        const response = await fetch('../api/kategori/listv2.php');
+        
+        let data;
+        try {
+            const responseText = await response.text();
+            console.log('Raw response from kategori/listv2.php:', responseText); // Debug log
+            
+            // Try to parse as JSON
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('JSON Parse Error in loadKategoriForFilter:', parseError);
+                console.error('Response text:', responseText);
+                throw new Error('Server returned invalid JSON format when loading categories for filter');
+            }
+        } catch (error) {
+            if (error.message.includes('JSON')) {
+                throw error;
+            }
+            throw new Error('Failed to read response: ' + error.message);
+        }
+        
+        if (data.success && data.data.length > 0) {
+            window.allKategoriData = data.data;
+            populateKategoriDropdown(data.data);
+        } else {
+            window.allKategoriData = [];
+        }
+    } catch (error) {
+        console.error('Gagal memuat data kategori untuk filter:', error);
+        window.allKategoriData = [];
+    }
+}
+
+/**
+ * Populate kategori dropdown with data
+ */
+function populateKategoriDropdown(kategoriData) {
+    const optionsContainer = document.getElementById('kategoriOptions');
+    
+    // Clear existing options
+    optionsContainer.innerHTML = '';
+    
+    // Add "All Categories" option
+    const allOption = document.createElement('div');
+    allOption.className = 'kategori-option';
+    allOption.textContent = 'Semua Kategori';
+    allOption.dataset.value = '';
+    allOption.dataset.id = '';
+    optionsContainer.appendChild(allOption);
+    
+    // Add category options
+    kategoriData.forEach(kategori => {
+        const option = document.createElement('div');
+        option.className = 'kategori-option';
+        option.textContent = kategori.nama_kategori;
+        option.dataset.value = kategori.nama_kategori;
+        option.dataset.id = kategori.id_kategori;
+        optionsContainer.appendChild(option);
+    });
+}
+
+/**
+ * Setup kategori dropdown functionality
+ */
+function setupKategoriDropdown() {
+    const input = document.getElementById('kategoriInput');
+    const optionsContainer = document.getElementById('kategoriOptions');
+    const arrow = document.getElementById('kategoriArrow');
+    const clearBtn = document.getElementById('clearKategoriBtn');
+    
+    // Variables to track selected state
+    let selectedKategori = {
+        id: '',
+        nama: ''
+    };
+    
+    // Toggle dropdown when clicking input
+    input.addEventListener('click', function() {
+        toggleDropdown();
+    });
+    
+    // Filter options when typing
+    input.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        filterKategoriOptions(searchTerm);
+        
+        // Show/hide clear button based on input value
+        if (this.value.trim() !== '') {
+            clearBtn.classList.remove('hidden');
+        } else {
+            clearBtn.classList.add('hidden');
+        }
+        
+        // Show dropdown when typing
+        if (!optionsContainer.classList.contains('block')) {
+            optionsContainer.classList.remove('hidden');
+            optionsContainer.classList.add('block');
+            arrow.classList.add('rotate-180');
+        }
+    });
+    
+    // Handle clear button click
+    clearBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        clearKategori();
+    });
+    
+    // Handle option selection
+    optionsContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('kategori-option')) {
+            selectKategori(e.target);
+        }
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('div.relative')) {
+            closeDropdown();
+        }
+    });
+    
+    function toggleDropdown() {
+        if (optionsContainer.classList.contains('block')) {
+            closeDropdown();
+        } else {
+            openDropdown();
+        }
+    }
+    
+    function openDropdown() {
+        optionsContainer.classList.remove('hidden');
+        optionsContainer.classList.add('block');
+        arrow.classList.add('rotate-180');
+        input.focus();
+    }
+    
+    function closeDropdown() {
+        optionsContainer.classList.remove('block');
+        optionsContainer.classList.add('hidden');
+        arrow.classList.remove('rotate-180');
+    }
+    
+    function filterKategoriOptions(searchTerm) {
+        const options = optionsContainer.querySelectorAll('.kategori-option');
+        
+        options.forEach(option => {
+            const text = option.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+        
+        // Check if any options are visible
+        const visibleOptions = Array.from(options).filter(option => option.style.display !== 'none');
+        
+        // Show "No results" message if no options match
+        if (visibleOptions.length === 0 && searchTerm !== '') {
+            // Remove any existing "no results" message
+            const existingNoResults = optionsContainer.querySelector('.no-results');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+            
+            // Add "no results" message
+            const noResults = document.createElement('div');
+            noResults.className = 'kategori-option no-results';
+            noResults.textContent = 'Tidak ada kategori yang cocok';
+            optionsContainer.appendChild(noResults);
+        } else {
+            // Remove "no results" message if it exists
+            const existingNoResults = optionsContainer.querySelector('.no-results');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+        }
+    }
+    
+    function selectKategori(option) {
+        // Update input value
+        input.value = option.dataset.value;
+        
+        // Update selected state
+        selectedKategori = {
+            id: option.dataset.id,
+            nama: option.dataset.value
+        };
+        
+        // Highlight selected option
+        const options = optionsContainer.querySelectorAll('.kategori-option');
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        
+        // Show clear button
+        clearBtn.classList.remove('hidden');
+        
+        // Close dropdown
+        closeDropdown();
+        
+        // Apply filter
+        filterByKategori();
+    }
+    
+    function clearKategori() {
+        // Clear input and selected state
+        input.value = '';
+        selectedKategori = {
+            id: '',
+            nama: ''
+        };
+        
+        // Hide clear button
+        clearBtn.classList.add('hidden');
+        
+        // Remove selected class from all options
+        const options = optionsContainer.querySelectorAll('.kategori-option');
+        options.forEach(opt => opt.classList.remove('selected'));
+        
+        // Apply filter
+        filterByKategori();
+    }
+    
+    // Expose selected kategori data globally
+    window.getSelectedKategori = function() {
+        return selectedKategori;
+    };
+    
+    // Expose clearKategori globally
+    window.clearKategori = clearKategori;
+}
+
+/**
  * Format currency to Rupiah
  */
 function formatRupiah(amount) {
@@ -296,14 +538,32 @@ function changePage(direction) {
 function searchProduk() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
     
-    if (searchTerm === '') {
-        filteredData = [...allProdukData];
-    } else {
-        filteredData = allProdukData.filter(produk => 
+    // Reset to all products first
+    filteredData = [...allProdukData];
+    
+    // Apply search filter if there's a search term
+    if (searchTerm !== '') {
+        filteredData = filteredData.filter(produk => 
             (produk.kode_produk && produk.kode_produk.toLowerCase().includes(searchTerm)) ||
             (produk.nama_produk && produk.nama_produk.toLowerCase().includes(searchTerm)) ||
             (produk.merk && produk.merk.toLowerCase().includes(searchTerm))
         );
+    }
+    
+    // Apply kategori filter if one is selected
+    const selectedKategori = window.getSelectedKategori();
+    if (selectedKategori && selectedKategori.id !== '') {
+        filteredData = filteredData.filter(produk => 
+            produk.id_kategori == selectedKategori.id
+        );
+    }
+    
+    // Apply stock filter if needed
+    const stockFilterValue = document.getElementById('stockFilter').value;
+    if (stockFilterValue === 'most') {
+        filteredData = [...filteredData].sort((a, b) => (b.jumlah_stok || 0) - (a.jumlah_stok || 0));
+    } else if (stockFilterValue === 'least') {
+        filteredData = [...filteredData].sort((a, b) => (a.jumlah_stok || 0) - (b.jumlah_stok || 0));
     }
     
     currentPage = 1;
@@ -317,12 +577,71 @@ function searchProduk() {
 function filterByStock() {
     const filterValue = document.getElementById('stockFilter').value;
     
-    if (filterValue === '') {
-        filteredData = [...allProdukData];
-    } else if (filterValue === 'most') {
-        filteredData = [...allProdukData].sort((a, b) => (b.jumlah_stok || 0) - (a.jumlah_stok || 0));
+    // Reset to all products first
+    filteredData = [...allProdukData];
+    
+    // Apply kategori filter if one is selected
+    const selectedKategori = window.getSelectedKategori();
+    if (selectedKategori && selectedKategori.id !== '') {
+        filteredData = filteredData.filter(produk => 
+            produk.id_kategori == selectedKategori.id
+        );
+    }
+    
+    // Apply search filter if there's a search term
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    if (searchTerm !== '') {
+        filteredData = filteredData.filter(produk => 
+            (produk.kode_produk && produk.kode_produk.toLowerCase().includes(searchTerm)) ||
+            (produk.nama_produk && produk.nama_produk.toLowerCase().includes(searchTerm)) ||
+            (produk.merk && produk.merk.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    // Apply stock filter
+    if (filterValue === 'most') {
+        filteredData = [...filteredData].sort((a, b) => (b.jumlah_stok || 0) - (a.jumlah_stok || 0));
     } else if (filterValue === 'least') {
-        filteredData = [...allProdukData].sort((a, b) => (a.jumlah_stok || 0) - (b.jumlah_stok || 0));
+        filteredData = [...filteredData].sort((a, b) => (a.jumlah_stok || 0) - (b.jumlah_stok || 0));
+    }
+    
+    currentPage = 1;
+    displayProduk();
+    updatePagination();
+}
+
+/**
+ * Filter produk by kategori
+ */
+function filterByKategori() {
+    const selectedKategori = window.getSelectedKategori();
+    
+    // Reset to all products first
+    filteredData = [...allProdukData];
+    
+    // Apply kategori filter if one is selected
+    if (selectedKategori && selectedKategori.id !== '') {
+        filteredData = filteredData.filter(produk => 
+            produk.id_kategori == selectedKategori.id
+        );
+    }
+    
+    // Reapply search filter if there's a search term
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+    if (searchTerm !== '') {
+        filteredData = filteredData.filter(produk => 
+            (produk.kode_produk && produk.kode_produk.toLowerCase().includes(searchTerm)) ||
+            (produk.nama_produk && produk.nama_produk.toLowerCase().includes(searchTerm)) ||
+            (produk.merk && produk.merk.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    // Reapply stock filter if needed
+    const stockFilterValue = document.getElementById('stockFilter').value;
+    if (stockFilterValue === 'most') {
+        filteredData = [...filteredData].sort((a, b) => (b.jumlah_stok || 0) - (a.jumlah_stok || 0));
+    } else if (stockFilterValue === 'least') {
+        filteredData = [...filteredData].sort((a, b) => (a.jumlah_stok || 0) - (b.jumlah_stok || 0));
     }
     
     currentPage = 1;
