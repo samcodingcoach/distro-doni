@@ -276,7 +276,6 @@ function setupKategoriDropdown() {
     const input = document.getElementById('kategoriInput');
     const optionsContainer = document.getElementById('kategoriOptions');
     const arrow = document.getElementById('kategoriArrow');
-    const clearBtn = document.getElementById('clearKategoriBtn');
     
     // Variables to track selected state
     let selectedKategori = {
@@ -289,16 +288,14 @@ function setupKategoriDropdown() {
         toggleDropdown();
     });
     
-    // Filter options when typing
+    // Filter options when typing and detect clear
     input.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
         filterKategoriOptions(searchTerm);
         
-        // Show/hide clear button based on input value
-        if (this.value.trim() !== '') {
-            clearBtn.classList.remove('hidden');
-        } else {
-            clearBtn.classList.add('hidden');
+        // If input is cleared, reset filter
+        if (this.value.trim() === '') {
+            clearKategori();
         }
         
         // Show dropdown when typing
@@ -307,12 +304,6 @@ function setupKategoriDropdown() {
             optionsContainer.classList.add('block');
             arrow.classList.add('rotate-180');
         }
-    });
-    
-    // Handle clear button click
-    clearBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        clearKategori();
     });
     
     // Handle option selection
@@ -402,9 +393,6 @@ function setupKategoriDropdown() {
         options.forEach(opt => opt.classList.remove('selected'));
         option.classList.add('selected');
         
-        // Show clear button
-        clearBtn.classList.remove('hidden');
-        
         // Close dropdown
         closeDropdown();
         
@@ -420,9 +408,6 @@ function setupKategoriDropdown() {
             nama: ''
         };
         
-        // Hide clear button
-        clearBtn.classList.add('hidden');
-        
         // Remove selected class from all options
         const options = optionsContainer.querySelectorAll('.kategori-option');
         options.forEach(opt => opt.classList.remove('selected'));
@@ -435,9 +420,6 @@ function setupKategoriDropdown() {
     window.getSelectedKategori = function() {
         return selectedKategori;
     };
-    
-    // Expose clearKategori globally
-    window.clearKategori = clearKategori;
 }
 
 /**
