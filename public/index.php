@@ -125,6 +125,47 @@
     .mobile-menu-icon-transition {
         transition: all 0.3s ease;
     }
+    
+    /* Cookie Consent Styles */
+    .cookie-consent-overlay {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    .cookie-consent-overlay.show {
+        transform: translateY(0);
+    }
+    
+    .cookie-consent-content {
+        padding: 24px;
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-top: 4px solid #137fec;
+    }
+    
+    .dark .cookie-consent-content {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        border-top-color: #2563eb;
+    }
+    
+    .cookie-button {
+        transition: all 0.2s ease;
+    }
+    
+    .cookie-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cookie-button:active {
+        transform: translateY(0);
+    }
   </style>
   <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
@@ -632,6 +673,92 @@
    <?php include 'footer.php'; ?>
   </div>
   
+  <!-- Cookie Consent Overlay -->
+  <div id="cookie-consent" class="cookie-consent-overlay">
+    <div class="cookie-consent-content">
+      <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-foreground-light dark:text-foreground-dark mb-2 flex items-center gap-2">
+            <span class="material-symbols-outlined text-2xl text-primary">cookie</span>
+            Cookie Consent
+          </h3>
+          <p class="text-sm text-secondary-light dark:text-secondary-dark leading-relaxed">
+            We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. 
+            By clicking "Accept All", you consent to our use of all cookies. 
+            You can manage your preferences by clicking "Settings".
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <button onclick="showCookieDetails()" class="text-xs text-primary hover:underline font-medium flex items-center gap-1">
+              <span class="material-symbols-outlined text-base">info</span>
+              Learn more about cookies
+            </button>
+          </div>
+        </div>
+        
+        <div class="flex flex-col gap-3 mt-4 md:mt-0 md:pr-4">
+          <!-- Mobile: 2 buttons horizontal on first row, Settings below -->
+          <!-- Desktop: all 3 buttons horizontal -->
+          <div class="flex flex-1 gap-3 justify-center md:justify-end">
+            <button onclick="acceptAllCookies()" class="cookie-button bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-lg font-medium text-sm shadow-lg flex items-center justify-center gap-2 flex-1 md:flex-auto md:min-w-[110px] md:max-w-[140px]">
+              <span class="material-symbols-outlined text-base">check_circle</span>
+              Accept All
+            </button>
+            <button onclick="acceptEssentialCookies()" class="cookie-button bg-surface-light dark:bg-surface-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-foreground-light dark:text-foreground-dark px-4 py-2 rounded-lg font-medium text-sm border border-gray-300 dark:border-gray-600 flex items-center justify-center gap-2 flex-1 md:flex-auto md:min-w-[110px] md:max-w-[140px]">
+              <span class="material-symbols-outlined text-base">shield</span>
+              Essential Only
+            </button>
+            <!-- Settings button only visible on desktop (inline with other buttons) -->
+            <button onclick="showCookieSettings()" class="cookie-button bg-surface-light dark:bg-surface-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-foreground-light dark:text-foreground-dark px-4 py-2 rounded-lg font-medium text-sm border border-gray-300 dark:border-gray-600 flex items-center justify-center gap-2 hidden md:flex md:flex-auto md:min-w-[110px] md:max-w-[140px]">
+              <span class="material-symbols-outlined text-base">tune</span>
+              Settings
+            </button>
+          </div>
+          <!-- Settings button only visible on mobile (below other buttons) -->
+          <button onclick="showCookieSettings()" class="cookie-button bg-surface-light dark:bg-surface-dark hover:bg-gray-200 dark:hover:bg-gray-700 text-foreground-light dark:text-foreground-dark px-4 py-2 rounded-lg font-medium text-sm border border-gray-300 dark:border-gray-600 flex items-center justify-center gap-2 w-full md:hidden">
+            <span class="material-symbols-outlined text-base">tune</span>
+            Settings
+          </button>
+        </div>
+      </div>
+      
+      <!-- Cookie Details (Hidden by default) -->
+      <div id="cookie-details" class="hidden mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+        <h4 class="font-medium text-foreground-light dark:text-foreground-dark mb-3">Cookie Categories</h4>
+        <div class="space-y-3">
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="essential-cookies" checked disabled class="mt-1">
+            <div class="flex-1">
+              <label for="essential-cookies" class="font-medium text-sm text-foreground-light dark:text-foreground-dark">Essential Cookies</label>
+              <p class="text-xs text-secondary-light dark:text-secondary-dark mt-1">Required for the site to function properly.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="analytics-cookies" checked class="mt-1">
+            <div class="flex-1">
+              <label for="analytics-cookies" class="font-medium text-sm text-foreground-light dark:text-foreground-dark">Analytics Cookies</label>
+              <p class="text-xs text-secondary-light dark:text-secondary-dark mt-1">Help us improve our website by collecting anonymous usage data.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <input type="checkbox" id="marketing-cookies" class="mt-1">
+            <div class="flex-1">
+              <label for="marketing-cookies" class="font-medium text-sm text-foreground-light dark:text-foreground-dark">Marketing Cookies</label>
+              <p class="text-xs text-secondary-light dark:text-secondary-dark mt-1">Used to deliver personalized advertisements.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 mt-4">
+          <button onclick="hideCookieDetails()" class="px-3 py-1 text-sm text-secondary-light dark:text-secondary-dark hover:text-foreground-light dark:hover:text-foreground-dark">
+            Cancel
+          </button>
+          <button onclick="saveCookiePreferences()" class="px-3 py-1 bg-primary hover:bg-primary-hover text-white text-sm rounded">
+            Save Preferences
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <!-- Include WhatsApp Floating Button Component -->
   <?php include 'components/whatsapp-float-btn.php'; ?>
   
@@ -654,6 +781,229 @@
         // Also add to cart (optional - you can remove this if you only want add to cart from modal)
         // window.cartFunctions.addToCart(cartProduct);
     }
+  </script>
+  
+  <!-- Cookie Consent Script -->
+  <script>
+  // Cookie Consent Management
+  document.addEventListener('DOMContentLoaded', function() {
+      const cookieConsent = document.getElementById('cookie-consent');
+      const cookieDetails = document.getElementById('cookie-details');
+      
+      // Check if user has already made a consent choice
+      if (!getCookie('cookie_consent')) {
+          // Show cookie consent after a short delay to let page load
+          setTimeout(() => {
+              cookieConsent.classList.add('show');
+          }, 1500);
+      }
+  });
+  
+  // Set a cookie
+  function setCookie(name, value, days) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+      const path = window.location.pathname.includes('distro') ? '/distro/' : '/';
+      document.cookie = name + '=' + value + ';expires=' + expires.toUTCString() + ';path=' + path + ';samesite=strict';
+  }
+  
+  // Get a cookie
+  function getCookie(name) {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(';');
+      for(let i = 0; i < ca.length; i++) {
+          let c = ca[i];
+          while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+      }
+      return null;
+  }
+  
+  // Accept all cookies
+  function acceptAllCookies() {
+      const preferences = {
+          essential: true,
+          analytics: true,
+          marketing: true
+      };
+      
+      // Save preferences
+      setCookie('cookie_consent', 'accepted', 365);
+      setCookie('cookie_preferences', JSON.stringify(preferences), 365);
+      
+      // Initialize analytics if accepted
+      if (preferences.analytics) {
+          initializeAnalytics();
+      }
+      
+      // Initialize marketing if accepted
+      if (preferences.marketing) {
+          initializeMarketing();
+      }
+      
+      // Hide cookie consent
+      hideCookieConsent();
+      
+      // Show success notification
+      showNotification('Cookie preferences saved!', 'success');
+  }
+  
+  // Accept essential cookies only
+  function acceptEssentialCookies() {
+      const preferences = {
+          essential: true,
+          analytics: false,
+          marketing: false
+      };
+      
+      // Save preferences
+      setCookie('cookie_consent', 'essential', 365);
+      setCookie('cookie_preferences', JSON.stringify(preferences), 365);
+      
+      // Hide cookie consent
+      hideCookieConsent();
+      
+      // Show notification
+      showNotification('Only essential cookies enabled', 'info');
+  }
+  
+  // Show cookie settings
+  function showCookieSettings() {
+      const details = document.getElementById('cookie-details');
+      details.classList.remove('hidden');
+      
+      // Load current preferences
+      const savedPrefs = getCookie('cookie_preferences');
+      if (savedPrefs) {
+          const prefs = JSON.parse(savedPrefs);
+          document.getElementById('analytics-cookies').checked = prefs.analytics;
+          document.getElementById('marketing-cookies').checked = prefs.marketing;
+      }
+  }
+  
+  // Show cookie details
+  function showCookieDetails() {
+      showCookieSettings();
+  }
+  
+  // Hide cookie details
+  function hideCookieDetails() {
+      const details = document.getElementById('cookie-details');
+      details.classList.add('hidden');
+  }
+  
+  // Save cookie preferences
+  function saveCookiePreferences() {
+      const preferences = {
+          essential: true,
+          analytics: document.getElementById('analytics-cookies').checked,
+          marketing: document.getElementById('marketing-cookies').checked
+      };
+      
+      // Save preferences
+      setCookie('cookie_consent', 'custom', 365);
+      setCookie('cookie_preferences', JSON.stringify(preferences), 365);
+      
+      // Initialize analytics if accepted
+      if (preferences.analytics) {
+          initializeAnalytics();
+      }
+      
+      // Initialize marketing if accepted
+      if (preferences.marketing) {
+          initializeMarketing();
+      }
+      
+      // Hide cookie consent
+      hideCookieConsent();
+      
+      // Show notification
+      showNotification('Your cookie preferences have been saved', 'success');
+  }
+  
+  // Hide cookie consent overlay
+  function hideCookieConsent() {
+      const cookieConsent = document.getElementById('cookie-consent');
+      cookieConsent.classList.remove('show');
+      
+      // Remove from DOM after animation
+      setTimeout(() => {
+          cookieConsent.style.display = 'none';
+      }, 400);
+  }
+  
+  // Show notification
+  function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `fixed bottom-4 right-4 z-[10000] px-4 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-y-full`;
+      
+      // Style based on type
+      if (type === 'success') {
+          notification.classList.add('bg-green-500', 'text-white');
+      } else if (type === 'error') {
+          notification.classList.add('bg-red-500', 'text-white');
+      } else {
+          notification.classList.add('bg-blue-500', 'text-white');
+      }
+      
+      notification.innerHTML = `
+          <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-base">
+                  ${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}
+              </span>
+              <span class="text-sm font-medium">${message}</span>
+          </div>
+      `;
+      
+      // Add to page
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+          notification.classList.remove('translate-y-full');
+          notification.classList.add('translate-y-0');
+      }, 10);
+      
+      // Remove after 3 seconds
+      setTimeout(() => {
+          notification.classList.add('translate-y-full');
+          setTimeout(() => {
+              notification.remove();
+          }, 300);
+      }, 3000);
+  }
+  
+  // Initialize analytics (placeholder for Google Analytics, etc.)
+  function initializeAnalytics() {
+      console.log('Analytics cookies accepted');
+      // Add your analytics initialization code here
+      // Example: gtag('config', 'GA_MEASUREMENT_ID');
+  }
+  
+  // Initialize marketing (placeholder for marketing pixels, etc.)
+  function initializeMarketing() {
+      console.log('Marketing cookies accepted');
+      // Add your marketing initialization code here
+      // Example: fbq('init', 'YOUR_PIXEL_ID');
+  }
+  
+  // Check consent on page load and initialize services accordingly
+  document.addEventListener('DOMContentLoaded', function() {
+      const consent = getCookie('cookie_consent');
+      if (consent) {
+          const prefs = getCookie('cookie_preferences');
+          if (prefs) {
+              const preferences = JSON.parse(prefs);
+              if (preferences.analytics) {
+                  initializeAnalytics();
+              }
+              if (preferences.marketing) {
+                  initializeMarketing();
+              }
+          }
+      }
+  });
   </script>
  </body>
 </html>
