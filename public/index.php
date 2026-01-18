@@ -120,6 +120,11 @@
     .dark .mobile-transparent-scrollbar {
         scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
     }
+    
+    /* Mobile menu icon transition */
+    .mobile-menu-icon-transition {
+        transition: all 0.3s ease;
+    }
   </style>
   <script src="script/tailwind-config.js"></script>
 <script src="script/product-modal.js"></script>
@@ -180,7 +185,7 @@
         
         <!-- Mobile Menu Toggle -->
         <button id="mobile-menu-toggle" class="md:hidden flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-transparent hover:bg-surface-light dark:hover:bg-surface-dark">
-            <span class="material-symbols-outlined text-2xl">
+            <span class="material-symbols-outlined text-2xl mobile-menu-icon-transition" id="mobile-menu-icon">
                 menu
             </span>
         </button>
