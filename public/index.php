@@ -289,7 +289,17 @@
 
             if ($api_output !== null) {
                 $data = json_decode($api_output, true);
-                $banner = isset($data['data'][0]) ? $data['data'][0] : null;
+                
+                // Filter only active banners (aktif = '1')
+                $active_banners = [];
+                if (isset($data['data']) && is_array($data['data'])) {
+                    $active_banners = array_filter($data['data'], function($b) {
+                        return isset($b['aktif']) && $b['aktif'] == '1';
+                    });
+                }
+                
+                // Get the first active banner if any exist
+                $banner = !empty($active_banners) ? reset($active_banners) : null;
             }
         }
 
