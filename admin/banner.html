@@ -659,8 +659,8 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-xs">${banner.nama_banner}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 truncate max-w-xs">${banner.judul}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-center w-[10%]">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${banner.aktif ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                            ${banner.aktif ? 'Aktif' : 'Tidak Aktif'}
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${banner.aktif == '1' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${banner.aktif == '1' ? 'Aktif' : 'Tidak Aktif'}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center w-[15%]">
@@ -716,7 +716,7 @@
         document.getElementById('judul').value = banner.judul;
         document.getElementById('deskripsi').value = banner.deskripsi;
         document.getElementById('url_gambar').value = banner.url_gambar;
-        document.getElementById('aktif').checked = banner.aktif == 1;
+        document.getElementById('aktif').checked = banner.aktif == '1';
         
         // Update character count after setting description
         updateWordCount();
