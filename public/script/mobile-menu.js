@@ -1,6 +1,7 @@
 // Mobile Menu Functionality
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileMenuIcon = document.getElementById('mobile-menu-icon');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuPanel = document.getElementById('mobile-menu-panel');
     const closeMobileMenu = document.getElementById('close-mobile-menu');
@@ -8,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileSearchInput = document.getElementById('mobile-search-input');
     const mobileSearchResults = document.getElementById('mobile-search-results');
     const mobileSearchResultsContent = document.getElementById('mobile-search-results-content');
-
     // Toggle mobile menu
     function openMobileMenu() {
         mobileMenu.classList.remove('hidden');
@@ -16,6 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileMenuPanel.classList.remove('translate-x-full');
         }, 10);
         document.body.style.overflow = 'hidden';
+        // Change hamburger icon to X
+        console.log('Changing icon to close');
+        mobileMenuIcon.textContent = 'close';
+        console.log('Icon textContent:', mobileMenuIcon.textContent);
     }
 
     function closeMobileMenuFunc() {
@@ -27,15 +31,25 @@ document.addEventListener('DOMContentLoaded', function() {
             mobileSearchInput.value = '';
             mobileSearchResults.classList.add('hidden');
         }, 300);
+        // Change X icon back to hamburger immediately
+        mobileMenuIcon.textContent = 'menu';
     }
 
     // Make closeMobileMenu globally accessible
     window.closeMobileMenu = closeMobileMenuFunc;
 
     // Event listeners
-    mobileMenuToggle.addEventListener('click', openMobileMenu);
+    mobileMenuToggle.addEventListener('click', function() {
+        if (mobileMenu.classList.contains('hidden')) {
+            openMobileMenu();
+        } else {
+            closeMobileMenuFunc();
+        }
+    });
     closeMobileMenu.addEventListener('click', closeMobileMenuFunc);
     mobileMenuBackdrop.addEventListener('click', closeMobileMenuFunc);
+
+    
 
     // Mobile Search Functionality
     if (mobileSearchInput) {
